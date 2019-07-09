@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="文件查看命令文件管理命令是Linux管理的核心，因为Linux中有一个非常重要的概念-一切皆文件。在Windows系统中存在注册表、设备管理器了等等各种各样的组建来管理Windows，但是在Linux中，我们系统的管理控制等通通都是文件，所以文件管理命令是Linux管理中非常重要的内容。 pwd命令显示出完整的当前活动目录名称 注意：目录结构中 “/“  目录和  “/root”  目录是两个不同">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-08T11:49:03.390Z">
+<meta property="og:updated_time" content="2019-07-09T12:20:44.904Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件查看命令">
 <meta name="twitter:description" content="文件查看命令文件管理命令是Linux管理的核心，因为Linux中有一个非常重要的概念-一切皆文件。在Windows系统中存在注册表、设备管理器了等等各种各样的组建来管理Windows，但是在Linux中，我们系统的管理控制等通通都是文件，所以文件管理命令是Linux管理中非常重要的内容。 pwd命令显示出完整的当前活动目录名称 注意：目录结构中 “/“  目录和  “/root”  目录是两个不同">
@@ -168,10 +168,25 @@
 <p>　　rwx(Owner)r-x(Group)r-x(Other)</p>
 <p>这个例子表示的权限是：使用者自己可读，可写，可执行；同一组的用户可读，不可写，可执行；其它用户可读，不可写，可执行。</p>
 <p>另外，有一些程序属性的执行部分不是X,而是S,这表示执行这个程序的使用者，临时可以有和拥有者一样权力的身份来执行该程序。一般出现在系统管理之类的指令或程序，让使用者执行时，拥有root身份。</p>
+<h3 id="a"><a href="#a" class="headerlink" title="-a"></a>-a</h3><p>显示全部文件包括隐藏的文件</p>
+<p>Linux隐藏文件的目的是为了在用户日常操作中不会误操作或修改掉一些不可修改的文件内容</p>
+<p>Linux创建隐藏文件的方式很简单，只需要在文件名前面加一个 “.” 即可</p>
+<h3 id="t"><a href="#t" class="headerlink" title="-t"></a>-t</h3><p>按照文件创建或最后修改的时间排序，默认是根据文件的名称来逆向排序</p>
+<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>逆向排序显示文件</p>
+<p>一般是配合 -l 来使用，例如： ls -l -r</p>
+<p>如果我们需要按照文件的创建/修改时间来进行逆向排序则可以使用命令 “-t”，例如： ls -l -r -t</p>
+<p>可以组合命令，多个参数不需要每个都用空格隔开，例如上述命令，可以写为： ls -lrt</p>
+<h3 id="R"><a href="#R" class="headerlink" title="-R"></a>-R</h3><p>递归显示文件，就是罗列出当前文件中所有的文件及文件夹，还有子文件夹中的文件夹及文件，都罗列出来</p>
+<h3 id="h"><a href="#h" class="headerlink" title="-h"></a>-h</h3><p>将文件大小数据显示转化为可以阅读清楚的大小表示单位</p>
+<h3 id="–full-time"><a href="#–full-time" class="headerlink" title="–full-time"></a>–full-time</h3><p>列出文件完整的日期时间</p>
+<h3 id="–color-auto-never-always"><a href="#–color-auto-never-always" class="headerlink" title="–color={auto,never,always}"></a>–color={auto,never,always}</h3><p>用颜色来表示不同的文件类型，大括号内是参数选项</p>
+<p>never：从不使用颜色表示不同类型</p>
+<p>always：总是使用颜色表示不同类型</p>
+<p>auto：根据终端属性自动确定是否使用颜色表示不同类型</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月08日 19:49</p>
+        <p>最后更新： 2019年07月09日 20:20</p>
         <p>原始链接： <a class="post-url" href="/2019/07/08/文件查看命令/" title="文件查看命令">https://jjw-story.github.io/2019/07/08/文件查看命令/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -291,7 +306,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件查看命令"><span class="post-toc-text">文件查看命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwd命令"><span class="post-toc-text">pwd命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ls命令"><span class="post-toc-text">ls命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ls基本选项说明"><span class="post-toc-text">ls基本选项说明</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#l"><span class="post-toc-text">-l</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件查看命令"><span class="post-toc-text">文件查看命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwd命令"><span class="post-toc-text">pwd命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ls命令"><span class="post-toc-text">ls命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ls基本选项说明"><span class="post-toc-text">ls基本选项说明</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#l"><span class="post-toc-text">-l</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#a"><span class="post-toc-text">-a</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#t"><span class="post-toc-text">-t</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#r"><span class="post-toc-text">-r</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#R"><span class="post-toc-text">-R</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#h"><span class="post-toc-text">-h</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#–full-time"><span class="post-toc-text">–full-time</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#–color-auto-never-always"><span class="post-toc-text">–color={auto,never,always}</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     
