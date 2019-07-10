@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="文件查看命令文件管理命令是Linux管理的核心，因为Linux中有一个非常重要的概念-一切皆文件。在Windows系统中存在注册表、设备管理器了等等各种各样的组建来管理Windows，但是在Linux中，我们系统的管理控制等通通都是文件，所以文件管理命令是Linux管理中非常重要的内容。 pwd命令显示出完整的当前活动目录名称 注意：目录结构中 “/“  目录和  “/root”  目录是两个不同">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-09T12:20:44.904Z">
+<meta property="og:updated_time" content="2019-07-08T11:43:55.473Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件查看命令">
 <meta name="twitter:description" content="文件查看命令文件管理命令是Linux管理的核心，因为Linux中有一个非常重要的概念-一切皆文件。在Windows系统中存在注册表、设备管理器了等等各种各样的组建来管理Windows，但是在Linux中，我们系统的管理控制等通通都是文件，所以文件管理命令是Linux管理中非常重要的内容。 pwd命令显示出完整的当前活动目录名称 注意：目录结构中 “/“  目录和  “/root”  目录是两个不同">
@@ -183,10 +183,28 @@
 <p>never：从不使用颜色表示不同类型</p>
 <p>always：总是使用颜色表示不同类型</p>
 <p>auto：根据终端属性自动确定是否使用颜色表示不同类型</p>
+<h1 id="cd命令"><a href="#cd命令" class="headerlink" title="cd命令"></a>cd命令</h1><p>cd命令用于切换当前工作目录至 dirName(目录参数)</p>
+<p>使用方法：</p>
+<ul>
+<li>cd /path/to…绝对路径</li>
+<li>cd /path/to…相对路径</li>
+</ul>
+<p>注意一些特殊参数：</p>
+<ul>
+<li>路径缺省，表示切换到当前用户的目录</li>
+<li>~    也是切换到当前用户的目录</li>
+<li>/    切换到根目录</li>
+<li>../    切换到上一层目录，注意 “/“ 可以省略也可以 “cd ../..” 切换到上两级目录</li>
+<li>-    切换到上一次访问的目录</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:/home$ pwd</span><br><span class="line">/home</span><br><span class="line">wangjia3@CHJ-20190520VPS:/home$ cd -</span><br><span class="line">/usr/local/lib</span><br><span class="line">wangjia3@CHJ-20190520VPS:/usr/local/lib$</span><br></pre></td></tr></table></figure>
+
+<p>当我们要切换的目录离根目录比较近，那就使用绝对路径</p>
+<p>当我们要切换的目录离当前目录比较近，那就使用相对路径</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月09日 20:20</p>
+        <p>最后更新： 2019年07月08日 19:43</p>
         <p>原始链接： <a class="post-url" href="/2019/07/08/文件查看命令/" title="文件查看命令">https://jjw-story.github.io/2019/07/08/文件查看命令/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -306,7 +324,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件查看命令"><span class="post-toc-text">文件查看命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwd命令"><span class="post-toc-text">pwd命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ls命令"><span class="post-toc-text">ls命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ls基本选项说明"><span class="post-toc-text">ls基本选项说明</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#l"><span class="post-toc-text">-l</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#a"><span class="post-toc-text">-a</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#t"><span class="post-toc-text">-t</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#r"><span class="post-toc-text">-r</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#R"><span class="post-toc-text">-R</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#h"><span class="post-toc-text">-h</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#–full-time"><span class="post-toc-text">–full-time</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#–color-auto-never-always"><span class="post-toc-text">–color={auto,never,always}</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件查看命令"><span class="post-toc-text">文件查看命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#pwd命令"><span class="post-toc-text">pwd命令</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ls命令"><span class="post-toc-text">ls命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ls基本选项说明"><span class="post-toc-text">ls基本选项说明</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#l"><span class="post-toc-text">-l</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#a"><span class="post-toc-text">-a</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#t"><span class="post-toc-text">-t</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#r"><span class="post-toc-text">-r</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#R"><span class="post-toc-text">-R</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#h"><span class="post-toc-text">-h</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#–full-time"><span class="post-toc-text">–full-time</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#–color-auto-never-always"><span class="post-toc-text">–color={auto,never,always}</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#cd命令"><span class="post-toc-text">cd命令</span></a></li></ol>
         </nav>
     </aside>
     
