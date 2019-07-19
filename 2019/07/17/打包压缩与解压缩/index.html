@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="打包压缩与解压缩打包与压缩windows常见压缩文件格式：.rar  .zip .7z Linux常见压缩文件格式 ：.tar.gz;  .tar.bz2; .tgz; tbz2 在linux系统中，文件的格式与后缀名没有关系，一般压缩工具压缩之后会在压缩文件后添加对应压缩工具的后缀名 在Windows中，打包与压缩是一个软件功能，但是在Linux中，它是由两个软件构成的 打包命令Linux早期的">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-18T12:49:51.100Z">
+<meta property="og:updated_time" content="2019-07-18T12:48:43.436Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="打包压缩与解压缩">
 <meta name="twitter:description" content="打包压缩与解压缩打包与压缩windows常见压缩文件格式：.rar  .zip .7z Linux常见压缩文件格式 ：.tar.gz;  .tar.bz2; .tgz; tbz2 在linux系统中，文件的格式与后缀名没有关系，一般压缩工具压缩之后会在压缩文件后添加对应压缩工具的后缀名 在Windows中，打包与压缩是一个软件功能，但是在Linux中，它是由两个软件构成的 打包命令Linux早期的">
@@ -182,10 +182,27 @@
 
 <p>虽然压缩后的文件都不大，但是能感觉到使用 bzip2 压缩用的时间明显能更长一点，但是 bzip2 压缩后的文件更小一些，因为 bzip2 压缩后的比例更高一些</p>
 <p>两种压缩方式都可以，如果我们希望压缩后的比例更高一下，就使用bzip2进行压缩</p>
+<h2 id="解压缩命令"><a href="#解压缩命令" class="headerlink" title="解压缩命令"></a>解压缩命令</h2><p>解压缩我们使用的命令还是 tar 命令，但是需要更换选项</p>
+<p>使用方法：tar [参数] 压缩文件 [-C] [解压后目录]</p>
+<p>常用选项说明：</p>
+<p><strong>x</strong></p>
+<p>与上述 c 命令对应，x 参数是解压缩参数</p>
+<p><strong>f</strong></p>
+<p>与上述一致</p>
+<p><strong>v</strong></p>
+<p>显示所有进程，及压缩或解压明细</p>
+<p><strong>C</strong></p>
+<p>注意：C是大写，此选项是可以指定解压后的目录地址</p>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/# ls /tmp</span><br><span class="line">etc-backup.tar  etc-backup.tar.gz  testtext</span><br><span class="line">root@CHJ-20190520VPS:/# tar xf /tmp/etc-backup.tar -C /root</span><br><span class="line">root@CHJ-20190520VPS:/# ls /root</span><br><span class="line">etc</span><br></pre></td></tr></table></figure>
 
+<p>将/tmp/etc-backup.tar压缩文件解压到 /root 目录下</p>
+<p>实际我们见到的很多的压缩文件是 .tbz2  .tgz 的文件，这两种其实是  .tar.bz2 .tar.gz  的缩写，为了方便网络上的传播，将双扩展名的文件进行的缩写</p>
+<p>解压我们不需要因为压缩软件的不同而使用不同的选项，只使用标准的 tar 解压就可以，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/# ls /tmp</span><br><span class="line">etc-backup.tar  etc-backup.tar.gz  testtext</span><br><span class="line">root@CHJ-20190520VPS:/# tar -xvf /tmp/etc-backup.tar.gz -C /root</span><br><span class="line">etc/</span><br><span class="line">etc/.pwd.lock</span><br><span class="line">......  解压文件明细</span><br><span class="line">root@CHJ-20190520VPS:/# ls /root</span><br><span class="line">etc</span><br></pre></td></tr></table></figure>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月18日 20:49</p>
+        <p>最后更新： 2019年07月18日 20:48</p>
         <p>原始链接： <a class="post-url" href="/2019/07/17/打包压缩与解压缩/" title="打包压缩与解压缩">https://jjw-story.github.io/2019/07/17/打包压缩与解压缩/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -305,7 +322,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#打包压缩与解压缩"><span class="post-toc-text">打包压缩与解压缩</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#打包与压缩"><span class="post-toc-text">打包与压缩</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#打包命令"><span class="post-toc-text">打包命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#压缩命令"><span class="post-toc-text">压缩命令</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#打包压缩与解压缩"><span class="post-toc-text">打包压缩与解压缩</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#打包与压缩"><span class="post-toc-text">打包与压缩</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#打包命令"><span class="post-toc-text">打包命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#压缩命令"><span class="post-toc-text">压缩命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解压缩命令"><span class="post-toc-text">解压缩命令</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
