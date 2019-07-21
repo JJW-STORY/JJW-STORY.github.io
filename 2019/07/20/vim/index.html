@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="vi编辑器vi编辑器是所有Unix及Linux系统下标准的编辑器，它的强大不逊色于任何最新的文本编辑器。 由于对Unix及Linux系统的任何版本，vi编辑器是完全相同的，因此您可以在其他任何介绍vi的地方进一步了解它。Vi也是Linux中最基本的文本编辑器，学会它后，您将在Linux的世界里畅行无阻。 vim vi的多模式 正常模式(Normal-mode)  启动vim后默认处于正常模式，其他">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-20T13:07:53.947Z">
+<meta property="og:updated_time" content="2019-07-21T12:34:44.074Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vim">
 <meta name="twitter:description" content="vi编辑器vi编辑器是所有Unix及Linux系统下标准的编辑器，它的强大不逊色于任何最新的文本编辑器。 由于对Unix及Linux系统的任何版本，vi编辑器是完全相同的，因此您可以在其他任何介绍vi的地方进一步了解它。Vi也是Linux中最基本的文本编辑器，学会它后，您将在Linux的世界里畅行无阻。 vim vi的多模式 正常模式(Normal-mode)  启动vim后默认处于正常模式，其他">
@@ -200,10 +200,58 @@
 <p>l 光标向右移动</p>
 <p>j 光标向下移动</p>
 <p>k 光标向上移动</p>
+<ol start="6">
+<li>y复制命令</li>
+</ol>
+<p>yy:复制光标所在行到缓冲区</p>
+<p>nyy:注意n表示行数，表示复制当前行向下n行的内容</p>
+<p>y$:复制当前光标所在位置到行尾的内容</p>
+<p>yw:与y$效果一致</p>
+<p>ny$:注意n表示字数，表示复制当前光标所在位置后n个字符</p>
+<ol start="7">
+<li>d剪切命令</li>
+</ol>
+<p>dd:剪切光标所在行到缓冲区</p>
+<p>ndd:注意n表示行数，表示剪切当前行向下n行的内容</p>
+<p>d$:剪切光标所在位置到行尾的内容</p>
+<p>dw:与d$效果一致</p>
+<ol start="8">
+<li>p粘贴命令</li>
+</ol>
+<p>将复制或剪切的内容粘贴到光标所在位置</p>
+<ol start="9">
+<li>u撤销命令</li>
+</ol>
+<p>撤销命令，可以将失误的操作进行撤销，如果我们连续失误了很多个命令，就多次使用u命令，一条一条撤销</p>
+<ol start="10">
+<li>Ctrl + r 重做撤销命令</li>
+</ol>
+<p>就是将使用u命令撤销的命令重做，类似于撤回撤销</p>
+<ol start="11">
+<li>x命令</li>
+</ol>
+<p>删除光标所在的单个字符</p>
+<ol start="12">
+<li>r命令</li>
+</ol>
+<p>替换光标所在单个字符，使用时先按r键，再输入新的字符</p>
+<ol start="13">
+<li>n + G命令</li>
+</ol>
+<p>n表示行数，G是大写，既将光标移动到指定的行</p>
+<p>如果不指定 n 则直接将光标跳转到文件的最后一行</p>
+<ol start="14">
+<li>^命令</li>
+</ol>
+<p>将光标移动到所在行的行尾</p>
+<ol start="15">
+<li>$命令</li>
+</ol>
+<p>将光标移动到所在行的行首</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月20日 21:07</p>
+        <p>最后更新： 2019年07月21日 20:34</p>
         <p>原始链接： <a class="post-url" href="/2019/07/20/vim/" title="vim">https://jjw-story.github.io/2019/07/20/vim/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
