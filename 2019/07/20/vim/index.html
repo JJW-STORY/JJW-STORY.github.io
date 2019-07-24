@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="vi编辑器vi编辑器是所有Unix及Linux系统下标准的编辑器，它的强大不逊色于任何最新的文本编辑器。 由于对Unix及Linux系统的任何版本，vi编辑器是完全相同的，因此您可以在其他任何介绍vi的地方进一步了解它。Vi也是Linux中最基本的文本编辑器，学会它后，您将在Linux的世界里畅行无阻。 vim vi的多模式 正常模式(Normal-mode)  启动vim后默认处于正常模式，其他">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-23T11:39:19.752Z">
+<meta property="og:updated_time" content="2019-07-23T01:16:50.344Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vim">
 <meta name="twitter:description" content="vi编辑器vi编辑器是所有Unix及Linux系统下标准的编辑器，它的强大不逊色于任何最新的文本编辑器。 由于对Unix及Linux系统的任何版本，vi编辑器是完全相同的，因此您可以在其他任何介绍vi的地方进一步了解它。Vi也是Linux中最基本的文本编辑器，学会它后，您将在Linux的世界里畅行无阻。 vim vi的多模式 正常模式(Normal-mode)  启动vim后默认处于正常模式，其他">
@@ -324,10 +324,29 @@
 <li><p>ESC，退出输入模式，切换到命令模式</p>
 </li>
 </ol>
+<h2 id="vim可视模式"><a href="#vim可视模式" class="headerlink" title="vim可视模式"></a>vim可视模式</h2><p>可视模式主要是针对于我们对文件的大量操作使用此模式一次性执行完成，通常我们都是配合 “I”, “d” 命令来快捷操作</p>
+<p>可以在正常模式下使用 v、V、Ctrl + v三种方式进入:</p>
+<ol>
+<li>命令</li>
+</ol>
+<p>进入字符可视模式，字符可视模式就是当我们移动光标的时候，它是以字符为单位进行选择的</p>
+<ol start="2">
+<li>V</li>
+</ol>
+<p>进入行可视模式，当我们移动光标的时候是对行进行选中</p>
+<ol start="3">
+<li>Ctrl + v</li>
+</ol>
+<p>进入块可视模式，移动光标时选中的是上下对齐的一个块，此命令是使用较多的命令</p>
+<p>使用示例如下：</p>
+<p>我们要在多个行中同时插入一下字符，就可以使用vim先打开文件，然后使用 “Ctrl + v” 选中要操作的多个行为块，然后输入 “I” 命令进入行首进行编辑，插入我们要插入的字符后，连续按两次 esc 按键，就会发现，之前选中的行都被添加进去了我们新添加的字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> 18 tyutyutyutyutyustyukcdefsdf</span><br><span class="line"> 19 sdfsdf</span><br><span class="line"> 20 sdf</span><br><span class="line"> 21 sdf</span><br><span class="line"></span><br><span class="line"># 操作完成后</span><br><span class="line"></span><br><span class="line"> 18 wangjia3tyutyutyutyutyustyukcdefsdf</span><br><span class="line"> 19 wangjia3sdfsdf</span><br><span class="line"> 20 wangjia3sdf</span><br><span class="line"> 21 wangjia3sdf</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用 “d” 命令，将选中的块或字符直接删除，使用方法同上，在块选择后，直接输入 d 即可完成删除，此命令比较常用</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月23日 19:39</p>
+        <p>最后更新： 2019年07月23日 09:16</p>
         <p>原始链接： <a class="post-url" href="/2019/07/20/vim/" title="vim">https://jjw-story.github.io/2019/07/20/vim/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -447,12 +466,22 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#vi编辑器"><span class="post-toc-text">vi编辑器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vi的多模式"><span class="post-toc-text">vi的多模式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#vim编辑器"><span class="post-toc-text">vim编辑器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vim正常模式"><span class="post-toc-text">vim正常模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#正常模式常用命令"><span class="post-toc-text">正常模式常用命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vim命令模式"><span class="post-toc-text">vim命令模式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vim插入模式"><span class="post-toc-text">vim插入模式</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#vi编辑器"><span class="post-toc-text">vi编辑器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vi的多模式"><span class="post-toc-text">vi的多模式</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#vim编辑器"><span class="post-toc-text">vim编辑器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vim正常模式"><span class="post-toc-text">vim正常模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#正常模式常用命令"><span class="post-toc-text">正常模式常用命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vim命令模式"><span class="post-toc-text">vim命令模式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vim插入模式"><span class="post-toc-text">vim插入模式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#vim可视模式"><span class="post-toc-text">vim可视模式</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
+  
+    <a href="/2019/07/20/Python/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Python
+        
+      </span>
+    </a>
   
   
     <a href="/2019/07/17/打包压缩与解压缩/" id="article-nav-older" class="article-nav-link-wrap">
@@ -518,10 +547,10 @@
 <div class="sidebar-menu-box" id="sidebar-menu-box">
     <div class="sidebar-menu-box-container">
         <div id="sidebar-menu-box-categories">
-            <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Linux/">Linux</a>
+            <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/Python/">Python</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 15px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a>
+            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/帮助命令/" style="font-size: 15px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -554,7 +583,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 15px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a>
+            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/帮助命令/" style="font-size: 15px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a>
         </div>
     </div>
 </div>
