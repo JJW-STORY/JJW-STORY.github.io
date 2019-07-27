@@ -3,22 +3,22 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>用户和权限管理 | JJW-STORY</title>
+  <title>用户和用户组管理 | JJW-STORY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="JJW-STORY">
   
   <meta name="description" content="用户管理Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。 用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。 每个用户账号都拥有一个惟一的用户名和各自的口令，用户在登录时键入正确的用户名和口令后，就能够进入系统">
-<meta name="keywords" content="command,用户和权限管理">
+<meta name="keywords" content="command,用户和用户组管理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用户和权限管理">
+<meta property="og:title" content="用户和用户组管理">
 <meta property="og:url" content="https://jjw-story.github.io/2019/07/25/用户和用户组管理/index.html">
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="用户管理Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。 用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。 每个用户账号都拥有一个惟一的用户名和各自的口令，用户在登录时键入正确的用户名和口令后，就能够进入系统">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-20T13:04:18.265Z">
+<meta property="og:updated_time" content="2019-07-27T14:40:05.018Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用户和权限管理">
+<meta name="twitter:title" content="用户和用户组管理">
 <meta name="twitter:description" content="用户管理Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。 用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。 每个用户账号都拥有一个惟一的用户名和各自的口令，用户在登录时键入正确的用户名和口令后，就能够进入系统">
   
   
@@ -117,7 +117,7 @@
         
   
     <h1 class="post-title" itemprop="name">
-      用户和权限管理
+      用户和用户组管理
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -224,8 +224,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/# groupdel group2</span><br></pre></td></tr></table></figure>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月20日 21:04</p>
-        <p>原始链接： <a class="post-url" href="/2019/07/25/用户和用户组管理/" title="用户和权限管理">https://jjw-story.github.io/2019/07/25/用户和用户组管理/</a></p>
+        <p>最后更新： 2019年07月27日 22:40</p>
+        <p>原始链接： <a class="post-url" href="/2019/07/25/用户和用户组管理/" title="用户和用户组管理">https://jjw-story.github.io/2019/07/25/用户和用户组管理/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
                 <img src="/images/logo.png" alt="JJW">
@@ -282,7 +282,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和权限管理》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和用户组管理》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -292,7 +292,7 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和权限管理》 — JJW-STORY&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和用户组管理》 — JJW-STORY&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
@@ -302,7 +302,7 @@
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《用户和权限管理》 — JJW-STORY&url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&via=https://jjw-story.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《用户和用户组管理》 — JJW-STORY&url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&via=https://jjw-story.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -331,7 +331,7 @@
       
     <a href="/tags/command/" class="color3">command</a>
       
-    <a href="/tags/用户和权限管理/" class="color3">用户和权限管理</a>
+    <a href="/tags/用户和用户组管理/" class="color4">用户和用户组管理</a>
       
   </li>
 
@@ -418,7 +418,7 @@
             <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/Python/">Python</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a>
+            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和用户组管理/" style="font-size: 10px;">用户和用户组管理</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -451,7 +451,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a>
+            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和用户组管理/" style="font-size: 10px;">用户和用户组管理</a>
         </div>
     </div>
 </div>
