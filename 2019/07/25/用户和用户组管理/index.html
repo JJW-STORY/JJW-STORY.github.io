@@ -3,22 +3,22 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>用户和用户组管理 | JJW-STORY</title>
+  <title>用户和权限管理 | JJW-STORY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="JJW-STORY">
   
   <meta name="description" content="用户管理Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。 用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。 每个用户账号都拥有一个惟一的用户名和各自的口令，用户在登录时键入正确的用户名和口令后，就能够进入系统">
-<meta name="keywords" content="command,用户和用户组管理">
+<meta name="keywords" content="command,用户和权限管理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="用户和用户组管理">
+<meta property="og:title" content="用户和权限管理">
 <meta property="og:url" content="https://jjw-story.github.io/2019/07/25/用户和用户组管理/index.html">
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="用户管理Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。 用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。 每个用户账号都拥有一个惟一的用户名和各自的口令，用户在登录时键入正确的用户名和口令后，就能够进入系统">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-27T14:40:05.018Z">
+<meta property="og:updated_time" content="2019-07-27T06:08:31.650Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用户和用户组管理">
+<meta name="twitter:title" content="用户和权限管理">
 <meta name="twitter:description" content="用户管理Linux系统是一个多用户多任务的分时操作系统，任何一个要使用系统资源的用户，都必须首先向系统管理员申请一个账号，然后以这个账号的身份进入系统。 用户的账号一方面可以帮助系统管理员对使用系统的用户进行跟踪，并控制他们对系统资源的访问；另一方面也可以帮助用户组织文件，并为用户提供安全性保护。 每个用户账号都拥有一个惟一的用户名和各自的口令，用户在登录时键入正确的用户名和口令后，就能够进入系统">
   
   
@@ -117,7 +117,7 @@
         
   
     <h1 class="post-title" itemprop="name">
-      用户和用户组管理
+      用户和权限管理
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -222,10 +222,61 @@
 
 <h3 id="删除用户组"><a href="#删除用户组" class="headerlink" title="删除用户组"></a>删除用户组</h3><p>如果要删除一个已有的用户组，使用groupdel命令，使用方法：groupdel 用户组</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/# groupdel group2</span><br></pre></td></tr></table></figure>
+
+<h1 id="用户和用户组配置文件"><a href="#用户和用户组配置文件" class="headerlink" title="用户和用户组配置文件"></a>用户和用户组配置文件</h1><p>用户和用户组相关的配置文件主要有三个，/etc/passwd、/ect/shadow、/etc/group</p>
+<h2 id="passwd"><a href="#passwd" class="headerlink" title="passwd"></a>passwd</h2><p>文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 root:x:0:0:root:/root:/bin/bash</span><br><span class="line">2 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">3 bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">4 sys:x:3:3:sys:/dev:/usr/sbin/nologin</span><br><span class="line">...</span><br><span class="line">30 wangjia3:x:1000:1000:,,,:/home/wangjia3:/bin/bash</span><br><span class="line">31 user01:x:1001:1001::/home/user01:/bin/sh</span><br></pre></td></tr></table></figure>
+
+<p>我们发现此文件被分成了七个字段，下面分别解释每个字段的含义：</p>
+<ol>
+<li><p>用户名称字段，表示用户的名称，可以看到此文件最后的两行是我们之前新创建的用户</p>
+</li>
+<li><p>第二个字段表示此用户登录需要不需要密码验证，如果把这个 “x” 删除之后，我们发现登录用户将不需要验证</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:~$ su -l wangjia3</span><br><span class="line">Password:</span><br><span class="line">wangjia3@CHJ-20190520VPS:~$ su -l user01</span><br><span class="line">user01@CHJ-20190520VPS:/$</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><p>第三个字段是用户的uid字段，Linux并不是通过用户的名称来识别用户的，它是通过用户的id来识别用户，如果id重复了就会用最小id的用户使用</p>
+</li>
+<li><p>第四个字段是gid，是当前用户属于哪一个组的标识字段</p>
+</li>
+<li><p>第五个字段是注释</p>
+</li>
+<li><p>第六个字段表示用户的家目录的位置</p>
+</li>
+<li><p>用户登录后使用的命令解释器，现在所通用的命令解释器都是bash命令解释器。我们发现有很多第七个字段显示的是 /usr/sbin/nologin， 这里表示的是此用户是不能登录终端的，例如我们将user01用户的此字段修改为nologin：</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> 30 wangjia3:x:1000:1000:,,,:/home/wangjia3:/bin/bash</span><br><span class="line"> 31 user01:x:1001:1001::/home/user01:/usr/sbin/nologin</span><br><span class="line"></span><br><span class="line">root@CHJ-20190520VPS:~# su -l user01</span><br><span class="line">This account is currently not available.</span><br><span class="line">root@CHJ-20190520VPS:~#</span><br></pre></td></tr></table></figure>
+
+<p>切换用户失败，提示此账户不能登录</p>
+<p>我们可以直接在这里添加一行数据，来添加用户</p>
+<h2 id="shadow"><a href="#shadow" class="headerlink" title="shadow"></a>shadow</h2><p>shadow文件是保存用户和用户密码相关信息的，我们需要了解它的前两个字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">28 sshd:*:18037:0:99999:7:::</span><br><span class="line">29 pollinate:*:18037:0:99999:7:::</span><br><span class="line">30 wangjia3:$6$486gKZ88$cobO1oh/kuz4HwAmnpnb.OQtszzD78m0e.KvbbxcEbNfIA9/4cSKvU78iTMOgFL8FstKrk0hIQ/S16P/R5o6t.:18080:0:</span><br><span class="line">   99999:7:::</span><br><span class="line">31 user01:$6$Pe7lIEqi$28CGKQAIa3E4JvTvAZKeymjFgVY5HvGZXVg0RuUWetl2YTlgU5sLcMzRs6FZmJbnIvad3IeJO4bPXs082KqL10:18104:0:99    999:7:::</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>第一个字段是用户名称字段，用来和passwd字段来进行对应</p>
+</li>
+<li><p>是用户加密过的密码，加密的密码是以$开头，然后一串字符，这样主要是为了保护用户的密码，及时用户的密码是相同的，但是在此文件中的显示也是不同的，防止被破解</p>
+</li>
+</ol>
+<h2 id="group"><a href="#group" class="headerlink" title="group"></a>group</h2><p>和用户组相关的配置文件，里面包含四个字段：</p>
+<ol>
+<li><p>第一个字段是组的名称</p>
+</li>
+<li><p>第二个字段这个组是否需要密码验证</p>
+</li>
+<li><p>第三个字段表示这个组的gid</p>
+</li>
+<li><p>第四个字段，表示其他组字段，表示哪些用户属于其他组，这个其他组里面又包含了用户名称</p>
+</li>
+</ol>
+
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月27日 22:40</p>
-        <p>原始链接： <a class="post-url" href="/2019/07/25/用户和用户组管理/" title="用户和用户组管理">https://jjw-story.github.io/2019/07/25/用户和用户组管理/</a></p>
+        <p>最后更新： 2019年07月27日 14:08</p>
+        <p>原始链接： <a class="post-url" href="/2019/07/25/用户和用户组管理/" title="用户和权限管理">https://jjw-story.github.io/2019/07/25/用户和用户组管理/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
                 <img src="/images/logo.png" alt="JJW">
@@ -282,7 +333,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和用户组管理》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和权限管理》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -292,7 +343,7 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和用户组管理》 — JJW-STORY&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&title=《用户和权限管理》 — JJW-STORY&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
@@ -302,7 +353,7 @@
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《用户和用户组管理》 — JJW-STORY&url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&via=https://jjw-story.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《用户和权限管理》 — JJW-STORY&url=https://jjw-story.github.io/2019/07/25/用户和用户组管理/&via=https://jjw-story.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
@@ -331,7 +382,7 @@
       
     <a href="/tags/command/" class="color3">command</a>
       
-    <a href="/tags/用户和用户组管理/" class="color4">用户和用户组管理</a>
+    <a href="/tags/用户和权限管理/" class="color3">用户和权限管理</a>
       
   </li>
 
@@ -344,7 +395,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#用户管理"><span class="post-toc-text">用户管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用户管理常用命令"><span class="post-toc-text">用户管理常用命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#用户添加命令"><span class="post-toc-text">用户添加命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为用户设置密码"><span class="post-toc-text">为用户设置密码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删除用户"><span class="post-toc-text">删除用户</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#修改账号"><span class="post-toc-text">修改账号</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#用户组管理"><span class="post-toc-text">用户组管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用户组管理命令"><span class="post-toc-text">用户组管理命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#新建用户组"><span class="post-toc-text">新建用户组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#修改用户组"><span class="post-toc-text">修改用户组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删除用户组"><span class="post-toc-text">删除用户组</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#用户管理"><span class="post-toc-text">用户管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用户管理常用命令"><span class="post-toc-text">用户管理常用命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#用户添加命令"><span class="post-toc-text">用户添加命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为用户设置密码"><span class="post-toc-text">为用户设置密码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删除用户"><span class="post-toc-text">删除用户</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#修改账号"><span class="post-toc-text">修改账号</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#用户组管理"><span class="post-toc-text">用户组管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#用户组管理命令"><span class="post-toc-text">用户组管理命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#新建用户组"><span class="post-toc-text">新建用户组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#修改用户组"><span class="post-toc-text">修改用户组</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删除用户组"><span class="post-toc-text">删除用户组</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#用户和用户组配置文件"><span class="post-toc-text">用户和用户组配置文件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#passwd"><span class="post-toc-text">passwd</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#shadow"><span class="post-toc-text">shadow</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#group"><span class="post-toc-text">group</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
@@ -418,7 +469,7 @@
             <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/Python/">Python</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和用户组管理/" style="font-size: 10px;">用户和用户组管理</a>
+            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -451,7 +502,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和用户组管理/" style="font-size: 10px;">用户和用户组管理</a>
+            <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a>
         </div>
     </div>
 </div>
