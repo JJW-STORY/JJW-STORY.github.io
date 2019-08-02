@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="su命令Linux su命令用于变更为其他使用者的身份，除 root 外，需要键入该使用者的密码 使用方法：su [选项] [用户名称] 选项说明 -f    不必读启动档（如 csh.cshrc 等），仅用于 csh 或 tcsh  -c    既command，变更为帐号为指定账号的使用者并执行指定指令（command）后再变回原来使用者，使用方法：su -c [指定命令] 用户名称  -m">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-01T12:47:40.889Z">
+<meta property="og:updated_time" content="2019-07-27T04:15:12.298Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="su-sudo命令">
 <meta name="twitter:description" content="su命令Linux su命令用于变更为其他使用者的身份，除 root 外，需要键入该使用者的密码 使用方法：su [选项] [用户名称] 选项说明 -f    不必读启动档（如 csh.cshrc 等），仅用于 csh 或 tcsh  -c    既command，变更为帐号为指定账号的使用者并执行指定指令（command）后再变回原来使用者，使用方法：su -c [指定命令] 用户名称  -m">
@@ -191,10 +191,40 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:~$ pwd</span><br><span class="line">/home/wangjia3</span><br><span class="line">wangjia3@CHJ-20190520VPS:~$ sudo -s</span><br><span class="line">root@CHJ-20190520VPS:~# pwd</span><br><span class="line">/home/wangjia3</span><br><span class="line">root@CHJ-20190520VPS:~# sudo -i</span><br><span class="line">root@CHJ-20190520VPS:~# pwd</span><br><span class="line">/root</span><br></pre></td></tr></table></figure>
 
 <p>注意 -s 和 -i 的区别</p>
+<h2 id="sudo命令使用补充"><a href="#sudo命令使用补充" class="headerlink" title="sudo命令使用补充"></a>sudo命令使用补充</h2><p>通常我们使用普通用户使用一些命令是没有权限的，在使用这些没有权限的命令时需要切换到root用户，这样就需要告知普通用户root用户的密码，这样做是不安全的</p>
+<p>例如我们执行shutdown命令时：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[frog@iZm5ehzqow4ijp2ya2g2drZ ~]$ shutdown -h 60</span><br><span class="line">shutdown: Need to be root</span><br></pre></td></tr></table></figure>
+
+<p>显示需要使用root用户来操作此命令</p>
+<p>这时我们可以使用visudo来修改sudo的配置文件，将此命令的使用权限赋给普通用户，来让普通用户有权限使用此命令，就可以不将root用户的密码告知与普通用户，安全的使用系统</p>
+<p>visudo的使用时以vi开头的，其实就类似于使用 vi 打开了一个文件，使用操作与 vi 一致</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ /]# visudo</span><br><span class="line"></span><br><span class="line">## Sudoers allows particular users to run various commands as</span><br><span class="line">## the root user, without needing the root password.</span><br><span class="line">##</span><br><span class="line">## Examples are provided at the bottom of the file for collections</span><br><span class="line">...</span><br><span class="line">##      user    MACHINE=COMMANDS</span><br><span class="line">##</span><br><span class="line">## The COMMANDS section may have other options added to it.</span><br><span class="line">##</span><br><span class="line">## Allow root to run any commands anywhere</span><br><span class="line">root    ALL=(ALL)       ALL</span><br><span class="line"></span><br><span class="line">## Allows members of the &apos;sys&apos; group to run networking, software,</span><br><span class="line">## service management apps and more.</span><br><span class="line"># %sys ALL = NETWORKING, SOFTWARE, SERVICES, STORAGE, DELEGATING, PROCESSES, LOCATE, DRIVERS</span><br><span class="line"></span><br><span class="line">## Allows people in group wheel to run all commands</span><br><span class="line"># %wheel        ALL=(ALL)       ALL</span><br><span class="line"></span><br><span class="line">## Same thing without a password</span><br><span class="line"># %wheel        ALL=(ALL)       NOPASSWD: ALL</span><br><span class="line"></span><br><span class="line">## Allows members of the users group to mount and unmount the</span><br><span class="line">## cdrom as root</span><br><span class="line"># %users  ALL=/sbin/mount /mnt/cdrom, /sbin/umount /mnt/cdrom</span><br><span class="line"></span><br><span class="line">## Allows members of the users group to shutdown this system</span><br><span class="line"># %users  localhost=/sbin/shutdown -h now</span><br><span class="line"></span><br><span class="line">## Read drop-in files from /etc/sudoers.d (the # here does not mean a comment)</span><br></pre></td></tr></table></figure>
+
+<p>注意此文件最下方有几段关于使用sudo的设置说明，下面是设置说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## Allows people in group wheel to run all commands</span><br><span class="line"># %wheel        ALL=(ALL)       ALL</span><br><span class="line"></span><br><span class="line">## Same thing without a password</span><br><span class="line"># %wheel        ALL=(ALL)       NOPASSWD: ALL</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>%wheel</strong>    表示的是如果我们要设置的是用户组，则需要用 % 加上用户组名称，如果只是单个用户，就直接写用户名即可</p>
+</li>
+<li><p><strong>ALL=(ALL)</strong> 表示在哪台主机上可以执行哪些命令，哪来主机指的是我们登陆的主机，Linux可以在本地登陆，也可以远程登陆，如果在本地登陆那么主机就是localhost，locachost是字符端登陆，如果是字符或远程都去登陆，就赋予 ALL 的权限。</p>
+</li>
+</ul>
+<p>如果只赋予一些命令，如上述中：# %users  localhost=/sbin/shutdown -h now，意思是赋予了用户shutdown -h now 的命令的使用权限</p>
+<p>如果有多条命令，就将命令用 “,” 隔开，例如上述段落中示例：%users  ALL=/sbin/mount /mnt/cdrom, /sbin/umount /mnt/cdrom，表示赋予了用户mount、unmount命令</p>
+<ul>
+<li><strong>NOPASSWD: ALL</strong> 表示普通用户在使用管理员账户赋予它的这些命令时是否需要输入密码，这里 NOPASSWD: ALL 表示不需要输入密码，但是这种是不安全的，所以我们不建议此种设置类型</li>
+</ul>
+<h2 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h2><p>我们现在配置普通用户 frog 被赋予使用 shutdown -h 60 的权限，使用visudo来设置，修改如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">## Read drop-in files from /etc/sudoers.d (the # here does not mean a comment)</span><br><span class="line">#includedir /etc/sudoers.d</span><br><span class="line">forg ALL=/sbin/shutdown -h 60</span><br></pre></td></tr></table></figure>
+
+<p>修改完成然后切换到frog用户执行此命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ /]# su -l frog</span><br><span class="line">[frog@iZm5ehzqow4ijp2ya2g2drZ ~]$ shutdown -h 60</span><br><span class="line">shutdown: Need to be root</span><br><span class="line">[frog@iZm5ehzqow4ijp2ya2g2drZ ~]$ sudo /sbin/shutdown -h 60</span><br><span class="line">[sudo] password for frog:</span><br><span class="line"></span><br><span class="line">Broadcast message from root@iZm5ehzqow4ijp2ya2g2drZ</span><br><span class="line">	(/dev/pts/1) at 12:14 ...</span><br><span class="line"></span><br><span class="line">The system is going down for halt in 60 minutes!</span><br></pre></td></tr></table></figure>
+
+<p>注意：直接执行还是会告诉你没有权限，我们需要使用sudo命令来执行root赋予权限的命令，需要使用命令的全路径，然后提示输入密码之后就执行成功啦</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年08月01日 20:47</p>
+        <p>最后更新： 2019年07月27日 12:15</p>
         <p>原始链接： <a class="post-url" href="/2019/07/27/su-sudo命令/" title="su-sudo命令">https://jjw-story.github.io/2019/07/27/su-sudo命令/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -314,7 +344,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#su命令"><span class="post-toc-text">su命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#选项说明"><span class="post-toc-text">选项说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#sudo命令"><span class="post-toc-text">sudo命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参数说明"><span class="post-toc-text">参数说明</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#su命令"><span class="post-toc-text">su命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#选项说明"><span class="post-toc-text">选项说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#sudo命令"><span class="post-toc-text">sudo命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#参数说明"><span class="post-toc-text">参数说明</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#sudo命令使用补充"><span class="post-toc-text">sudo命令使用补充</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用示例"><span class="post-toc-text">使用示例</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
