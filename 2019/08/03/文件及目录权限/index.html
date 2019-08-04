@@ -3,23 +3,23 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>文本查看命令 | JJW-STORY</title>
+  <title>文件及目录权限 | JJW-STORY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="JJW-STORY">
   
-  <meta name="description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
-<meta name="keywords" content="command,文本查看命令">
+  <meta name="description" content="文件及目录权限的表示方法当我们使用 ls -l 命令查看详细文件内容时，可以看到查询出的内容如下： 123456789root@CHJ-20190520VPS:/usr/lib# ls -ltotal 920drwxr-xr-x 1 root root   4096 May 21 22:39 kerneldrwxr-xr-x 1 root root   4096 May 21 22:39 klib">
+<meta name="keywords" content="command,文件及目录权限">
 <meta property="og:type" content="article">
-<meta property="og:title" content="文本查看命令">
-<meta property="og:url" content="https://jjw-story.github.io/2019/07/15/文本查看命令/index.html">
+<meta property="og:title" content="文件及目录权限">
+<meta property="og:url" content="https://jjw-story.github.io/2019/08/03/文件及目录权限/index.html">
 <meta property="og:site_name" content="JJW-STORY">
-<meta property="og:description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
+<meta property="og:description" content="文件及目录权限的表示方法当我们使用 ls -l 命令查看详细文件内容时，可以看到查询出的内容如下： 123456789root@CHJ-20190520VPS:/usr/lib# ls -ltotal 920drwxr-xr-x 1 root root   4096 May 21 22:39 kerneldrwxr-xr-x 1 root root   4096 May 21 22:39 klib">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-14T06:58:51.714Z">
+<meta property="og:updated_time" content="2019-08-04T12:36:13.750Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="文本查看命令">
-<meta name="twitter:description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
+<meta name="twitter:title" content="文件及目录权限">
+<meta name="twitter:description" content="文件及目录权限的表示方法当我们使用 ls -l 命令查看详细文件内容时，可以看到查询出的内容如下： 123456789root@CHJ-20190520VPS:/usr/lib# ls -ltotal 920drwxr-xr-x 1 root root   4096 May 21 22:39 kerneldrwxr-xr-x 1 root root   4096 May 21 22:39 klib">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,14 +110,14 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-文本查看命令" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-文件及目录权限" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      文本查看命令
+      文件及目录权限
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -130,7 +130,7 @@
               </li>
           
         <li>
-          <i class="fa fa-calendar"></i>  2019-07-15
+          <i class="fa fa-calendar"></i>  2019-08-03
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -146,74 +146,57 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h1 id="文本查看命令"><a href="#文本查看命令" class="headerlink" title="文本查看命令"></a>文本查看命令</h1><h2 id="cat命令"><a href="#cat命令" class="headerlink" title="cat命令"></a>cat命令</h2><p>显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端</p>
-<p>使用方法：cat [参数] 文件</p>
-<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>显示的文本的行编号</p>
-<p><strong>-e</strong></p>
-<p>显示行结束符号$</p>
-<p>示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# cat -n -E testtext</span><br><span class="line">     1  sdf$</span><br><span class="line">     2  $</span><br><span class="line">     3  sd$</span><br><span class="line">     4  f$</span><br><span class="line">     5  ds$</span><br></pre></td></tr></table></figure>
+            <h1 id="文件及目录权限的表示方法"><a href="#文件及目录权限的表示方法" class="headerlink" title="文件及目录权限的表示方法"></a>文件及目录权限的表示方法</h1><p>当我们使用 ls -l 命令查看详细文件内容时，可以看到查询出的内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/usr/lib# ls -l</span><br><span class="line">total 920</span><br><span class="line">drwxr-xr-x 1 root root   4096 May 21 22:39 kernel</span><br><span class="line">drwxr-xr-x 1 root root   4096 May 21 22:39 klibc</span><br><span class="line">drwxr-xr-x 1 root root   4096 May 21 22:40 language-selector</span><br><span class="line">lrwxrwxrwx 1 root root     21 Feb 12 16:55 libDeployPkg.so.0 -&gt; libDeployPkg.so.0.0.0</span><br><span class="line">-rw-r--r-- 1 root root  31280 Feb 12 16:55 libDeployPkg.so.0.0.0</span><br><span class="line">lrwxrwxrwx 1 root root     20 Feb 12 16:55 libguestlib.so.0 -&gt; libguestlib.so.0.0.0</span><br><span class="line">-rw-r--r-- 1 root root  22656 Feb 12 16:55 libguestlib.so.0.0.0</span><br></pre></td></tr></table></figure>
 
-<h2 id="head命令"><a href="#head命令" class="headerlink" title="head命令"></a>head命令</h2><p>查看文件的开头的内容，默认显示文件开头的前十行</p>
-<p>使用方法：head [参数] 文件</p>
-<h3 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>注意：n 表示行数，意为查看文件的前n行内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# head -3 testtext</span><br><span class="line">sdf</span><br><span class="line"></span><br><span class="line">sd</span><br></pre></td></tr></table></figure>
-
-<h2 id="tail命令"><a href="#tail命令" class="headerlink" title="tail命令"></a>tail命令</h2><p>查看文件的末尾的内容，默认显示文件末的后十行</p>
-<p>使用方法：tail [参数] 文件</p>
-<h3 id="参数说明-2"><a href="#参数说明-2" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>注意：n 表示行数，意为查看文件的后n行内容</p>
-<p><strong>-f</strong></p>
-<p>循环读取文本信息，此命令一般用于文件内容在不断变化的文本查看，一般在查看服务器日志内容时使用</p>
-<p>当我们看到文件在一直滚动循环查看，想要停止的时候，使用 ctrl + c命令，退出循环查看，即可停止来具体查看</p>
-<h2 id="wc命令"><a href="#wc命令" class="headerlink" title="wc命令"></a>wc命令</h2><p>wc(Word Count)命令的功能为统计指定文件中的字节数、字数、行数，并将统计结果显示输出。</p>
-<h3 id="参数说明-3"><a href="#参数说明-3" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-l</strong></p>
-<p>统计文本文件的内容行数，一般我们在使用文本查看命令时，不清粗应该使用哪种命令来查看，可以使用此命令来查看文本的行数，然后选择要使用的文本查看命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# wc -l testtext</span><br><span class="line">206 testtext</span><br></pre></td></tr></table></figure>
-
-<p><strong>-c</strong></p>
-<p>统计字节数</p>
-<p><strong>-m</strong></p>
-<p>统计字符数。这个标志不能与 -c 标志一起使用</p>
-<p><strong>-w</strong></p>
-<p>统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串</p>
-<p><strong>-L</strong></p>
-<p>打印最长行的长度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# wc -L testtext</span><br><span class="line">7 testtext</span><br></pre></td></tr></table></figure>
-
-<h2 id="more命令"><a href="#more命令" class="headerlink" title="more命令"></a>more命令</h2><p>分页显示文件内容，还支持直接跳转行等功能，最大的特点是查看每一页文本内容下方都会显示当前当前查看的文本内容所在位置百分比</p>
-<p>使用方法：more 文件名</p>
-<h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><ol>
-<li>Space：显示文本下一屏内容</li>
-<li>Enter：只显示文本下一行内容</li>
-<li>b：显示文本上一屏内容</li>
-<li>q：退出</li>
+<p>一共查询出七列内容，分别表示：</p>
+<p>文件属性(占10个字符空间)、拥有的文件数量、文件的创建者、所属的group、文件大小、建档日期、文件名</p>
+<h2 id="文件属性"><a href="#文件属性" class="headerlink" title="文件属性"></a>文件属性</h2><p>Linux的文件基本上分为三个属性：可读（r），可写（w），可执行（x）</p>
+<p>但是这里有十个格子可以填（具体程序实现时，实际上是十个bit位）</p>
+<h3 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h3><p>第一个小格是特殊表示格，表示目录或连结文件等等</p>
+<ol>
+<li><p><strong>d</strong>    表示目录，这个是在创建下来文件的类型就固定了下来，不可以人为进行更改</p>
+</li>
+<li><p><strong>l</strong>    表示链接文件，类似于快捷方式</p>
+</li>
+<li><p><strong>-</strong>    表示这是普通文件</p>
+</li>
+<li><p><strong>b</strong>    块特殊文件，其实是指的是设备，比如我们插入一个移动硬盘，插入一个硬盘之后，Linux系统就会把他当成一个特出文件块文件来表示</p>
+</li>
+<li><p><strong>c</strong>    字符特殊文件，就是终端</p>
+</li>
+<li><p><strong>f</strong>    命名管道</p>
+</li>
+<li><p><strong>s</strong>    套接字文件</p>
+</li>
 </ol>
-<h2 id="less命令"><a href="#less命令" class="headerlink" title="less命令"></a>less命令</h2><p>分页显示文件内容，操作比more更为详细</p>
-<p>使用方法：less [参数] 文件名</p>
-<h3 id="参数说明-4"><a href="#参数说明-4" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-m</strong></p>
-<p>显示类似more命令的百分比</p>
-<p><strong>-N</strong></p>
-<p>注意这里是大写N，显示每行的行号</p>
-<h3 id="具体操作-1"><a href="#具体操作-1" class="headerlink" title="具体操作"></a>具体操作</h3><ol>
-<li>Space：显示文本下一屏内容</li>
-<li>b：显示文本上一屏内容</li>
-<li>Enter：前进一行</li>
-<li>v：后退一行</li>
-<li>d：前进半页</li>
-<li>u：后退半页</li>
-<li>/字符串 向下搜索</li>
-<li>?字符串 向上搜索</li>
-<li>左右方向键 相当于水平滚动条</li>
-<li>q键：退出</li>
+<h3 id="文件权限表示方法"><a href="#文件权限表示方法" class="headerlink" title="文件权限表示方法"></a>文件权限表示方法</h3><p>字符权限表示方法：</p>
+<ol>
+<li><p><strong>r</strong>    读</p>
+</li>
+<li><p><strong>w</strong>    写</p>
+</li>
+<li><p><strong>x</strong>    执行</p>
+</li>
 </ol>
+<p>数字权限的表示方法（8进制数字表示）：</p>
+<ol>
+<li><p><strong>r=4</strong></p>
+</li>
+<li><p><strong>w=2</strong></p>
+</li>
+<li><p><strong>x=1</strong></p>
+</li>
+</ol>
+<p>其余剩下的格子就以每3格为一个单位，因为Linux是多用户多任务系统，所以一个文件可能同时被许多人使用，所以我们一定要设好每个文件的权限，其文件的权限位置排列顺序是（以-rwxr-xr-x为例）：</p>
+<p>　　rwx(Owner)r-x(Group)r-x(Other)</p>
+<p>这个例子表示的权限是：使用者自己可读，可写，可执行；同一组的用户可读，不可写，可执行；其它用户可读，不可写，可执行。</p>
+<p>另外，有一些程序属性的执行部分不是X,而是S,这表示执行这个程序的使用者，临时可以有和拥有者一样权力的身份来执行该程序。一般出现在系统管理之类的指令或程序，让使用者执行时，拥有root身份。</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月14日 14:58</p>
-        <p>原始链接： <a class="post-url" href="/2019/07/15/文本查看命令/" title="文本查看命令">https://jjw-story.github.io/2019/07/15/文本查看命令/</a></p>
+        <p>最后更新： 2019年08月04日 20:36</p>
+        <p>原始链接： <a class="post-url" href="/2019/08/03/文件及目录权限/" title="文件及目录权限">https://jjw-story.github.io/2019/08/03/文件及目录权限/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
                 <img src="/images/logo.png" alt="JJW">
@@ -270,7 +253,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/07/15/文本查看命令/&title=《文本查看命令》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/08/03/文件及目录权限/&title=《文件及目录权限》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -280,22 +263,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/07/15/文本查看命令/&title=《文本查看命令》 — JJW-STORY&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/08/03/文件及目录权限/&title=《文件及目录权限》 — JJW-STORY&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/07/15/文本查看命令/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/08/03/文件及目录权限/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《文本查看命令》 — JJW-STORY&url=https://jjw-story.github.io/2019/07/15/文本查看命令/&via=https://jjw-story.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《文件及目录权限》 — JJW-STORY&url=https://jjw-story.github.io/2019/08/03/文件及目录权限/&via=https://jjw-story.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/07/15/文本查看命令/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/08/03/文件及目录权限/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -305,7 +288,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/07/15/文本查看命令/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/08/03/文件及目录权限/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -319,7 +302,7 @@
       
     <a href="/tags/command/" class="color3">command</a>
       
-    <a href="/tags/文本查看命令/" class="color2">文本查看命令</a>
+    <a href="/tags/文件及目录权限/" class="color3">文件及目录权限</a>
       
   </li>
 
@@ -332,26 +315,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文本查看命令"><span class="post-toc-text">文本查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cat命令"><span class="post-toc-text">cat命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#head命令"><span class="post-toc-text">head命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-1"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#tail命令"><span class="post-toc-text">tail命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-2"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#wc命令"><span class="post-toc-text">wc命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-3"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#more命令"><span class="post-toc-text">more命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#具体操作"><span class="post-toc-text">具体操作</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#less命令"><span class="post-toc-text">less命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-4"><span class="post-toc-text">参数说明</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#具体操作-1"><span class="post-toc-text">具体操作</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件及目录权限的表示方法"><span class="post-toc-text">文件及目录权限的表示方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件属性"><span class="post-toc-text">文件属性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件类型"><span class="post-toc-text">文件类型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件权限表示方法"><span class="post-toc-text">文件权限表示方法</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2019/07/17/打包压缩与解压缩/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          打包压缩与解压缩
-        
-      </span>
-    </a>
   
-  
-    <a href="/2019/07/11/文件管理命令/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">文件管理命令</span>
+    <a href="/2019/07/27/su-sudo命令/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">su-sudo命令</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
