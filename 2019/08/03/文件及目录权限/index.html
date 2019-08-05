@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="文件及目录权限的表示方法当我们使用 ls -l 命令查看详细文件内容时，可以看到查询出的内容如下： 123456789root@CHJ-20190520VPS:/usr/lib# ls -ltotal 920drwxr-xr-x 1 root root   4096 May 21 22:39 kerneldrwxr-xr-x 1 root root   4096 May 21 22:39 klib">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-04T12:36:13.750Z">
+<meta property="og:updated_time" content="2019-08-05T11:47:06.403Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件及目录权限">
 <meta name="twitter:description" content="文件及目录权限的表示方法当我们使用 ls -l 命令查看详细文件内容时，可以看到查询出的内容如下： 123456789root@CHJ-20190520VPS:/usr/lib# ls -ltotal 920drwxr-xr-x 1 root root   4096 May 21 22:39 kerneldrwxr-xr-x 1 root root   4096 May 21 22:39 klib">
@@ -192,10 +192,27 @@
 <p>　　rwx(Owner)r-x(Group)r-x(Other)</p>
 <p>这个例子表示的权限是：使用者自己可读，可写，可执行；同一组的用户可读，不可写，可执行；其它用户可读，不可写，可执行。</p>
 <p>另外，有一些程序属性的执行部分不是X,而是S,这表示执行这个程序的使用者，临时可以有和拥有者一样权力的身份来执行该程序。一般出现在系统管理之类的指令或程序，让使用者执行时，拥有root身份。</p>
+<h1 id="文件权限的修改"><a href="#文件权限的修改" class="headerlink" title="文件权限的修改"></a>文件权限的修改</h1><h2 id="修改权限命令"><a href="#修改权限命令" class="headerlink" title="修改权限命令"></a>修改权限命令</h2><h3 id="chown命令"><a href="#chown命令" class="headerlink" title="chown命令"></a>chown命令</h3><p>修改属主或数组命令，使用方法：</p>
+<ol>
+<li><p>修改属主：chown 用户名称 文件名称</p>
+</li>
+<li><p>修改属组：chown :用户组名称 文件名称</p>
+</li>
+</ol>
+<p>修改文件、目录权限。Linux/Unix 的文件调用权限分为三级 : 文件拥有者、群组、其他。利用 chmod 可以藉以控制文件如何被他人所调用</p>
+<p>首先我们新创建一个目录，查看root用户新创建目录的默认权限，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# ls -ld testdir/</span><br><span class="line">drwxr-xr-x 1 root root 4096 Jul 27 15:05 testdir/</span><br></pre></td></tr></table></figure>
+
+<p>表示文件的属主是root用户，root用户可以读写删除等，所属用户组不能删除，其他其他用户不能删除</p>
+<p>这里我们需要了解，Linux权限限制是非root用户的，这里既是我们将文件或目录的权限给root修改了，但是root用户还是不受限制的</p>
+<p>所以为了方便测试我们不要用root用户来操作，命令使用示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 修改属主</span><br><span class="line">root@CHJ-20190520VPS:/tmp# chown wangjia3 testdir</span><br><span class="line">root@CHJ-20190520VPS:/tmp# ls -ld testdir</span><br><span class="line">drwxr-xr-x 1 wangjia3 root 4096 Jul 27 15:05 testdir</span><br><span class="line"></span><br><span class="line"># 修改属组</span><br><span class="line">root@CHJ-20190520VPS:/tmp# groupadd group01</span><br><span class="line">root@CHJ-20190520VPS:/tmp# chown :group01 testdir</span><br><span class="line">root@CHJ-20190520VPS:/tmp# ls -ld testdir</span><br><span class="line">drwxr-xr-x 1 wangjia3 group01 4096 Jul 27 15:05 testdir</span><br><span class="line"></span><br><span class="line"># 属主属组一起修改</span><br><span class="line">root@CHJ-20190520VPS:/tmp# chown wangjia3:group01 testdir/</span><br><span class="line">root@CHJ-20190520VPS:/tmp# ls -ld testdir/</span><br><span class="line">drwxr-xr-x 1 wangjia3 group01 4096 Aug  3 12:35 testdir/</span><br></pre></td></tr></table></figure>
+
+<p>可以看到文件的属主和属组已经改变</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年08月04日 20:36</p>
+        <p>最后更新： 2019年08月05日 19:47</p>
         <p>原始链接： <a class="post-url" href="/2019/08/03/文件及目录权限/" title="文件及目录权限">https://jjw-story.github.io/2019/08/03/文件及目录权限/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -315,7 +332,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件及目录权限的表示方法"><span class="post-toc-text">文件及目录权限的表示方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件属性"><span class="post-toc-text">文件属性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件类型"><span class="post-toc-text">文件类型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件权限表示方法"><span class="post-toc-text">文件权限表示方法</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件及目录权限的表示方法"><span class="post-toc-text">文件及目录权限的表示方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件属性"><span class="post-toc-text">文件属性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件类型"><span class="post-toc-text">文件类型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文件权限表示方法"><span class="post-toc-text">文件权限表示方法</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件权限的修改"><span class="post-toc-text">文件权限的修改</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#修改权限命令"><span class="post-toc-text">修改权限命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#chown命令"><span class="post-toc-text">chown命令</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     

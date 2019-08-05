@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="Djongo入门Djongo介绍Django是一个开放源代码的Web应用框架，由Python写成。采用了MTV的框架模式，即模型M，视图V和模版T。它最初是被开发来用于管理劳伦斯出版集团旗下的一些以新闻内容为主的网站的，即是CMS（内容管理系统）软件。并于2005年7月在BSD许可证下发布。这套框架是以比利时的吉普赛爵士吉他手Django Reinhardt来命名的。 Django是一个基于MVC">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-05T02:45:37.333Z">
+<meta property="og:updated_time" content="2019-08-05T09:23:05.959Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Django-01">
 <meta name="twitter:description" content="Djongo入门Djongo介绍Django是一个开放源代码的Web应用框架，由Python写成。采用了MTV的框架模式，即模型M，视图V和模版T。它最初是被开发来用于管理劳伦斯出版集团旗下的一些以新闻内容为主的网站的，即是CMS（内容管理系统）软件。并于2005年7月在BSD许可证下发布。这套框架是以比利时的吉普赛爵士吉他手Django Reinhardt来命名的。 Django是一个基于MVC">
@@ -170,20 +170,31 @@
 </tbody></table>
 <p>Django 框架的核心组件及设计哲学：</p>
 <ul>
-<li>对象关系映射 (ORM,object-relational mapping)：以Python类形式定义你的数据模型，ORM将模型与关系数据库连接起来，你将得到一个非常容易使用的数据库API，同时你也可以在Django中使用原始的SQL语句。</li>
-<li>URL 分派：使用正则表达式匹配URL，你可以设计任意的URL，没有框架的特定限定。像你喜欢的一样灵活。</li>
-<li>模版系统：使用Django强大而可扩展的模板语言，可以分隔设计、内容和Python代码。并且具有可继承性。</li>
-<li>表单处理：你可以方便的生成各种表单模型，实现表单的有效性检验。可以方便的从你定义的模型实例生成相应的表单。</li>
-<li>Cache系统：可以挂在内存缓冲或其它的框架实现超级缓冲 －－ 实现你所需要的粒度。</li>
-<li>会话(session)，用户登录与权限检查，快速开发用户会话功能。</li>
-<li>国际化：内置国际化系统，方便开发出多种语言的网站。</li>
-<li>自动化的管理界面：不需要你花大量的工作来创建人员管理和更新内容。Django自带一个ADMIN site,类似于内容管理系统</li>
+<li><p>对象关系映射 (ORM,object-relational mapping)：以Python类形式定义你的数据模型，ORM将模型与关系数据库连接起来，你将得到一个非常容易使用的数据库API，同时你也可以在Django中使用原始的SQL语句。</p>
+</li>
+<li><p>URL 分派：使用正则表达式匹配URL，你可以设计任意的URL，没有框架的特定限定。像你喜欢的一样灵活。</p>
+</li>
+<li><p>模版系统：使用Django强大而可扩展的模板语言，可以分隔设计、内容和Python代码。并且具有可继承性。</p>
+</li>
+<li><p>表单处理：你可以方便的生成各种表单模型，实现表单的有效性检验。可以方便的从你定义的模型实例生成相应的表单。</p>
+</li>
+<li><p>Cache系统：可以挂在内存缓冲或其它的框架实现超级缓冲 －－ 实现你所需要的粒度。</p>
+</li>
+<li><p>会话(session)，用户登录与权限检查，快速开发用户会话功能。</p>
+</li>
+<li><p>国际化：内置国际化系统，方便开发出多种语言的网站。</p>
+</li>
+<li><p>自动化的管理界面：不需要你花大量的工作来创建人员管理和更新内容。Django自带一个ADMIN site,类似于内容管理系统</p>
+</li>
 </ul>
 <h2 id="Djongo安装"><a href="#Djongo安装" class="headerlink" title="Djongo安装"></a>Djongo安装</h2><p>Djongo安装分为三步：</p>
 <ol>
-<li>安装 Python</li>
-<li>安装 Python 虚拟环境</li>
-<li>安装 Django</li>
+<li><p>安装 Python</p>
+</li>
+<li><p>安装 Python 虚拟环境</p>
+</li>
+<li><p>安装 Django</p>
+</li>
 </ol>
 <ul>
 <li><p>第一步不在赘述，注意使用Python3及以上版本</p>
@@ -202,13 +213,20 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysite/</span><br><span class="line">    manage.py</span><br><span class="line">    mysite/</span><br><span class="line">        __init__.py</span><br><span class="line">        settings.py</span><br><span class="line">        urls.py</span><br><span class="line">        wsgi.py</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>外层的mysite/ 根目录是项目的容器。这个目录的名称对 Django 没有什么作用，你可以根据喜好重命名。</li>
-<li>manage.py 是一个命令行实用脚本，可以通过不同的方式与 Django 项目交互。</li>
-<li>内部的mysite/ 目录是项目的 Python 包。导入这里面的内容时要使用目录的名称（如mysite.urls）。</li>
-<li>mysite/init.py 是一个空文件，目的是让 Python 把这个目录识别为 Python 包。</li>
-<li>mysite/settings.py 是 Django 项目的设置/配置。</li>
-<li>mysite/urls.py 是 Django 项目的 URL 声明，即 Django 驱动的网站的“目录”。</li>
-<li>mysite/wsgi.py 是兼容 WSGI 的 Web 服务器的入口点，用于伺服项目。</li>
+<li><p>外层的mysite/ 根目录是项目的容器。这个目录的名称对 Django 没有什么作用，你可以根据喜好重命名。</p>
+</li>
+<li><p>manage.py 是一个命令行实用脚本，可以通过不同的方式与 Django 项目交互。</p>
+</li>
+<li><p>内部的mysite/ 目录是项目的 Python 包。导入这里面的内容时要使用目录的名称（如mysite.urls）。</p>
+</li>
+<li><p>mysite/init.py 是一个空文件，目的是让 Python 把这个目录识别为 Python 包。</p>
+</li>
+<li><p>mysite/settings.py 是 Django 项目的设置/配置。</p>
+</li>
+<li><p>mysite/urls.py 是 Django 项目的 URL 声明，即 Django 驱动的网站的“目录”。</p>
+</li>
+<li><p>mysite/wsgi.py 是兼容 WSGI 的 Web 服务器的入口点，用于伺服项目。</p>
+</li>
 </ul>
 <p>这里说明一下settings文件，这是整个项目的配置和设置，我们发现Djongo框架本身已经帮我们创建好了一些项目，这是为常见场景所做的约定，具体看INSTALLED_APPS的配置（这里打开项目为大家讲解一下此文件的配置内容）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Application definition</span><br><span class="line"># 注意：此处添加自己开发的应用</span><br><span class="line">INSTALLED_APPS = (</span><br><span class="line">    &apos;django.contrib.admin&apos;, # 管理后天</span><br><span class="line">    &apos;django.contrib.auth&apos;,  # 身份验证系统</span><br><span class="line">    &apos;django.contrib.contenttypes&apos;,  # 内容类型框架</span><br><span class="line">    &apos;django.contrib.sessions&apos;,  # 会话框架</span><br><span class="line">    &apos;django.contrib.messages&apos;,  # 消息框架</span><br><span class="line">    &apos;django.contrib.staticfiles&apos;,   # 管理静态文件的框架</span><br><span class="line">    &apos;cerealsOils&apos;,  # 自己开发的应用</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
@@ -227,34 +245,52 @@
 <p>找到匹配的模式之后，调用对应的视图函数，并把一个HttpRequest 对象作为第一个参数传给视图,视图函数必须返回一个HttpResponse 对象。</p>
 <p>随后，余下的工作交给 Django 处理：把那个 Python 对象转换成正确的 Web 响应，并且提供合适的 HTTP 首部和主体（即网页的内容）。综上：</p>
 <ol>
-<li>请求/hello/。</li>
-<li>Django 查看ROOT_URLCONF 设置，找到根 URL 配置。</li>
-<li>Django 比较 URL 配置中的各个 URL 模式，找到与/hello/ 匹配的那个。</li>
-<li>如果找到匹配的模式，调用对应的视图函数。</li>
-<li>视图函数返回一个HttpResponse 对象。</li>
-<li>Django 把HttpResponse 对象转换成正确的 HTTP 响应，得到网页。</li>
+<li><p>请求/hello/。</p>
+</li>
+<li><p>Django 查看ROOT_URLCONF 设置，找到根 URL 配置。</p>
+</li>
+<li><p>Django 比较 URL 配置中的各个 URL 模式，找到与/hello/ 匹配的那个。</p>
+</li>
+<li><p>如果找到匹配的模式，调用对应的视图函数。</p>
+</li>
+<li><p>视图函数返回一个HttpResponse 对象。</p>
+</li>
+<li><p>Django 把HttpResponse 对象转换成正确的 HTTP 响应，得到网页。</p>
+</li>
 </ol>
 <h1 id="Djongo模板"><a href="#Djongo模板" class="headerlink" title="Djongo模板"></a>Djongo模板</h1><p>Django 模板是一些文本字符串，作用是把文档的表现与数据区分开。模板定义一些占位符和基本的逻辑（模板标签），规定如何显示文档。通常，模板用于生成 HTML，不过 Django 模板可以生成任何基于文本的格式。</p>
 <h2 id="变量和模板标签"><a href="#变量和模板标签" class="headerlink" title="变量和模板标签"></a>变量和模板标签</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line">* &#123;&#123; xxx &#125;&#125;     指定变量的值插入这里</span><br><span class="line"></span><br><span class="line">* &#123;% xxx %&#125;     模板标签，基本模板标签有如下</span><br><span class="line"></span><br><span class="line">    # 逻辑判断标签</span><br><span class="line">    # 注意，此示例中使用了 if elif else and not or 等逻辑判断语句，与python保持一致</span><br><span class="line">    # if标签中不能包含括号，如果需要使用括号判断，必须写成嵌套 if 标签语句</span><br><span class="line">    &#123;% if a1 and a2 %&#125;</span><br><span class="line">        &lt;p&gt;a1为真并且a2为真，显示此内容&lt;/p&gt;</span><br><span class="line">    &#123;% elif not a3 %&#125;</span><br><span class="line">        &lt;p&gt; else if a3 为假，显示此内容，注意elif是可选标签&lt;/p&gt;</span><br><span class="line">    &#123;% elif a4 or not a5 %&#125;</span><br><span class="line">        &lt;p&gt; else if a4 为真，或者 a5 为假，显示此内容，注意elif是可选标签&lt;/p&gt;</span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">        &lt;p&gt; else显示此内容，注意else是可选标签&lt;/p&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # 迭代元素标签</span><br><span class="line">    # 正向迭代</span><br><span class="line">    &#123;% for item in item_list %&#125;</span><br><span class="line">        &lt;li&gt;&#123;&#123; item &#125;&#125;&lt;/li&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">    # 反向迭代</span><br><span class="line">    &#123;% for item in item_list reversed %&#125;</span><br><span class="line">        &lt;li&gt;&#123;&#123; item &#125;&#125;&lt;/li&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">    # 定义迭代列表为空的行为</span><br><span class="line">    &#123;% for item in item_list %&#125;</span><br><span class="line">        &lt;p&gt;&#123;&#123; item &#125;&#125;&lt;/p&gt;</span><br><span class="line">    &#123;% empty %&#125;</span><br><span class="line">        &lt;p&gt;此处定义要迭代的元素为空的行为&lt;/p&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">    # 获取迭代当前元素索引</span><br><span class="line">    &#123;% for item in item_list %&#125;</span><br><span class="line">        &lt;p&gt;&#123;&#123; forloop.counter &#125;&#125;: forloop.counter表示当前元素索引&lt;/p&gt;</span><br><span class="line">        &lt;p&gt;&#123;&#123; forloop.revcounter &#125;&#125;: forloop.revcounter表示剩余元素数量&lt;/p&gt;</span><br><span class="line">        &#123;% if forloop.first %&#125;</span><br><span class="line">           &lt;p&gt;forloop.first返回的是boolean，表示是否第一个元素&lt;/p&gt;</span><br><span class="line">        &#123;% elif forloop.last %&#125;</span><br><span class="line">            &lt;p&gt;forloop.last返回的也是boolean，表示是否最后一个元素&lt;/p&gt;</span><br><span class="line">        &#123;% endif %&#125;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # 比较值相等标签</span><br><span class="line">    &#123;% ifequal A B %&#125;</span><br><span class="line">        &lt;h1&gt;A 的值和 B 的值相等!&lt;/h1&gt;</span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">        &lt;h1&gt;A 的值和 B 的值不相等!&lt;/h1&gt;</span><br><span class="line">    &#123;% endifequal %&#125;</span><br><span class="line"></span><br><span class="line">    # 比较值不相等标签</span><br><span class="line">    &#123;% ifnotequal A &apos;JJW&apos; %&#125;</span><br><span class="line">        &lt;h1&gt;A 的值不等于JJW!&lt;/h1&gt;</span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">        &lt;h1&gt;A 的值等于JJW!&lt;/h1&gt;</span><br><span class="line">    &#123;% endifnotequal %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # 模板注释</span><br><span class="line">    # 单行注释</span><br><span class="line">    &#123;# 这里是一个注释 #&#125;</span><br><span class="line"></span><br><span class="line">    # 多行注释，comment标签</span><br><span class="line">    &#123;% comment %&#125;</span><br><span class="line">        第一行注释</span><br><span class="line">        第二行注释</span><br><span class="line">    &#123;% endcomment %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # 过滤器</span><br><span class="line">    # 模板过滤器是在显示变量之前调整变量值的简单方式</span><br><span class="line">    # 把文本转换成小写，然后再显示</span><br><span class="line">    &#123;&#123; name|lower &#125;&#125;</span><br><span class="line"></span><br><span class="line">    # 获取列表中的第一个元素，然后将其转换成大写</span><br><span class="line">    &#123;&#123; my_list|first|upper &#125;&#125;</span><br><span class="line"></span><br><span class="line">    # 显示bio 变量的前 30 个词</span><br><span class="line">    &#123;&#123; bio|truncatewords:&quot;30&quot; &#125;&#125;</span><br><span class="line"></span><br><span class="line">    # 在反斜线、单引号和双引号前面添加一个反斜线。可用于转义字符串</span><br><span class="line">    &#123;&#123; value|addslashes &#125;&#125;</span><br><span class="line"></span><br><span class="line">    # 返回值长度，如果是列表，返回列表元素个数</span><br><span class="line">    &#123;&#123; name|length &#125;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # include 模板标签</span><br><span class="line">    这个标签的作用是引入另一个模板的内容。它的参数是要引入的模板的名称，可以是变量，也可以是硬编码的字符串（放在引号里，单双引号都行）</span><br><span class="line"></span><br><span class="line">    &#123;% include &apos;nav.html&apos; %&#125;</span><br><span class="line">    &#123;% include &quot;nav.html&quot; %&#125;</span><br><span class="line"></span><br><span class="line">    # 以下是使用示例</span><br><span class="line">    &lt;html&gt;</span><br><span class="line">        &lt;body&gt;</span><br><span class="line">            &#123;% include &quot;includes/nav.html&quot; %&#125;</span><br><span class="line">            &lt;h1&gt;&#123;&#123; title &#125;&#125;&lt;/h1&gt;</span><br><span class="line">        &lt;/body&gt;</span><br><span class="line">    &lt;/html&gt;</span><br><span class="line"></span><br><span class="line">    # includes/nav.html</span><br><span class="line">    &lt;div id=&quot;nav&quot;&gt;</span><br><span class="line">        You are in: &#123;&#123; current_section &#125;&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # 模板继承</span><br><span class="line">    # 模板继承是指创建一个基底“骨架”模板，包含网站的所有通用部分，并且定义一些“块”，让子模板覆盖。</span><br><span class="line"></span><br><span class="line">    # 首先定义一个基地模板</span><br><span class="line">    # &#123;% block xxx %&#125;&#123;% endblock %&#125; 表示此标签内容可以被子模板重写</span><br><span class="line">    &lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">        &lt;head&gt;</span><br><span class="line">            &lt;title&gt;&#123;% block title %&#125;&#123;% endblock %&#125;&lt;/title&gt;</span><br><span class="line">        &lt;/head&gt;</span><br><span class="line">        &lt;body&gt;</span><br><span class="line">            &lt;h1&gt;My helpful timestamp site&lt;/h1&gt;</span><br><span class="line">            &#123;% block content %&#125;&#123;% endblock %&#125;</span><br><span class="line">            &#123;% block footer %&#125;</span><br><span class="line">                &lt;hr&gt;</span><br><span class="line">                &lt;p&gt;Thanks for visiting my site.&lt;/p&gt;</span><br><span class="line">            &#123;% endblock %&#125;</span><br><span class="line">        &lt;/body&gt;</span><br><span class="line">    &lt;/html&gt;</span><br><span class="line"></span><br><span class="line">    # 然后定义子模板</span><br><span class="line">    # 子模板需要继承父模板 &#123;% extends &quot;base.html&quot; %&#125;</span><br><span class="line">    # 重写依然要使用 &#123;% block xxx %&#125;&#123;% endblock %&#125; 标签</span><br><span class="line">    &#123;% extends &quot;base.html&quot; %&#125;</span><br><span class="line">    &#123;% block title %&#125;Future time&#123;% endblock %&#125;</span><br><span class="line">    &#123;% block content %&#125;</span><br><span class="line">        &lt;p&gt;</span><br><span class="line">        In &#123;&#123; hour_offset &#125;&#125; hour(s), it will be &#123;&#123; next_time &#125;&#125;.</span><br><span class="line">        &lt;/p&gt;</span><br><span class="line">    &#123;% endblock %&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="使用模板系统"><a href="#使用模板系统" class="headerlink" title="使用模板系统"></a>使用模板系统</h2><p>Django 系统经过配置后可以使用一个或多个模板引擎（如果不用模板，那就不用配置）。Django 自带了一个内置的后端，用于支持自身的模板引擎，即 Django Template Language（DTL），若想在 Python 代码中使用 Django 的模板系统，基本方式如下：</p>
 <ol>
-<li>以字符串形式提供原始的模板代码，创建Template 对象。</li>
-<li>在Template 对象上调用render() 方法，传入一系列变量（上下文）。返回的是完全渲染模板后得到的字符串，模板中的变量和模板标签已经根据上下文求出值了。</li>
+<li><p>以字符串形式提供原始的模板代码，创建Template 对象。</p>
+</li>
+<li><p>在Template 对象上调用render() 方法，传入一系列变量（上下文）。返回的是完全渲染模板后得到的字符串，模板中的变量和模板标签已经根据上下文求出值了。</p>
+</li>
 </ol>
 <p>以上步骤我们都可以使用一个函数来完成，那就是render()函数，render() 的第一个参数是请求对象，第二个参数是模板名称，第三个参数可选，是一个字段，用于创建传给模板的上下文。如果不指定第三个参数，render() 使用一个空字典，具体使用如下介绍。</p>
 <h3 id="模板目录及模板加载"><a href="#模板目录及模板加载" class="headerlink" title="模板目录及模板加载"></a>模板目录及模板加载</h3><p>为了从文件系统中加载模板，Django 提供了便利而强大的 API，力求去掉模板加载调用和模板自身的冗余。若想使用这个模板加载 API，首先要告诉框架模板的存储位置。这个位置在设置文件中配置，打开settings.py 文件，找到TEMPLATES 设置。它的值是一个列表，分别针对各个模板引擎：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATES = [</span><br><span class="line">    &#123;</span><br><span class="line">        # BACKEND 的值是一个点分 Python 路径，指向实现 Django 模板后端 API 的模板引擎类</span><br><span class="line">        &apos;BACKEND&apos;: &apos;django.template.backends.django.DjangoTemplates&apos;,</span><br><span class="line"></span><br><span class="line">        #  DIRS 定义一个目录列表，模板引擎按顺序在里面查找模板源文件。</span><br><span class="line">        # 当前设置表示在项目根目录中放一些主模板，模板目录不一定非得叫&apos;templates&apos;，可以自定义</span><br><span class="line">        &apos;DIRS&apos;: [os.path.join(BASE_DIR, &apos;templates&apos;)],</span><br><span class="line"></span><br><span class="line">        # 去应用所在位置查找模板，APPS_DIRS 设为True 时，DjangoTemplates 会在INSTALLED_APPS 中的各个应用里查找名为“templates”的子目录。这样，即使DIRS 为空，模板引擎还能查找应用模板。</span><br><span class="line">        &apos;APP_DIRS&apos;: True,</span><br><span class="line"></span><br><span class="line">        # OPTIONS 是一些针对后端的设置</span><br><span class="line">        &apos;OPTIONS&apos;: &#123;</span><br><span class="line">            # 默认的处理器上下文</span><br><span class="line">            &apos;context_processors&apos;: [</span><br><span class="line">                &apos;django.template.context_processors.debug&apos;,</span><br><span class="line">                &apos;django.template.context_processors.request&apos;,</span><br><span class="line">                &apos;django.contrib.auth.context_processors.auth&apos;,</span><br><span class="line">                &apos;django.contrib.messages.context_processors.messages&apos;,</span><br><span class="line">            ],</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
-<h4 id="查找模板逻辑"><a href="#查找模板逻辑" class="headerlink" title="查找模板逻辑"></a>查找模板逻辑</h4><p>• 如果APP_DIRS 的值是True，而且使用 DTL，在当前应用中查找“templates”目录。<br>• 如果在当前应用中没找到模板，把传给它的模板名称添加到DIRS 中的各个目录后面，按顺序在各个目录中查找。假如DIRS 的第一个元素是’/home/django/mysite/templates’，调用查找的模板是/home/django/mysite/templates/current_datetime.html。<br>• 找不到指定名称对应的模板，抛出TemplateDoesNotExist 异常。</p>
+<h4 id="查找模板逻辑"><a href="#查找模板逻辑" class="headerlink" title="查找模板逻辑"></a>查找模板逻辑</h4><ul>
+<li><p>如果APP_DIRS 的值是True，而且使用 DTL，在当前应用中查找“templates”目录。</p>
+</li>
+<li><p>如果在当前应用中没找到模板，把传给它的模板名称添加到DIRS 中的各个目录后面，按顺序在各个目录中查找。假如DIRS 的第一个元素是’/home/django/mysite/templates’，调用查找的模板是/home/django/mysite/templates/current_datetime.html。</p>
+</li>
+<li><p>找不到指定名称对应的模板，抛出TemplateDoesNotExist 异常。</p>
+</li>
+</ul>
 <h4 id="使用示例及说明"><a href="#使用示例及说明" class="headerlink" title="使用示例及说明"></a>使用示例及说明</h4><p>视图函数如下定义：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from django.shortcuts import render</span><br><span class="line">import datetime</span><br><span class="line"></span><br><span class="line">def currentDatetime(request):</span><br><span class="line">    now = datetime.datetime.now()</span><br><span class="line">    return render(request, &apos;test/current_datetime.html&apos;, &#123;&apos;current_date&apos;: now&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>通过以上示例我们发现：</p>
 <ul>
-<li>不用再导入get_template、Template、Context 或HttpResponse 了，而要导入django.shortcuts.render</li>
-<li>import datetime 不变。</li>
-<li>在current_datetime 函数中，仍然要计算now，不过加载模板、创建上下文、渲染模板和创建HttpResponse对象全由render() 调用代替了。render() 的返回值是一个HttpResponse 对象，因此在视图中可以直接返回那个值。</li>
+<li><p>不用再导入get_template、Template、Context 或HttpResponse 了，而要导入django.shortcuts.render</p>
+</li>
+<li><p>import datetime 不变。</p>
+</li>
+<li><p>在current_datetime 函数中，仍然要计算now，不过加载模板、创建上下文、渲染模板和创建HttpResponse对象全由render() 调用代替了。render() 的返回值是一个HttpResponse 对象，因此在视图中可以直接返回那个值。</p>
+</li>
 </ul>
 <p>注意上述我们还使用了模板子目录：test/current_datetime.html，表示去根目录下寻找templates目录下的test目录，找到模板。</p>
 <h1 id="Djongo模型"><a href="#Djongo模型" class="headerlink" title="Djongo模型"></a>Djongo模型</h1><p>Django 非常适合构建数据库驱动型网站，它提供了简单而强大的工具，易于使用 Python 执行数据库查询，本章就说明这个功能，即 Django 的数据库层。</p>
@@ -263,21 +299,28 @@
 
 <h2 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h2><p>下面说明项目和应用的区别：</p>
 <ul>
-<li>一个项目是一系列 Django 应用的实例，外加那些应用的配置。严格来说，一个项目唯一需要的是一个设定文件，定义数据库连接信息、安装的应用列表、DIRS，等等。</li>
-<li>一个应用是一系列便携的 Django 功能，通常包含模型和视图。打包在一个 Python 包里。Django 自带了一些应用，例如管理后台。这些应用的独特之处是便携，可以在多个项目中复用。</li>
+<li><p>一个项目是一系列 Django 应用的实例，外加那些应用的配置。严格来说，一个项目唯一需要的是一个设定文件，定义数据库连接信息、安装的应用列表、DIRS，等等。</p>
+</li>
+<li><p>一个应用是一系列便携的 Django 功能，通常包含模型和视图。打包在一个 Python 包里。Django 自带了一些应用，例如管理后台。这些应用的独特之处是便携，可以在多个项目中复用。</p>
+</li>
 </ul>
 <p>在项目目录，注意是项目目录，使用如下命令创建新的应用，并指定自定义应用名称：python manage.py startapp 应用名称。</p>
 <p>Django 通过模型在背后执行 SQL，返回便利的 Python 数据结构，表示数据库表中的行。Django 还通过模型表示 SQL 无法处理的高层级概念，这么做的好处如下：</p>
 <ul>
-<li>内省（introspection）有开销，而且不完美。为了提供便利的数据访问 API，Django 需要以某种方式知晓数据库布局，而这一需求有两种实现方式。第一种是使用Python 明确描述数据，第二种是在运行时内省数据库，推知数据模型。第二种方式在一个地方存储表的元数据，看似更简单，其实会导致几个问题。首先，运行时内省数据库肯定有消耗。如果每次执行请求，或者只是初始化 Web 服务器都要内省数据库，那带来的消耗是无法接受的，其次，有些数据库，尤其是旧版 MySQL，存储的元数据不足以完成内省。</li>
-<li>Python 编写起来让人心情舒畅，而且使用 Python 编写所有代码无需频繁让大脑切换情境。在一个编程环境（思维）中待久了，有助于提升效率。在 SQL 和 Python 之间换来换去容易打断状态。</li>
-<li>把数据模型保存在代码中比保存在数据库中易于做版本控制，易于跟踪数据布局的变化。</li>
-<li>SQL 对数据布局的元数据只有部分支持。例如，多数数据库系统没有提供专门表示电子邮件地址或URL 的数据类型。而 Django 模型有。高层级的数据结构有助于提升效率，让代码更便于复用。</li>
-<li>不同数据库平台使用的 SQL 不一致。</li>
+<li><p>内省（introspection）有开销，而且不完美。为了提供便利的数据访问 API，Django 需要以某种方式知晓数据库布局，而这一需求有两种实现方式。第一种是使用Python 明确描述数据，第二种是在运行时内省数据库，推知数据模型。第二种方式在一个地方存储表的元数据，看似更简单，其实会导致几个问题。首先，运行时内省数据库肯定有消耗。如果每次执行请求，或者只是初始化 Web 服务器都要内省数据库，那带来的消耗是无法接受的，其次，有些数据库，尤其是旧版 MySQL，存储的元数据不足以完成内省。</p>
+</li>
+<li><p>Python 编写起来让人心情舒畅，而且使用 Python 编写所有代码无需频繁让大脑切换情境。在一个编程环境（思维）中待久了，有助于提升效率。在 SQL 和 Python 之间换来换去容易打断状态。</p>
+</li>
+<li><p>把数据模型保存在代码中比保存在数据库中易于做版本控制，易于跟踪数据布局的变化。</p>
+</li>
+<li><p>SQL 对数据布局的元数据只有部分支持。例如，多数数据库系统没有提供专门表示电子邮件地址或URL 的数据类型。而 Django 模型有。高层级的数据结构有助于提升效率，让代码更便于复用。</p>
+</li>
+<li><p>不同数据库平台使用的 SQL 不一致。</p>
+</li>
 </ul>
 <p>分发 Web 应用程序时，更务实的做法是分发一个描述数据布局的 Python 模块，而不是分别针对MySQL、PostgreSQL 和 SQLite 的CREATE TABLE 语句。</p>
 <h3 id="创建自己的模型"><a href="#创建自己的模型" class="headerlink" title="创建自己的模型"></a>创建自己的模型</h3><p>在我们新创建的应用的models.py文件中，添加自己定义的模型，如下：</p>
-<p>让 Django 具有基本的数据访问能力只需编写这些代码。一般，一个模型对应于一个数据库表，模型中的各个属性分别对应于数据库表中的一列。属性的名称对应于列的名称，字段的类型（如CharField）对应于数据库列的类型（如varchar</p>
+<p>让 Django 具有基本的数据访问能力只需编写这些代码。一般，一个模型对应于一个数据库表，模型中的各个属性分别对应于数据库表中的一列。属性的名称对应于列的名称，字段的类型（如CharField）对应于数据库列的类型(如varchar)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># 厂家</span><br><span class="line">class Manufacturers(models.Model):</span><br><span class="line">    name = models.CharField(max_length=30)</span><br><span class="line">    address = models.CharField(max_length=50)</span><br><span class="line">    city = models.CharField(max_length=60)</span><br><span class="line">    province = models.CharField(max_length=30)</span><br><span class="line">    website = models.URLField(blank=True, null=True, verbose_name=&apos;网址&apos;) # 表单允许为空    修改数据库结构，表示字段可为空</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return u&apos;%s&apos; % (self.name)</span><br><span class="line"></span><br><span class="line"># 经销商</span><br><span class="line">class Vender(models.Model):</span><br><span class="line">    name = models.CharField(max_length=30)</span><br><span class="line">    address = models.CharField(max_length=50)</span><br><span class="line">    city = models.CharField(max_length=60)</span><br><span class="line">    province = models.CharField(max_length=30)</span><br><span class="line">    telephone = models.CharField(max_length=20)</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return u&apos;%s %s %s %s %s&apos; % (self.name, self.address, self.city, self.province, self.telephone)</span><br><span class="line"></span><br><span class="line"># 产品</span><br><span class="line">class Product(models.Model):</span><br><span class="line">    title = models.CharField(max_length=100)</span><br><span class="line">    vender = models.ManyToManyField(Vender) # 多对多关系</span><br><span class="line">    manufacturers = models.ForeignKey(Manufacturers)    # 一对多</span><br><span class="line">    product_date = models.DateField()</span><br><span class="line">    # fields = (&apos;title&apos;, &apos;product_date&apos;, &apos;vender&apos;, &apos;manufacturers&apos;)</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return u&apos;%s %s&apos; % (self.title, self.product_date)</span><br><span class="line"></span><br><span class="line">    # 任何模型都可以使用Meta 类指定多个针对所在模型的选项。</span><br><span class="line">    class Meta:</span><br><span class="line">        ordering = [&apos;product_date&apos;]</span><br></pre></td></tr></table></figure>
 
 <p>注意：多对多关系，在上述示例模型中，Django 会创建一个额外的表，一个多对多联结表（join table），处理Product与Vender之间的对应关系。</p>
@@ -285,16 +328,20 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># Application definition</span><br><span class="line"># 注意：此处添加自己开发的应用</span><br><span class="line">INSTALLED_APPS = (</span><br><span class="line">    &apos;django.contrib.admin&apos;, # 管理后台</span><br><span class="line">    &apos;django.contrib.auth&apos;,  # 身份验证系统</span><br><span class="line">    &apos;django.contrib.contenttypes&apos;,  # 内容类型框架</span><br><span class="line">    &apos;django.contrib.sessions&apos;,  # 会话框架</span><br><span class="line">    &apos;django.contrib.messages&apos;,  # 消息框架</span><br><span class="line">    &apos;django.contrib.staticfiles&apos;,   # 管理静态文件的框架</span><br><span class="line"></span><br><span class="line">    &apos;cerealsOils&apos;,  # 自己开发的应用</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <p>注册好后就可以验证和安装模型：</p>
-<p>验证模型使用命令：<strong>python manage.py check</strong> check 命令运行 Django 系统检查框架，即验证 Django 项目的一系列静态检查。如果一切正常，你将看到这<br>个消息：System check identified no issues (0 silenced)，不然会抛出出错位置的异常</p>
+<p>验证模型使用命令：<strong>python manage.py check</strong> check 命令运行 Django 系统检查框架，即验证 Django 项目的一系列静态检查。如果一切正常，你将看到这个消息：System check identified no issues (0 silenced)，不然会抛出出错位置的异常</p>
 <p>安装模型使用命令：<strong>python manage.py makemigrations cerealsOils</strong>，这样我们就安装好了模型，并根据模型定义创建好了数据库表</p>
 <p>查看建表语句可以执行命令：<strong>python manage.py sqlmigrate cerealsOils 0001</strong>，这样建表语句就会输出出来</p>
 <h1 id="Djongo后台管理"><a href="#Djongo后台管理" class="headerlink" title="Djongo后台管理"></a>Djongo后台管理</h1><p>对多数现代的网站而言，管理界面是基础设施的重要组成部分。这是一个 Web 界面，限制只让授信的网站管理员访问，用于添加、编辑和删除网站内容。常见的示例有：发布博客的界面，网站管理人员审核用户评论的后端，客户用来更新新闻稿的工具。<br>不过，管理界面有个问题：构建起来繁琐。构建面向公众的功能时，Web 开发是有趣的，但是管理界面一成不变，要验证用户身份、显示并处理表单、验证输入，等等。这个过程无趣、乏味。<br>在 Django 中，构建管理界面不算个事， Django 为我们自动生成的管理界面，了解它为模型提供的便利界面，以及可以使用的其他功能。</p>
 <h2 id="使用管理后台"><a href="#使用管理后台" class="headerlink" title="使用管理后台"></a>使用管理后台</h2><p>之前创建项目时我们执行了<strong>django-admin startproject mysite</strong>命令时，Django 为我们创建并配置了默认的管理后台。我们只需创建一个管理员用户（超级用户），就可以登录管理后台。</p>
 <ol>
-<li>创建管理用户：<strong>python manage.py createsuperuser</strong></li>
-<li>输入要创建的用户：Username: admin</li>
-<li>输入邮箱地址：Email address: <a href="mailto:admin@example.com" target="_blank" rel="noopener">admin@example.com</a></li>
-<li>输入用户密码，需要输入两次确认：Password: <strong><strong>**</strong></strong></li>
+<li><p>创建管理用户：<strong>python manage.py createsuperuser</strong></p>
+</li>
+<li><p>输入要创建的用户：Username: admin</p>
+</li>
+<li><p>输入邮箱地址：Email address: <a href="mailto:admin@example.com" target="_blank" rel="noopener">admin@example.com</a></p>
+</li>
+<li><p>输入用户密码，需要输入两次确认：Password: <strong><strong>**</strong></strong></p>
+</li>
 </ol>
 <p>启动服务器，访问ttp://127.0.0.1:8000/admin/就可以进入登录页面，登录后具体操作就可以被看懂了，这里不再赘述，可以启动项目为大家演示一下。</p>
 <h2 id="将我们创建的模型添加至后台管理"><a href="#将我们创建的模型添加至后台管理" class="headerlink" title="将我们创建的模型添加至后台管理"></a>将我们创建的模型添加至后台管理</h2><p>在我们新创建的项目目录下创建admin.py文件，并添加如下代码，这样就将我们创建的模型添加至了后天管理系统：</p>
@@ -310,7 +357,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年08月05日 10:45</p>
+        <p>最后更新： 2019年08月05日 17:23</p>
         <p>原始链接： <a class="post-url" href="/2019/08/04/Django-01/" title="Django-01">https://jjw-story.github.io/2019/08/04/Django-01/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
