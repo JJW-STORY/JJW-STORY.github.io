@@ -3,23 +3,23 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>文本查看命令 | JJW-STORY</title>
+  <title>网络状态查看 | JJW-STORY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="JJW-STORY">
   
-  <meta name="description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
-<meta name="keywords" content="command,文本查看命令">
+  <meta name="description" content="网络状态查看网络状态查看我们列举两套工具包，一套是net-tools，一套是iproute或者有时候也叫iproute2 使用两套工具的作用是，在CentOS7以前，我们一般使用的都是net-tools工具包，而在CentOS7以后，主推的使用iproute工具包 ifconfig查看网络状态既网卡状态，使用方法：ifconfig [网卡名称] 注意网卡名称是可选的，管理用户直接输入命令，普通用户">
+<meta name="keywords" content="command,网络管理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="文本查看命令">
-<meta property="og:url" content="https://jjw-story.github.io/2019/07/15/文本查看命令/index.html">
+<meta property="og:title" content="网络状态查看">
+<meta property="og:url" content="https://jjw-story.github.io/2019/08/08/网络状态查看/index.html">
 <meta property="og:site_name" content="JJW-STORY">
-<meta property="og:description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
+<meta property="og:description" content="网络状态查看网络状态查看我们列举两套工具包，一套是net-tools，一套是iproute或者有时候也叫iproute2 使用两套工具的作用是，在CentOS7以前，我们一般使用的都是net-tools工具包，而在CentOS7以后，主推的使用iproute工具包 ifconfig查看网络状态既网卡状态，使用方法：ifconfig [网卡名称] 注意网卡名称是可选的，管理用户直接输入命令，普通用户">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-14T06:58:51.714Z">
+<meta property="og:updated_time" content="2019-08-12T12:36:42.144Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="文本查看命令">
-<meta name="twitter:description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
+<meta name="twitter:title" content="网络状态查看">
+<meta name="twitter:description" content="网络状态查看网络状态查看我们列举两套工具包，一套是net-tools，一套是iproute或者有时候也叫iproute2 使用两套工具的作用是，在CentOS7以前，我们一般使用的都是net-tools工具包，而在CentOS7以后，主推的使用iproute工具包 ifconfig查看网络状态既网卡状态，使用方法：ifconfig [网卡名称] 注意网卡名称是可选的，管理用户直接输入命令，普通用户">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,14 +110,14 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-文本查看命令" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-网络状态查看" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      文本查看命令
+      网络状态查看
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -130,7 +130,7 @@
               </li>
           
         <li>
-          <i class="fa fa-calendar"></i>  2019-07-15
+          <i class="fa fa-calendar"></i>  2019-08-08
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -146,74 +146,33 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h1 id="文本查看命令"><a href="#文本查看命令" class="headerlink" title="文本查看命令"></a>文本查看命令</h1><h2 id="cat命令"><a href="#cat命令" class="headerlink" title="cat命令"></a>cat命令</h2><p>显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端</p>
-<p>使用方法：cat [参数] 文件</p>
-<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>显示的文本的行编号</p>
-<p><strong>-e</strong></p>
-<p>显示行结束符号$</p>
-<p>示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# cat -n -E testtext</span><br><span class="line">     1  sdf$</span><br><span class="line">     2  $</span><br><span class="line">     3  sd$</span><br><span class="line">     4  f$</span><br><span class="line">     5  ds$</span><br></pre></td></tr></table></figure>
-
-<h2 id="head命令"><a href="#head命令" class="headerlink" title="head命令"></a>head命令</h2><p>查看文件的开头的内容，默认显示文件开头的前十行</p>
-<p>使用方法：head [参数] 文件</p>
-<h3 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>注意：n 表示行数，意为查看文件的前n行内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# head -3 testtext</span><br><span class="line">sdf</span><br><span class="line"></span><br><span class="line">sd</span><br></pre></td></tr></table></figure>
-
-<h2 id="tail命令"><a href="#tail命令" class="headerlink" title="tail命令"></a>tail命令</h2><p>查看文件的末尾的内容，默认显示文件末的后十行</p>
-<p>使用方法：tail [参数] 文件</p>
-<h3 id="参数说明-2"><a href="#参数说明-2" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>注意：n 表示行数，意为查看文件的后n行内容</p>
-<p><strong>-f</strong></p>
-<p>循环读取文本信息，此命令一般用于文件内容在不断变化的文本查看，一般在查看服务器日志内容时使用</p>
-<p>当我们看到文件在一直滚动循环查看，想要停止的时候，使用 ctrl + c命令，退出循环查看，即可停止来具体查看</p>
-<h2 id="wc命令"><a href="#wc命令" class="headerlink" title="wc命令"></a>wc命令</h2><p>wc(Word Count)命令的功能为统计指定文件中的字节数、字数、行数，并将统计结果显示输出。</p>
-<h3 id="参数说明-3"><a href="#参数说明-3" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-l</strong></p>
-<p>统计文本文件的内容行数，一般我们在使用文本查看命令时，不清粗应该使用哪种命令来查看，可以使用此命令来查看文本的行数，然后选择要使用的文本查看命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# wc -l testtext</span><br><span class="line">206 testtext</span><br></pre></td></tr></table></figure>
-
-<p><strong>-c</strong></p>
-<p>统计字节数</p>
-<p><strong>-m</strong></p>
-<p>统计字符数。这个标志不能与 -c 标志一起使用</p>
-<p><strong>-w</strong></p>
-<p>统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串</p>
-<p><strong>-L</strong></p>
-<p>打印最长行的长度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# wc -L testtext</span><br><span class="line">7 testtext</span><br></pre></td></tr></table></figure>
-
-<h2 id="more命令"><a href="#more命令" class="headerlink" title="more命令"></a>more命令</h2><p>分页显示文件内容，还支持直接跳转行等功能，最大的特点是查看每一页文本内容下方都会显示当前当前查看的文本内容所在位置百分比</p>
-<p>使用方法：more 文件名</p>
-<h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><ol>
-<li>Space：显示文本下一屏内容</li>
-<li>Enter：只显示文本下一行内容</li>
-<li>b：显示文本上一屏内容</li>
-<li>q：退出</li>
+            <h1 id="网络状态查看"><a href="#网络状态查看" class="headerlink" title="网络状态查看"></a>网络状态查看</h1><p>网络状态查看我们列举两套工具包，一套是net-tools，一套是iproute或者有时候也叫iproute2</p>
+<p>使用两套工具的作用是，在CentOS7以前，我们一般使用的都是net-tools工具包，而在CentOS7以后，主推的使用iproute工具包</p>
+<h2 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h2><p>查看网络状态既网卡状态，使用方法：ifconfig [网卡名称]</p>
+<p>注意网卡名称是可选的，管理用户直接输入命令，普通用户需要 /sbin/ifconfig(注意普通用户需要加上命令的完整路径)</p>
+<p>一般使用此命令查询出来的结果中，会显示etho，第一块网卡的状态信息，这个名字是默认的，但是有可能我们查询出来不叫这个名字，这是因为在CentOS7中使用了一致性网络设备命名，它会先去检测我们的网卡，检测后具体命名如下：</p>
+<ol>
+<li><p><strong>en01</strong>     板载网卡</p>
+</li>
+<li><p><strong>ens33</strong>    PCI-E网卡</p>
+</li>
+<li><p><strong>enp0s3</strong>   无法获取物理信息的PCI-E网卡</p>
+</li>
+<li><p><strong>eth0</strong>     如果以上都获取不到，会使用此命名</p>
+</li>
 </ol>
-<h2 id="less命令"><a href="#less命令" class="headerlink" title="less命令"></a>less命令</h2><p>分页显示文件内容，操作比more更为详细</p>
-<p>使用方法：less [参数] 文件名</p>
-<h3 id="参数说明-4"><a href="#参数说明-4" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-m</strong></p>
-<p>显示类似more命令的百分比</p>
-<p><strong>-N</strong></p>
-<p>注意这里是大写N，显示每行的行号</p>
-<h3 id="具体操作-1"><a href="#具体操作-1" class="headerlink" title="具体操作"></a>具体操作</h3><ol>
-<li>Space：显示文本下一屏内容</li>
-<li>b：显示文本上一屏内容</li>
-<li>Enter：前进一行</li>
-<li>v：后退一行</li>
-<li>d：前进半页</li>
-<li>u：后退半页</li>
-<li>/字符串 向下搜索</li>
-<li>?字符串 向上搜索</li>
-<li>左右方向键 相当于水平滚动条</li>
-<li>q键：退出</li>
-</ol>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:~$ ifconfig</span><br><span class="line">eth3: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 172.31.34.113  netmask 255.255.255.240  broadcast 172.31.34.127</span><br><span class="line">        inet6 fe80::4c47:3429:b72c:5130  prefixlen 64  scopeid 0x0&lt;global&gt;</span><br><span class="line">        ether 7e:15:d8:27:73:38  (Ethernet)</span><br><span class="line">        RX packets 0  bytes 0 (0.0 B)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 0  bytes 0 (0.0 B)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br><span class="line"></span><br><span class="line">lo: flags=73&lt;UP,LOOPBACK,RUNNING&gt;  mtu 1500</span><br><span class="line">        inet 127.0.0.1  netmask 255.0.0.0</span><br><span class="line">        inet6 ::1  prefixlen 128  scopeid 0x0&lt;global&gt;</span><br><span class="line">        loop  (Local Loopback)</span><br><span class="line">        RX packets 0  bytes 0 (0.0 B)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 0  bytes 0 (0.0 B)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br></pre></td></tr></table></figure>
 
+<p>我们还可以使用命令：ifconfig 网卡名称 来查看指定网卡，例如我们只查看lo网卡的信息：</p>
+<p>以上查询结果我们需要关注的是：</p>
+<p>etho信息中的 inet选项，第一个参数addr是IP信息，Mask参数对应的是子网掩码，还要注意 有个 ether参数，它显示的是mac地址，RX、TX：发送数据包的个数及多少</p>
+<p>lo网卡信息中：lo网卡表示的是本地环回，它的地址永远是127.0.0.1，这个网卡的作用就是我们在自己本地搭建了一个服务，在我们访问自己主机服务的时候，就使用这个IP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:~$ ifconfig lo</span><br><span class="line">lo: flags=73&lt;UP,LOOPBACK,RUNNING&gt;  mtu 1500</span><br><span class="line">        inet 127.0.0.1  netmask 255.0.0.0</span><br><span class="line">        inet6 ::1  prefixlen 128  scopeid 0x0&lt;global&gt;</span><br><span class="line">        loop  (Local Loopback)</span><br><span class="line">        RX packets 0  bytes 0 (0.0 B)</span><br><span class="line">        RX errors 0  dropped 0  overruns 0  frame 0</span><br><span class="line">        TX packets 0  bytes 0 (0.0 B)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br></pre></td></tr></table></figure>
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月14日 14:58</p>
-        <p>原始链接： <a class="post-url" href="/2019/07/15/文本查看命令/" title="文本查看命令">https://jjw-story.github.io/2019/07/15/文本查看命令/</a></p>
+        <p>最后更新： 2019年08月12日 20:36</p>
+        <p>原始链接： <a class="post-url" href="/2019/08/08/网络状态查看/" title="网络状态查看">https://jjw-story.github.io/2019/08/08/网络状态查看/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
                 <img src="/images/logo.png" alt="JJW">
@@ -270,7 +229,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/07/15/文本查看命令/&title=《文本查看命令》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/08/08/网络状态查看/&title=《网络状态查看》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -280,22 +239,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/07/15/文本查看命令/&title=《文本查看命令》 — JJW-STORY&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/08/08/网络状态查看/&title=《网络状态查看》 — JJW-STORY&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/07/15/文本查看命令/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/08/08/网络状态查看/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《文本查看命令》 — JJW-STORY&url=https://jjw-story.github.io/2019/07/15/文本查看命令/&via=https://jjw-story.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《网络状态查看》 — JJW-STORY&url=https://jjw-story.github.io/2019/08/08/网络状态查看/&via=https://jjw-story.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/07/15/文本查看命令/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/08/08/网络状态查看/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -305,7 +264,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/07/15/文本查看命令/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/08/08/网络状态查看/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -319,7 +278,7 @@
       
     <a href="/tags/command/" class="color3">command</a>
       
-    <a href="/tags/文本查看命令/" class="color2">文本查看命令</a>
+    <a href="/tags/网络管理/" class="color5">网络管理</a>
       
   </li>
 
@@ -332,26 +291,26 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文本查看命令"><span class="post-toc-text">文本查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cat命令"><span class="post-toc-text">cat命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#head命令"><span class="post-toc-text">head命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-1"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#tail命令"><span class="post-toc-text">tail命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-2"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#wc命令"><span class="post-toc-text">wc命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-3"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#more命令"><span class="post-toc-text">more命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#具体操作"><span class="post-toc-text">具体操作</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#less命令"><span class="post-toc-text">less命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-4"><span class="post-toc-text">参数说明</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#具体操作-1"><span class="post-toc-text">具体操作</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#网络状态查看"><span class="post-toc-text">网络状态查看</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ifconfig"><span class="post-toc-text">ifconfig</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2019/07/17/打包压缩与解压缩/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/08/11/Djongo-03/" id="article-nav-newer" class="article-nav-link-wrap">
 
       <span class="article-nav-title">
         <i class="fa fa-hand-o-left" aria-hidden="true"></i>
         
-          打包压缩与解压缩
+          Djongo-03
         
       </span>
     </a>
   
   
-    <a href="/2019/07/11/文件管理命令/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">文件管理命令</span>
+    <a href="/2019/08/04/Django-01/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Django-01</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
