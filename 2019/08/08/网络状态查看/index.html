@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="网络状态查看网络状态查看我们列举两套工具包，一套是net-tools，一套是iproute或者有时候也叫iproute2 使用两套工具的作用是，在CentOS7以前，我们一般使用的都是net-tools工具包，而在CentOS7以后，主推的使用iproute工具包 ifconfig查看网络状态既网卡状态，使用方法：ifconfig [网卡名称] 注意网卡名称是可选的，管理用户直接输入命令，普通用户">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-08-14T11:36:29.109Z">
+<meta property="og:updated_time" content="2019-08-15T11:56:40.912Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络状态查看">
 <meta name="twitter:description" content="网络状态查看网络状态查看我们列举两套工具包，一套是net-tools，一套是iproute或者有时候也叫iproute2 使用两套工具的作用是，在CentOS7以前，我们一般使用的都是net-tools工具包，而在CentOS7以后，主推的使用iproute工具包 ifconfig查看网络状态既网卡状态，使用方法：ifconfig [网卡名称] 注意网卡名称是可选的，管理用户直接输入命令，普通用户">
@@ -213,10 +213,20 @@
 <td>eth0</td>
 </tr>
 </tbody></table>
+<h2 id="查看网卡物理连接情况"><a href="#查看网卡物理连接情况" class="headerlink" title="查看网卡物理连接情况"></a>查看网卡物理连接情况</h2><p>查看网卡物理连接情况，比如查看网线是否连接好，Windows可以直接通过图形界面来查看，Linux需要用过命令来查看</p>
+<p>mii-tool命令</p>
+<p>使用方法：mii-tool [网卡名称]</p>
+<p>注意CentOS7及以上使用此命令，网卡名称是必须要有的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/# mii-tool</span><br><span class="line">No interface specified</span><br><span class="line">usage: mii-tool [-VvRrwl] [-A media,... | -F media] [-p addr] &lt;interface ...&gt;</span><br><span class="line">       -V, --version               display version information</span><br><span class="line">       -v, --verbose               more verbose output</span><br><span class="line">       -R, --reset                 reset MII to poweron state</span><br><span class="line">       -r, --restart               restart autonegotiation</span><br><span class="line">       -w, --watch                 monitor for link status changes</span><br><span class="line">       -l, --log                   with -w, write events to syslog</span><br><span class="line">       -A, --advertise=media,...   advertise only specified media</span><br><span class="line">       -F, --force=media           force specified media technology</span><br><span class="line">       -p, --phy=addr              set PHY (MII address) to report</span><br><span class="line">media: 1000baseTx-HD, 1000baseTx-FD,</span><br><span class="line">       100baseT4, 100baseTx-FD, 100baseTx-HD,</span><br><span class="line">       10baseT-FD, 10baseT-HD,</span><br><span class="line">       (to advertise both HD and FD) 1000baseTx, 100baseTx, 10base</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用：ethtool命令</p>
+<p>使用方法：ethtool 网卡名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ etc]# ethtool eth0</span><br><span class="line">Settings for eth0:</span><br><span class="line">	Link detected: ye</span><br></pre></td></tr></table></figure>
+
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年08月14日 19:36</p>
+        <p>最后更新： 2019年08月15日 19:56</p>
         <p>原始链接： <a class="post-url" href="/2019/08/08/网络状态查看/" title="网络状态查看">https://jjw-story.github.io/2019/08/08/网络状态查看/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -336,7 +346,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#网络状态查看"><span class="post-toc-text">网络状态查看</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ifconfig"><span class="post-toc-text">ifconfig</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#修改网卡名称"><span class="post-toc-text">修改网卡名称</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#网络状态查看"><span class="post-toc-text">网络状态查看</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ifconfig"><span class="post-toc-text">ifconfig</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#修改网卡名称"><span class="post-toc-text">修改网卡名称</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#查看网卡物理连接情况"><span class="post-toc-text">查看网卡物理连接情况</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
@@ -354,8 +364,8 @@
     </a>
   
   
-    <a href="/2019/08/04/Django-01/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">Django-01</span>
+    <a href="/2019/08/04/Django-02/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Django-02</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
