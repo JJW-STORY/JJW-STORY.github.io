@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="网络故障排查命令ping命令Linux系统的ping命令是常用的网络命令，它通常用来测试与目标主机的连通性 使用方法：ping [参数] 主机IP或域名 参数详解： -q  不显示任何传送封包的信息，只显示最后的结果 -n  只输出数值 -R  记录路由过程 -c count  总次数 -i  时间间隔 -t  存活数值：设置存活数值TTL的大小 使用示例： 123456789wangjia3@C">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-09-03T11:45:59.915Z">
+<meta property="og:updated_time" content="2019-09-04T12:02:59.441Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络故障排除命令">
 <meta name="twitter:description" content="网络故障排查命令ping命令Linux系统的ping命令是常用的网络命令，它通常用来测试与目标主机的连通性 使用方法：ping [参数] 主机IP或域名 参数详解： -q  不显示任何传送封包的信息，只显示最后的结果 -n  只输出数值 -R  记录路由过程 -c count  总次数 -i  时间间隔 -t  存活数值：设置存活数值TTL的大小 使用示例： 123456789wangjia3@C">
@@ -150,9 +150,21 @@
 <p><strong>-t</strong>  存活数值：设置存活数值TTL的大小</p>
 <p>使用示例：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:~$ ping -c 3  192.168.1.1</span><br><span class="line">PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.</span><br><span class="line">64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=3.18 ms</span><br><span class="line">64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=3.14 ms</span><br><span class="line">64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=10.0 ms</span><br><span class="line"></span><br><span class="line">--- 192.168.1.1 ping statistics ---</span><br><span class="line">3 packets transmitted, 3 received, 0% packet loss, time 2002ms</span><br><span class="line">rtt min/avg/max/mdev = 3.147/5.445/10.007/3.226 ms</span><br></pre></td></tr></table></figure>
+
+<h2 id="traceroute命令"><a href="#traceroute命令" class="headerlink" title="traceroute命令"></a>traceroute命令</h2><p>命令用于显示数据包到主机间的路径，traceroute指令让你追踪网络数据包的路由途径，预设数据包大小是40Bytes，用户可另行设置</p>
+<p>使用方法：traceroute [参数] 主机IP或域名</p>
+<p>参数详解：</p>
+<p><strong>-m &lt;存活数值&gt;</strong> 设置检测数据包的最大存活数值TTL的大小</p>
+<p><strong>-n</strong> 直接使用IP地址而非主机名称</p>
+<p><strong>-v</strong> 详细显示指令的执行过程</p>
+<p><strong>-w &lt;超时秒数&gt;</strong> 设置等待远端主机回报的时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">traceroute to www.baidu.com (180.101.49.12), 30 hops max, 60 byte packets</span><br><span class="line"> 1  * * *</span><br><span class="line"> 2  11.219.5.13 (11.219.5.13)  6.841 ms 11.219.5.85 (11.219.5.85)  7.559 ms 11.219.4.85 (11.219.4.85)  6.439 ms</span><br><span class="line"> 3  * * *</span><br><span class="line"> 4  11.219.68.42 (11.219.68.42)  0.427 ms  0.436 ms 11.219.68.26 (11.219.68.26)  0.679 ms</span><br><span class="line"> 5  103.41.143.69 (103.41.143.69)  1.187 ms 103.52.86.106 (103.52.86.106)  1.045 ms 103.52.86.138 (103.52.86.138)  0.956 ms</span><br><span class="line"> 6  116.251.113.33 (116.251.113.33)  1.145 ms 116.251.113.37 (116.251.113.37)  1.447 ms 116.251.113.53 (116.251.113.53)  0.856 ms</span><br><span class="line"> 7  150.138.130.121 (150.138.130.121)  1.377 ms 150.138.132.129 (150.138.132.129)  0.939 ms 150.138.130.133 (150.138.130.133)  1.184 ms</span><br><span class="line"> 8  150.138.128.65 (150.138.128.65)  12.132 ms 150.138.128.173 (150.138.128.173)  17.526 ms  17.970 ms</span><br><span class="line"> 9  202.97.46.49 (202.97.46.49)  22.672 ms</span><br></pre></td></tr></table></figure>
+
+<p>显示的访问此主机中间经过的路由，中间路由对应的IP地址及它的延时是多长时间等等，注意如果不支持traceroute方式追踪，会以 * * * 的方式展示出来</p>
+
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年09月03日 19:45</p>
+        <p>最后更新： 2019年09月04日 20:02</p>
         <p>原始链接： <a class="post-url" href="/2019/09/03/网络故障排除命令/" title="网络故障排除命令">https://jjw-story.github.io/2019/09/03/网络故障排除命令/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -272,7 +284,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#网络故障排查命令"><span class="post-toc-text">网络故障排查命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ping命令"><span class="post-toc-text">ping命令</span></a></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#网络故障排查命令"><span class="post-toc-text">网络故障排查命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ping命令"><span class="post-toc-text">ping命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#traceroute命令"><span class="post-toc-text">traceroute命令</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
