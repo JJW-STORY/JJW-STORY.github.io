@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>进程管理 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="进程管理进程可以理解为程序正在运行的过程，管理的内容主要包括程序什么时候启动，程序运行的整个生命周期需要多少资源，包括需要多少内存资源，运行是需要多少CPU资源，运行结束是需要自己结束还是被其他程序结束的，还有程序运行时我们需要让他结束应该怎么让它结束等等 进程的概念及进程查看进程是运行中的程序，从程序开始运行到终止的整个生命周期是可管理的 C程序的启动时从main函数开始的，包括Java等，终止">
+<meta name="keywords" content="command,进程管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程管理">
+<meta property="og:url" content="https://jjw-story.github.io/2019/10/06/进程管理/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="进程管理进程可以理解为程序正在运行的过程，管理的内容主要包括程序什么时候启动，程序运行的整个生命周期需要多少资源，包括需要多少内存资源，运行是需要多少CPU资源，运行结束是需要自己结束还是被其他程序结束的，还有程序运行时我们需要让他结束应该怎么让它结束等等 进程的概念及进程查看进程是运行中的程序，从程序开始运行到终止的整个生命周期是可管理的 C程序的启动时从main函数开始的，包括Java等，终止">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-06T10:07:30.431Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进程管理">
+<meta name="twitter:description" content="进程管理进程可以理解为程序正在运行的过程，管理的内容主要包括程序什么时候启动，程序运行的整个生命周期需要多少资源，包括需要多少内存资源，运行是需要多少CPU资源，运行结束是需要自己结束还是被其他程序结束的，还有程序运行时我们需要让他结束应该怎么让它结束等等 进程的概念及进程查看进程是运行中的程序，从程序开始运行到终止的整个生命周期是可管理的 C程序的启动时从main函数开始的，包括Java等，终止">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-进程管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      进程管理
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Linux/">Linux</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-10-06
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h1><p>进程可以理解为程序正在运行的过程，管理的内容主要包括程序什么时候启动，程序运行的整个生命周期需要多少资源，包括需要多少内存资源，运行是需要多少CPU资源，运行结束是需要自己结束还是被其他程序结束的，还有程序运行时我们需要让他结束应该怎么让它结束等等</p>
+<h2 id="进程的概念及进程查看"><a href="#进程的概念及进程查看" class="headerlink" title="进程的概念及进程查看"></a>进程的概念及进程查看</h2><p>进程是运行中的程序，从程序开始运行到终止的整个生命周期是可管理的</p>
+<p>C程序的启动时从main函数开始的，包括Java等，终止的方式并不唯一，分为正常终止和异常终止：</p>
+<ol>
+<li>正常终止也分为从main返回，调用exit等方式</li>
+<li>异常终止分为调用abort、接收信号等。当程序获取不到资源比如内存、CPU资源等，会调用abort函数来终止程序</li>
+</ol>
+<h3 id="ps命令"><a href="#ps命令" class="headerlink" title="ps命令"></a>ps命令</h3><p>使用方法：ps [选项]</p>
+<p>单独使用ps命令，它只能查看到当前终端既当前shell下面能够查看到的进程状态，并不是真的只有这些进程在运行，如下只查看到两条:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ etc]# ps</span><br><span class="line">  PID TTY          TIME CMD</span><br><span class="line">27267 pts/0    00:00:00 bash</span><br><span class="line">27342 pts/0    00:00:00 ps</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>PID：表示进程在系统中运行的唯一表示，注意进程的名称是可以重复的，但是PID不能重复</p>
+</li>
+<li><p>TTY：表示执行当前进程的终端，那么当前执行是一个虚拟终端，所以叫 pts/0</p>
+</li>
+<li><p>TIME：程序的运行时间，此项不具有参考价值，可以不用关注</p>
+</li>
+<li><p>CMD：命令</p>
+</li>
+</ul>
+<h4 id="ps选项说明"><a href="#ps选项说明" class="headerlink" title="ps选项说明"></a>ps选项说明</h4><ul>
+<li><strong>-e</strong>    查看所有的进程，这样我们查出来的会非常多，我们可以通过 more 命令来进行分页查看，具体使用为：ps -e | more，这里主要是通过管道符，将管道符左边的输出传递给more，示例如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@iZm5ehzqow4ijp2ya2g2drZ etc]#  ps -e | more</span><br><span class="line">  PID TTY          TIME CMD</span><br><span class="line">    1 ?        00:00:00 init</span><br><span class="line">    2 ?        00:00:00 kthreadd</span><br><span class="line">    3 ?        00:00:00 migration/0</span><br><span class="line">    4 ?        00:00:01 ksoftirqd/0</span><br><span class="line">    5 ?        00:00:00 stopper/0</span><br><span class="line">    6 ?        00:00:02 watchdog/0</span><br><span class="line">    7 ?        00:01:35 events/0</span><br></pre></td></tr></table></figure>
+
+<p>注意我们看到的1号进程，此进程在CentOS6中叫init，在CentOS7中叫systemd</p>
+<ul>
+<li><strong>-f</strong>    表示显示全格式，既对进程的信息显示更加完善，一般是结合-e选项来使用，ps -ef | more</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UID        PID  PPID  C STIME TTY          TIME CMD</span><br><span class="line">root         1     0  0 Sep14 ?        00:00:00 /sbin/init</span><br><span class="line">root         2     0  0 Sep14 ?        00:00:00 [kthreadd]</span><br><span class="line">root         3     2  0 Sep14 ?        00:00:00 [migration/0]</span><br><span class="line">root         4     2  0 Sep14 ?        00:00:01 [ksoftirqd/0]</span><br><span class="line">root         5     2  0 Sep14 ?        00:00:00 [stopper/0]</span><br></pre></td></tr></table></figure>
+
+<p>UID表示此进程是哪一个用户来启动的，但是注意，进程启动的用户是可以修改的，所以它的专业名称叫有效用户ID</p>
+<p>PPID是父进程，因为我们的程序在启动时都要集成它的父进程的一些信息下来，Linux的第一个进程是1号进程，既init进程</p>
+<ul>
+<li><strong>-L</strong>    查看更详细的进程情况，既可以查看到当前进程中包含了多少个线程，通过此选项我们可以查看到当前进程运行缓慢是不是因为并发太大及线程太多导致的，一般使用也是结合着-ef，具体：ps -eLf | more</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UID        PID  PPID   LWP  C NLWP STIME TTY          TIME CMD</span><br><span class="line">root         1     0     1  0    1 Sep14 ?        00:00:00 /sbin/init</span><br><span class="line">root         2     0     2  0    1 Sep14 ?        00:00:00 [kthreadd]</span><br><span class="line">root         3     2     3  0    1 Sep14 ?        00:00:00 [migration/0]</span><br><span class="line">root         4     2     4  0    1 Sep14 ?        00:00:01 [ksoftirqd/0]</span><br><span class="line">root         5     2     5  0    1 Sep14 ?        00:00:00 [stopper/0]</span><br></pre></td></tr></table></figure>
+
+<p>LWP表示的既是线程数量</p>
+<h3 id="pstree命令"><a href="#pstree命令" class="headerlink" title="pstree命令"></a>pstree命令</h3><p>pstree命令是将进程用树形表示出来，上述ps命令中，我们能查看到进程的父进程，在使用此命令时，我们可以看到一个树形结构的进程图，方便我们查看进程的依属关系，示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@iZm5ehzqow4ijp2ya2g2drZ etc]# pstree | more</span><br><span class="line">init-+-AliYunDun---17*[&#123;AliYunDun&#125;]</span><br><span class="line">     |-AliYunDunUpdate---3*[&#123;AliYunDunUpdat&#125;]</span><br><span class="line">     |-agetty</span><br><span class="line">     |-aliyun-service---2*[&#123;aliyun-service&#125;]</span><br><span class="line">     |-auditd---&#123;auditd&#125;</span><br><span class="line">     |-crond</span><br><span class="line">     |-dhclient</span><br><span class="line">     |-java---28*[&#123;java&#125;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="top命令"><a href="#top命令" class="headerlink" title="top命令"></a>top命令</h3><p>top命令能显示系统的信息及进程信息，类似于Windows的任务管理器，也是一个日常非常实用的命令，可以不带参数，使用具体如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ etc]# top</span><br><span class="line">top - 17:38:41 up 22 days,  7:54,  2 users,  load average: 0.00, 0.00, 0.00</span><br><span class="line">Tasks:  78 total,   1 running,  77 sleeping,   0 stopped,   0 zombie</span><br><span class="line">Cpu(s):  0.3%us,  0.3%sy,  0.0%ni, 99.3%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:   1019980k total,   732792k used,   287188k free,   138988k buffers</span><br><span class="line">Swap:        0k total,        0k used,        0k free,   230192k cached</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                                                                                          </span><br><span class="line"> 1407 root      10 -10  121m  11m 9176 S  0.3  1.2  94:59.64 AliYunDun                                                                                                         </span><br><span class="line">27417 root      20   0 15012 1292 1004 R  0.3  0.1   0:00.01 top                                                                                                               </span><br><span class="line">    1 root      20   0 19228 1508 1232 S  0.0  0.1   0:00.72 init                                                                                                              </span><br><span class="line">    2 root      20   0     0    0    0 S  0.0  0.0   0:00.00 kthreadd                                                                                                          </span><br><span class="line">    3 root      RT   0     0    0    0 S  0.0  0.0   0:00.00 migration/0</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ul>
+<li><p>top</p>
+<p>  up 22 days： 当前系统上一次开机到现在运行的时长</p>
+<p>  users：当前系统有两个用户已经登录了</p>
+<p>  load average: 0.00, 0.00, 0.00： 平均负载，全都是0.00表示空负载，数值越大负载越高，都是1表示满负载运行，平均负载是一分钟进行一次汇总的结果，第一个数字是1分钟的数据，中间数据时5分钟的数据，最后一个是15分钟的统计数据，此数据是查看系统繁忙程度的指标数据</p>
+</li>
+<li><p>Tasks:  </p>
+<p>  78 tota：系统中有多少个任务正在运行，这里系统将进程表示为任务</p>
+<pre><code>1 running,  77 sleeping,   0 stopped,   0 zombie：一个进程在运行中，77个在休眠状态中。。</code></pre></li>
+<li><p>Cpu(s):  </p>
+<p>  0.3%us： 0.3%的资源用于用户状态的计算</p>
+<p>  0.3%sy： 进程的状态交互占用的资源</p>
+<p>  99.3%id：空闲的CPU资源</p>
+<p>  0.0%wa：磁盘IO占用的资源</p>
+</li>
+</ul>
+<p>Cpu(s)是说统计的是一个整体情况，如果我们是多核的，可以按下数字键1来分别查看每一个CPU的运行状况，再次按下数字1即可恢复成整体模式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">top - 17:54:45 up 1 min,  0 users,  load average: 0.52, 0.58, 0.59</span><br><span class="line">Tasks:   4 total,   1 running,   3 sleeping,   0 stopped,   0 zombie</span><br><span class="line">%Cpu0  :  5.4 us,  8.0 sy,  0.0 ni, 84.0 id,  0.0 wa,  2.6 hi,  0.0 si,  0.0 st</span><br><span class="line">%Cpu1  :  2.0 us,  3.0 sy,  0.0 ni, 95.1 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">%Cpu2  :  5.6 us, 10.8 sy,  0.0 ni, 83.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">%Cpu3  :  3.0 us,  3.0 sy,  0.0 ni, 94.1 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">%Cpu4  :  4.6 us,  3.0 sy,  0.0 ni, 92.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">%Cpu5  :  2.3 us,  0.3 sy,  0.0 ni, 97.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">%Cpu6  :  1.6 us,  2.0 sy,  0.0 ni, 96.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">%Cpu7  :  1.6 us, 14.8 sy,  0.0 ni, 83.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st</span><br><span class="line">KiB Mem : 16670136 total,  9322736 free,  7118048 used,   229352 buff/cache</span><br><span class="line">KiB Swap: 15518328 total, 15430616 free,    87712 used.  9418356 avail Mem</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Mem：</p>
+<p>  1019980k total：总共有多少内存</p>
+<p>  732792k used：已经使用了的内存</p>
+<p>  287188k free：空闲的内存</p>
+<p>  138988k buffers：读写缓存使用的内存</p>
+</li>
+<li><p>Swap：交换分区，当内存不够用的时候，需要使用交换分区的内存</p>
+<p>  0k used：这里只需要关注此选项即可，因为在内存占用比较大的时候才会与系统进行交换分区内存，这里有占用说明程序占用内存很大了</p>
+</li>
+<li><p>进程信息：</p>
+<p>  这里的进程信息我们可以看到还显示了每个进程当前的CPU占用率，以及内存占用情况，默认是3秒已刷新，我们还可以修改刷新时间，使用按键s，即可输入你需要的刷新间隔时间，然后回车，注意单位是秒，这样既可以按照你输入的时间间隔来刷新</p>
+</li>
+</ul>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年10月06日 18:07</p>
+        <p>原始链接： <a class="post-url" href="/2019/10/06/进程管理/" title="进程管理">https://jjw-story.github.io/2019/10/06/进程管理/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/10/06/进程管理/&title=《进程管理》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/10/06/进程管理/&title=《进程管理》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/10/06/进程管理/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《进程管理》 — JJW-STORY&url=https://jjw-story.github.io/2019/10/06/进程管理/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/10/06/进程管理/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/10/06/进程管理/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/command/" class="color3">command</a>
+      
+    <a href="/tags/进程管理/" class="color5">进程管理</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#进程管理"><span class="post-toc-text">进程管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#进程的概念及进程查看"><span class="post-toc-text">进程的概念及进程查看</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ps命令"><span class="post-toc-text">ps命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#ps选项说明"><span class="post-toc-text">ps选项说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#pstree命令"><span class="post-toc-text">pstree命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#top命令"><span class="post-toc-text">top命令</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/03/网络故障排除命令/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">网络故障排除命令</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/Python/">Python</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
