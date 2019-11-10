@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Elasticsearch核心技术 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="ElasticsearchElasticsearch简介Elasticsearch是分布式，高性能，高可用，可伸缩的全文检索和分析系统  什么是搜索，百度、谷歌等是我们接触到的最直接的搜索，还有垂直搜索（站内搜索），比如理想APP、OA了等等的搜索  如果用数据库做搜索有什么缺点？ （1、每次都搜索查找都需要对数据库中所有的记录进行扫描查找。2、不能将搜索词拆分，比如我搜索理想汽车但是却匹配搜索不">
+<meta name="keywords" content="Elasticsearch核心技术,基础入门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch核心技术">
+<meta property="og:url" content="https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="ElasticsearchElasticsearch简介Elasticsearch是分布式，高性能，高可用，可伸缩的全文检索和分析系统  什么是搜索，百度、谷歌等是我们接触到的最直接的搜索，还有垂直搜索（站内搜索），比如理想APP、OA了等等的搜索  如果用数据库做搜索有什么缺点？ （1、每次都搜索查找都需要对数据库中所有的记录进行扫描查找。2、不能将搜索词拆分，比如我搜索理想汽车但是却匹配搜索不">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-30T11:20:24.215Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch核心技术">
+<meta name="twitter:description" content="ElasticsearchElasticsearch简介Elasticsearch是分布式，高性能，高可用，可伸缩的全文检索和分析系统  什么是搜索，百度、谷歌等是我们接触到的最直接的搜索，还有垂直搜索（站内搜索），比如理想APP、OA了等等的搜索  如果用数据库做搜索有什么缺点？ （1、每次都搜索查找都需要对数据库中所有的记录进行扫描查找。2、不能将搜索词拆分，比如我搜索理想汽车但是却匹配搜索不">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Elasticsearch核心技术" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Elasticsearch核心技术
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Linux/">Linux</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-10-20
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h1><h2 id="Elasticsearch简介"><a href="#Elasticsearch简介" class="headerlink" title="Elasticsearch简介"></a>Elasticsearch简介</h2><p>Elasticsearch是分布式，高性能，高可用，可伸缩的全文检索和分析系统</p>
+<ol>
+<li><p>什么是搜索，百度、谷歌等是我们接触到的最直接的搜索，还有垂直搜索（站内搜索），比如理想APP、OA了等等的搜索</p>
+</li>
+<li><p>如果用数据库做搜索有什么缺点？ （1、每次都搜索查找都需要对数据库中所有的记录进行扫描查找。2、不能将搜索词拆分，比如我搜索理想汽车但是却匹配搜索不出理想One。总的来说，效率会非常差）</p>
+</li>
+<li><p>什么是全文检索和lucene？（1、倒排索引的概念：传统数据库的检索，如果有几十万条数据，那么我们数据库检索就要扫描几十万次，而使用倒排索引，它可以把这几十万条数据拆分成单个的词或词语，可能会拆出来几百万条，但是我们在检索的时候，只要第一次匹配到检索的词语，就可以知道此词语在哪些文档中，并且在这些文档的什么位置，我们不必担心几十万的数据拆词后拆成几百万个词在极端情况下会需要检索到最后的几百万次才能检索到此词语，因为ES底层的算法及数据结构对此做了非常大的优化，所以我们并不需要担心。这里可以专门讲解一下倒排索引的数据结构。 2、lucene的概念：就是一些个jar包，里面包含了封装好的各种建立倒排索引，以及进行搜索的代码，包括各种算法。我们就用java开发的时候，引入lucene jar，然后基于lucene的api进行去进行开发就可以了。用lucene，我们就可以去将已有的数据建立索引，lucene会在本地磁盘上面，给我们组织索引的数据结构。另外的话，我们也可以用lucene提供的一些功能和api来针对磁盘上的索引数据进行搜索。 总之来讲：lucene非常优秀，以前玩过一个solr，也是建立在lucene上，ES同样也是，他们都是对lucene的封装）</p>
+</li>
+<li><p>什么是Elasticsearch？（我们说ES是基于lucene的封装，那他解决了什么问题呢？ 1、磁盘容量问题：基于磁盘容量的限制，比如我们有10TB的数据，如果我们使用10个1TB的计算机分别存储，数据散落在不同的机器上，那么每次查询我们都需要跟多台机器进行通信分别查询然后组织所有数据这个过程会非常麻烦。 这里我们就可以使用ES的集群来解决此问题，我们建立多个ES的节点，ES会自动维护数据并将数据均匀的分布在多个节点上，并且将搜索请求分布到各个节点上，然后把数据整体封装起来返回给调用方。 2、机器宕机的问题：我们的10个1TB的机器中有一个或多个挂掉，那么数据就会有丢失。这里ES会自动维护数据的冗余副本，可以保证如果一些机器宕机了，不会丢失任何的数据。 3、基于lucene的封装，提供了更多的高级功能，以便给我们提供更多的高级支持，使我们快速开发更复杂的应用，比如更复杂的查询，聚合查询分析等，地理位置的搜索等）</p>
+</li>
+</ol>
+<p>这就是Elasticsearch，以上已经将ES的分布式，高性能（ES的很多性能优化），高可用，可伸缩（可伸缩说的是集群扩容成本很低）的特性讲解了</p>
+<h2 id="Elastcsearch入门"><a href="#Elastcsearch入门" class="headerlink" title="Elastcsearch入门"></a>Elastcsearch入门</h2><h3 id="Elasticsearch功能"><a href="#Elasticsearch功能" class="headerlink" title="Elasticsearch功能"></a>Elasticsearch功能</h3><ul>
+<li><p>分布式的搜索引擎和数据分析引擎（1、搜索：百度，网站的站内搜索，IT系统的检索。 2、数据分析：电商网站，最近7天牙膏这种商品销量排名前10的商家有哪些；新闻网站，最近1个月访问量排名前3的新闻版块是哪些）</p>
+</li>
+<li><p>全文检索，结构化检索，数据分析等等（1、全文检索：类似模糊匹配。 2、结构化检索：精确匹配。 3、数据分析：统计分类总数，直方图了等等。还包括搜索纠错、数据分词等）</p>
+</li>
+<li><p>对海量数据进行近实时的处理（ES自动可以将海量数据分散到多台服务器上去存储和检索，分布式以后，就可以采用大量的服务器去存储和检索数据，自然而然就可以实现海量数据的处理了，在秒级别对数据进行搜索和分析）</p>
+</li>
+</ul>
+<p>lucene，单机应用，只能在单台服务器上使用，最多只能处理单台服务器可以处理的数据量</p>
+<h3 id="Elasticsearch使用场景"><a href="#Elasticsearch使用场景" class="headerlink" title="Elasticsearch使用场景"></a>Elasticsearch使用场景</h3><ol>
+<li>维基百科，全文检索，高亮，搜索推荐</li>
+<li>理想APP话题及帖子，对用户行为日志（点击、浏览、收藏、评论）数据分析，分析话题的热度，文章的反馈反响等</li>
+<li>GitHub（开源代码管理），搜索上千亿行代码</li>
+<li>淘宝京东商品检索</li>
+<li>IT系统搜索（OA，CRM，ERP，等等），数据分析（ES热门的一个使用场景）</li>
+</ol>
+<h3 id="Elasticsearch特点"><a href="#Elasticsearch特点" class="headerlink" title="Elasticsearch特点"></a>Elasticsearch特点</h3><ul>
+<li><p>可以作为一个大型分布式集群（数百台服务器）技术，处理PB级数据，服务大公司；也可以运行在单机上，服务小公司</p>
+</li>
+<li><p>Elasticsearch不是什么新技术，主要是将全文检索、数据分析以及分布式技术，合并在了一起，才形成了独一无二的ES；lucene（全文检索），商用的数据分析软件（也是有的），分布式数据库（mycat）</p>
+</li>
+<li><p>对用户而言，是开箱即用的，非常简单，作为中小型的应用，直接3分钟部署一下ES，就可以作为生产环境的系统来使用了，数据量不大，操作不是太复杂</p>
+</li>
+<li><p>数据库的功能面对很多领域是不够用的；特殊的功能，比如全文检索，同义词处理，相关度排名，复杂数据分析，海量数据的近实时处理；Elasticsearch作为传统数据库的一个补充，提供了数据库所不不能提供的很多功能</p>
+</li>
+</ul>
+<h2 id="Elasticsearch核心概念"><a href="#Elasticsearch核心概念" class="headerlink" title="Elasticsearch核心概念"></a>Elasticsearch核心概念</h2><p>通过上面的讲解我们知道lucene和elasticsearch之间的关系。</p>
+<p>lucene：最先进、功能最强大的搜索库，直接基于lucene开发，非常复杂，api复杂（实现一些简单的功能，写大量的java代码），需要深入理解原理（各种索引结构）</p>
+<p>elasticsearch：基于lucene，隐藏复杂性，提供简单易用的restful api接口、java api接口（还有其他语言的api接口），lucene是单机的，ES有如下特点：</p>
+<ol>
+<li>分布式的文档存储引擎</li>
+<li>分布式的搜索引擎和分析引擎</li>
+<li>分布式，支持PB级数据</li>
+</ol>
+<p>开箱即用，优秀的默认参数，不需要任何额外设置，完全开源</p>
+<p>关于elasticsearch的一个传说，有一个程序员失业了，陪着自己老婆去英国伦敦学习厨师课程。程序员在失业期间想给老婆写一个菜谱搜索引擎，觉得lucene实在太复杂了，就开发了一个封装了lucene的开源项目，compass。后来程序员找到了工作，是做分布式的高性能项目的，觉得compass不够，就写了elasticsearch，让lucene变成分布式的系统。</p>
+<h3 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h3><p>Near Realtime（NRT）：近实时，两个意思，1、从写入数据到数据可以被搜索到有一个小延迟（大概1秒）。 2、基于es执行搜索和分析可以达到秒级。一般说纯实时说的基本是毫秒级，秒或几十秒算是近实时。这里也遇到问题，比如我们搜索热词删除之后刷新快的话，数据还在。</p>
+<p>Cluster：集群，包含多个节点，每个节点属于哪个集群是通过一个配置（集群名称，默认是elasticsearch）来决定的，对于中小型应用来说，刚开始一个集群就一个节点很正常</p>
+<p>Node：节点，集群中的一个节点，节点也有一个名称（默认是随机分配的），节点名称很重要（在执行运维管理操作的时候），默认节点会去加入一个名称为“elasticsearch”的集群，如果直接启动一堆节点，那么它们会自动组成一个elasticsearch集群，当然一个节点也可以组成一个elasticsearch集群，一个局域网中的集群是通过集群的名称来分割的，节点也是通过集群名称匹配来加入集群的</p>
+<p>Document&amp;field：文档，es中的最小数据单元，一个document可以是一条客户数据，一条商品分类数据，一条订单数据，通常用JSON数据结构表示，每个index下的type中，都可以去存储多个document。一个document里面有多个field，每个field就是一个数据字段。</p>
+<p>Index：索引，包含一堆有相似结构的文档数据，比如可以有一个客户索引，商品分类索引，订单索引，索引有一个名称。一个index包含很多document，一个index就代表了一类类似的或者相同的document。比如说建立一个product index，商品索引，里面可能就存放了所有的商品数据，所有的商品document。</p>
+<p>Type：类型，每个索引里都可以有一个或多个type，type是index中的一个逻辑数据分类，一个type下的document，都有相同的field，比如博客系统，有一个索引，可以定义用户数据type，博客数据type，评论数据type。（这里可以讲一下type已经不推荐使用了，它跟数据库表的区别，多个type类型的文档但是如果在同一个索引下，type的mapping既字段类型必须是一样的，现在还存在只是为了兼容）</p>
+<p>注：以上三个类型可以现场打开kibana进行讲解分析一下</p>
+<p>shard：单台机器无法存储大量数据，es可以将一个索引中的数据切分为多个shard，分布在多台服务器上存储。有了shard就可以横向扩展，存储更多数据，让搜索和分析等操作分布到多台服务器上去执行，提升吞吐量和性能。每个shard都是一个lucene index。</p>
+<p>replica：任何一个服务器随时可能故障或宕机，此时shard可能就会丢失，因此可以为每个shard创建多个replica副本。replica可以在shard故障时提供备用服务，保证数据不丢失，多个replica还可以提升搜索操作的吞吐量和性能。primary shard（建立索引时一次设置，不能修改，默认5个），replica shard（随时修改数量，默认1个），默认每个索引10个shard，5个primary shard，5个replica shard，最小的高可用配置，是2台服务器。</p>
+<p>注： 上述主分片和副本分片详细说明如下：</p>
+<p>在ES中，index会被拆分成多个shard，每个shard会存放这个index一部分数据，这些shard会散落在多台服务器上面，shard其实叫primary shard，一般直接说shard，多个分片的好处主要有两个：1、横向扩展：比如说我们的数据量增大，现有的服务器已经无法承载，那我们就加机器，横向扩展，重新建立索引然后将数据重新索引导入就行。 2、数据分布在多个shard，多台服务器上，所有的操作，都会在多台服务器上并行分布式执行，提升吞吐量和性能</p>
+<p>副本分片replice其实叫replice shard，它也是分片，并且跟主分片一样，一般简称为replice。上面讲过如果不使用ES，传统lucene多个机器，其中一个机器挂掉，那么搜索就会丢数据，ES能解决这个问题，就是通过副本分片来解决的，如果我们的集群中有一台机器宕机了，这个时候不会丢数据，因为还有一个replice，在另外一个节点上面，用户搜索的时候，还是可以搜索到的，请求直接被发送到replice上，这样数据就不会丢失。</p>
+<p>总结分片好处： 1、高可用，一个shard宕机，数据不会丢，服务继续提供。 2、提升了搜索这类请求的吞吐量和性能</p>
+<p>分片机制梳理：</p>
+<ol>
+<li>index包含多个shard</li>
+<li>每个shard都是一个最小工作单元，承载部分数据，lucene实例，完整的建立索引和处理请求的能力</li>
+<li>增减节点时，shard会自动在nodes中负载均衡</li>
+<li>primary shard和replica shard，每个document肯定只存在于某一个primary shard以及其对应的replica shard中，不可能存在于多个primary shard</li>
+<li>replica shard是primary shard的副本，负责容错，以及承担读请求负载</li>
+<li>primary shard的数量在创建索引的时候就固定了，replica shard的数量可以随时修改</li>
+<li>primary shard的默认数量是5，replica默认是1，默认有10个shard，5个primary shard，5个replica shard</li>
+<li>primary shard不能和自己的replica shard放在同一个节点上（否则节点宕机，primary shard和副本都丢失，起不到容错的作用），但是可以和其他primary shard的replica shard放在同一个节点上</li>
+<li>如果集群中某个节点宕掉了，那么此节点的主分片立刻失效，转移到其他存活的节点上的副本分片上，将其他节点的副本分片作为主节点。宕掉的节点重新启动后，其他节点会将数据同步到新起来的节点上，并且不是直接覆盖，而是只是将宕机的期间发生的新的数据变化的内容同步过来</li>
+</ol>
+<p>注意（个人理解）：要保证服务器的高容错性，我们可以增加副本分片的数量，保证更多的机器有跟多的副本分片，容错性更高，当然，容错高是需要占用更多的磁盘空间。另外提升检索效率，可以适当增加主分片的个数，但是不要一味的高，各个集群机器之间的通信也非常耗费时间。</p>
+<h3 id="ES的特性"><a href="#ES的特性" class="headerlink" title="ES的特性"></a>ES的特性</h3><p>透明隐藏性：ES将复杂的分布式机制，比如分片、副本、负载均衡等等全部隐藏了起来</p>
+<p>扩容的透明性：两种方式，1、垂直扩容：直接扩展服务器的磁盘容量，但是这种方案的弊端就是，世界上最大的服务器磁盘容量也就只有10T。2、水平扩容：采购更多的服务，扩展到集群中。一般采取水平扩容的方式。</p>
+<p>负载均衡：某个节点的分片或者数据量，及处理的请求量，明显比其他节点多，那么ES就会有负载均衡的特点，将压力分布到其他节点上</p>
+<p>master节点：并不是必须存在，关键看集群的部署是那种方式，比如我们现在的项目，它就没有master节点，如果有的话，它的作用是：1、创建或删除索引。2、增加或删除节点</p>
+<p>节点平等的分布式架构：1.节点对等，每个节点都能接收所有的请求。2、自动请求路由。3.响应收集。主要就是每一个节点接收到查询等的请求，都可以将每个节点上收集的数据汇总起来，由接收到的节点响应给用户</p>
+<h2 id="Elasticsearch基本使用"><a href="#Elasticsearch基本使用" class="headerlink" title="Elasticsearch基本使用"></a>Elasticsearch基本使用</h2><h3 id="集群状态既所有索引查看等API，待定是否讲解"><a href="#集群状态既所有索引查看等API，待定是否讲解" class="headerlink" title="集群状态既所有索引查看等API，待定是否讲解"></a>集群状态既所有索引查看等API，待定是否讲解</h3><h3 id="索引操作（PUT创建索引，DELETE删除操作）"><a href="#索引操作（PUT创建索引，DELETE删除操作）" class="headerlink" title="索引操作（PUT创建索引，DELETE删除操作）"></a>索引操作（PUT创建索引，DELETE删除操作）</h3><h3 id="索引文档操作（增删改查，注意修改的时候，可以使用PUT直接替换，和使用POST修改），注意替换方式，必须带上所有的数据进行替换，修改可以只修改其中某一个字段，讲的时候可以演示一下PUT和POST的使用，注意，POST的使用最后要跟上”-update”在url上，DELETE演示直接使用ID删除就可以"><a href="#索引文档操作（增删改查，注意修改的时候，可以使用PUT直接替换，和使用POST修改），注意替换方式，必须带上所有的数据进行替换，修改可以只修改其中某一个字段，讲的时候可以演示一下PUT和POST的使用，注意，POST的使用最后要跟上”-update”在url上，DELETE演示直接使用ID删除就可以" class="headerlink" title="索引文档操作（增删改查，注意修改的时候，可以使用PUT直接替换，和使用POST修改），注意替换方式，必须带上所有的数据进行替换，修改可以只修改其中某一个字段，讲的时候可以演示一下PUT和POST的使用，注意，POST的使用最后要跟上”_update”在url上，DELETE演示直接使用ID删除就可以"></a>索引文档操作（增删改查，注意修改的时候，可以使用PUT直接替换，和使用POST修改），注意替换方式，必须带上所有的数据进行替换，修改可以只修改其中某一个字段，讲的时候可以演示一下PUT和POST的使用，注意，POST的使用最后要跟上”_update”在url上，DELETE演示直接使用ID删除就可以</h3><p>增加文档的时候，我们可以指定ID，也可以不指定ID，如果我们的数据是从SQL数据库中拉取过来，那么我们就使用数据中已有的ID，指定ID进行保存数据。如果我们的数据只是在ES库中存在，那么我们可以不指定ID，使用ES自带的主键生成策略，它使用一种GUID得算法生成主键，保证在分布式的系统中，同时插入数据生成的主键不会重复，不指定主键的插入数据需要使用POST，然后不指定主键即可，PUT式的插入数据需要指定主键</p>
+<p>注意：ES全量替换是先将原来的数据删除，然后新添加进去，注意这里说的删除和我们主动的删除数据都是伪删除，只是给文档标记为了deleted的状态，并没有直接删除，它会在后面这种状态的数据多的时候或者其他情况下执行物理删除</p>
+<p>注意：ES的并发控制是通过乐观锁CAS这种方式来控制的，它里面有_version这个字段，不过现在的版本已经改了，不是这个字段了。这个字段我们在对文档进行操作，不管是修改还是删除，都会给这个字段自动+1，即使我们是PUT形式覆盖数据，或者先删除数据，然后添加数据，ID一样，它的版本号都是存在并且直接++的，而不是重新从1开始（注意：主从同步时，只有版本号高的时候才同步数据，否则不同步）</p>
+<p>注意：一般我们在修改数据的时候，还是尽量使用PUT式的全量替换，而不是使用POST式的部分替换，虽然POST修改只修改我们需要修改的字段，能够节省网络开销，但是其实我们内部的修改实现是和PUT是一样的，都是先删除在插入，而且POST式的修改，ES先把要修改的所有文档的内容找出来，然后将我们POST过来的数据中的部分字段内容替换，然后将原文档删除，插入此新的文档。所以我们发现虽然能节省网络开销，但是多了重新构建数据这一步，对于数据量很大的情况来说，还是会有损失效率，所以尽量使用PUT来修改。注意：如果我们是用的POST这种方式修改数据，我们内部也是有并发控制的，同样使用CAS，如果我们在拼装好新的数据后，发现_version已经不一样了，那么它内部会重新拉去doucment数据，然后重新拼装，然后再次CAS，一共可以重试五次，如果五次都失败了，则会抛弃此数据。</p>
+<h3 id="DSL语言演示讲解（Domain-Specified-Language）（注意一些高阶查询，聚合查询，可以查看视频中第八讲的笔记，这里讲了一点）"><a href="#DSL语言演示讲解（Domain-Specified-Language）（注意一些高阶查询，聚合查询，可以查看视频中第八讲的笔记，这里讲了一点）" class="headerlink" title="DSL语言演示讲解（Domain Specified Language）（注意一些高阶查询，聚合查询，可以查看视频中第八讲的笔记，这里讲了一点）"></a>DSL语言演示讲解（Domain Specified Language）（注意一些高阶查询，聚合查询，可以查看视频中第八讲的笔记，这里讲了一点）</h3><h2 id="Elasticsearch的分布式架构"><a href="#Elasticsearch的分布式架构" class="headerlink" title="Elasticsearch的分布式架构"></a>Elasticsearch的分布式架构</h2>
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年10月30日 19:20</p>
+        <p>原始链接： <a class="post-url" href="/2019/10/20/Elasticsearch核心技术/" title="Elasticsearch核心技术">https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/&title=《Elasticsearch核心技术》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/&title=《Elasticsearch核心技术》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Elasticsearch核心技术》 — JJW-STORY&url=https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/10/20/Elasticsearch核心技术/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Elasticsearch核心技术/" class="color3">Elasticsearch核心技术</a>
+      
+    <a href="/tags/基础入门/" class="color5">基础入门</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Elasticsearch"><span class="post-toc-text">Elasticsearch</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Elasticsearch简介"><span class="post-toc-text">Elasticsearch简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Elastcsearch入门"><span class="post-toc-text">Elastcsearch入门</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Elasticsearch功能"><span class="post-toc-text">Elasticsearch功能</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Elasticsearch使用场景"><span class="post-toc-text">Elasticsearch使用场景</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Elasticsearch特点"><span class="post-toc-text">Elasticsearch特点</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Elasticsearch核心概念"><span class="post-toc-text">Elasticsearch核心概念</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#核心概念"><span class="post-toc-text">核心概念</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ES的特性"><span class="post-toc-text">ES的特性</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Elasticsearch基本使用"><span class="post-toc-text">Elasticsearch基本使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#集群状态既所有索引查看等API，待定是否讲解"><span class="post-toc-text">集群状态既所有索引查看等API，待定是否讲解</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#索引操作（PUT创建索引，DELETE删除操作）"><span class="post-toc-text">索引操作（PUT创建索引，DELETE删除操作）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#索引文档操作（增删改查，注意修改的时候，可以使用PUT直接替换，和使用POST修改），注意替换方式，必须带上所有的数据进行替换，修改可以只修改其中某一个字段，讲的时候可以演示一下PUT和POST的使用，注意，POST的使用最后要跟上”-update”在url上，DELETE演示直接使用ID删除就可以"><span class="post-toc-text">索引文档操作（增删改查，注意修改的时候，可以使用PUT直接替换，和使用POST修改），注意替换方式，必须带上所有的数据进行替换，修改可以只修改其中某一个字段，讲的时候可以演示一下PUT和POST的使用，注意，POST的使用最后要跟上”_update”在url上，DELETE演示直接使用ID删除就可以</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DSL语言演示讲解（Domain-Specified-Language）（注意一些高阶查询，聚合查询，可以查看视频中第八讲的笔记，这里讲了一点）"><span class="post-toc-text">DSL语言演示讲解（Domain Specified Language）（注意一些高阶查询，聚合查询，可以查看视频中第八讲的笔记，这里讲了一点）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Elasticsearch的分布式架构"><span class="post-toc-text">Elasticsearch的分布式架构</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2019/11/10/内存与磁盘管理/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          内存与磁盘管理
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2019/10/06/进程管理/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">进程管理</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/Python/">Python</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
