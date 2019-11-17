@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="内存与磁盘管理内存查看命令free命令通过free命令可以查看当前内存的使用情况，使用方法： free [参数] 参数：  -m 将数据按以MB为单位进行显示  -g 将数据按以GB为单位进行显示   注意我们一般不用 -g 参数，因为例如我们内存使用了1990M，但是-g会显示1g，将超出的都舍去了，所以会显示的不精准 下面是使用示例： 12345678910111213141516171819">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-10T07:13:19.062Z">
+<meta property="og:updated_time" content="2019-11-17T11:52:07.162Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存与磁盘管理">
 <meta name="twitter:description" content="内存与磁盘管理内存查看命令free命令通过free命令可以查看当前内存的使用情况，使用方法： free [参数] 参数：  -m 将数据按以MB为单位进行显示  -g 将数据按以GB为单位进行显示   注意我们一般不用 -g 参数，因为例如我们内存使用了1990M，但是-g会显示1g，将超出的都舍去了，所以会显示的不精准 下面是使用示例： 12345678910111213141516171819">
@@ -162,10 +162,36 @@
 <p>还有要注意的就是Swap，它是交换分区的意思，它占用的并不是实际的内存，而是使用的磁盘空间，这里一般查看都是0，如果我们发现查询的时候这里的占用不是0，那么就真的该加内存了，这里就跟Windows中虚拟内存是一样的，指的是内存本身不够用了，我们需要将一些超出的使用转移到硬盘上，将硬盘的一些容量当做内存使用，但是磁盘的读写速度比内存慢十倍，所以一般我们看到交换分区被使用了，就该加内存了。这个交换分区大小一般默认为2G，可以手动指定。</p>
 <p>如果我们不指定swap分区，既超出内存占用后不使用交换分区，那么系统会随机杀掉一些占用内存较大的进程，当然这样是不安全的，所以我们一般还是保留swap存在。还有一些Redies了，Memcache等内存数据库，它们不会使用swap分区，内存超出后就停止新增数据了</p>
 <h3 id="top命令"><a href="#top命令" class="headerlink" title="top命令"></a>top命令</h3><p>top命令我们在进程管理中已经讲解完毕了，可以直接去进程管理章节查看</p>
+<h2 id="磁盘查看命令"><a href="#磁盘查看命令" class="headerlink" title="磁盘查看命令"></a>磁盘查看命令</h2><h3 id="fdisk命令"><a href="#fdisk命令" class="headerlink" title="fdisk命令"></a>fdisk命令</h3><p>fdisk命令既可以查看磁盘的信息，又可以修改磁盘的分区，一般不要直接执行此命令进行分区，会有风险</p>
+<p>使用方法： fdisk [参数]</p>
+<ul>
+<li><strong>-l</strong>    查询磁盘信息，使用示例如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ ~]# fdisk -l</span><br><span class="line"></span><br><span class="line">Disk /dev/vda: 42.9 GB, 42949672960 bytes</span><br><span class="line">255 heads, 63 sectors/track, 5221 cylinders</span><br><span class="line">Units = cylinders of 16065 * 512 = 8225280 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk identifier: 0x0003a7b4</span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/vda1   *           1        5222    41940992   83  Linux</span><br></pre></td></tr></table></figure>
+
+<p>Linux的磁盘都是用文件来表示的，磁盘文件所在的位置是:<strong>/dev</strong>目录下，vda表示是主机固有磁盘，我们有时候会见到很多 <strong>/dev/sda</strong> 的磁盘，这种表示的是可插拔的磁盘，类似于我们外接的移动硬盘等，磁盘一般表示都是 vda ~ vdb …这样按顺序往下排，同样挂载的硬盘也是，sda ~ sdb 等排列</p>
+<p>上述命令查询出信息的第一行有磁盘总大小的表示方法，一种是以GB为单位，一种是换算为字节为单位，一般我们关注第一行的信息即可，还有就是最后的表格展示的项目，当我们有多快磁盘在机器中时，我们需要看到boot选项的 * 号在哪块磁盘上，* 号表示的就是我们系统启动的引导盘</p>
+<p>我们可以直接进入 /dev 目录具体的查看硬盘的文件信息。如下示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ ~]# ls -l /dev/vd?</span><br><span class="line">brw-rw---- 1 root disk 252, 0 Sep 14 09:44 /dev/vda</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ ~]# ls -l /dev/vd??</span><br><span class="line">brw-rw---- 1 root disk 252, 1 Sep 14 09:44 /dev/vda1</span><br></pre></td></tr></table></figure>
+
+<p>如上查询，disk后跟的数字252表示磁盘的主设备号，第二个数字表示磁盘的从设备号，我们第二条命令查询出来的发现是 vda1，其中1表示这块磁盘的分区为1分区，如同我们Windows中一块磁盘可以划分为CDE几块不同的分区，Linux也有分区的概念，如果有多个分区，就是从 1 … n，这样的表示方法</p>
+<h3 id="df命令"><a href="#df命令" class="headerlink" title="df命令"></a>df命令</h3><p>此命令也可以查询磁盘的具体大小，它可以作为fdsik命令的补充，因为fdisk命令只能查看到磁盘的大小，看不到磁盘具体挂载的目录以及目录的大小，这个时候我们就可以使用df命令来查看，一般我们会使用 <strong>-h</strong> 参数来具体查看，使用示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ ~]# df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1        40G  2.5G   35G   7% /</span><br><span class="line">tmpfs           499M     0  499M   0% /dev/shm</span><br></pre></td></tr></table></figure>
+
+<p>如上我们就可以看到我们机器的分区挂载目录，以及此目录的大小，注意：此命令是我们最常用的</p>
+<h3 id="du命令"><a href="#du命令" class="headerlink" title="du命令"></a>du命令</h3><p>上述命令都是直接查看磁盘大小的，我们还可以通过du命令查看具体文件夹的大小，但是注意，我们同样可以是用ls -l命令查看文件的大小，但是ls命令查询出的文件大小可能与du命令查出的文件大小是不一样的，这是因为，ls查询出的文件包含了文件占用的全部大小，而这全部大小可能包含了很多空洞文件，空洞文件表示的是可以理解为一块磁盘空间，我们只给空间头和尾加了标记，其他位置全部都是空的，这样的文件就叫做空洞文件，我们可以使用dd命令来创建空洞命令，这里不做详细解释</p>
+<p>在查看文件的具体大小时我们可以使用此两种命令查看文件的具体大小，使用示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# ls -lh SparrowNet-1.0-SNAPSHOT.jar </span><br><span class="line">-rw-r--r-- 1 root root 51M Oct 19 14:27 SparrowNet-1.0-SNAPSHOT.jar</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# du -h SparrowNet-1.0-SNAPSHOT.jar </span><br><span class="line">51M	SparrowNet-1.0-SNAPSHOT.jar</span><br></pre></td></tr></table></figure>
+
+<p>以上两种命令所查出的文件大小是一样的，说明此文件中没有包含空洞文件</p>
+<p>我们需要查看文件夹的大小时，我们就可以使用du命令，因为我们发现ls命令查看的文件夹大小并不包含文件夹中的内容，所以无法知道文件夹及其中内容的总大小，这时我们就可以使用 <strong>du -sh *</strong>命令，注意此命令是重点，要牢记，使用示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 首先使用 ls -lh 命令查看，这里只包含一级目录的大小，并没有包含子目录中文件的总大小</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# ls -lh</span><br><span class="line">total 51M</span><br><span class="line">drwxrwxrwx 2 root root 4.0K Nov 15 01:02 data</span><br><span class="line">drwxr-xr-x 2 root root 4.0K Nov 17 00:07 logs</span><br><span class="line">drwxr-xr-x 2 root root 4.0K Oct 19 14:28 package</span><br><span class="line">drwxrwxrwx 5 root root 4.0K Sep 14 17:20 resources</span><br><span class="line">-rw-r--r-- 1 root root  51M Oct 19 14:27 SparrowNet-1.0-SNAPSHOT.jar</span><br><span class="line"></span><br><span class="line"># 使用 du 命令的 -sh 参数查询文件的总大小，包含了子目录中所有文件的大小</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# du -sh</span><br><span class="line">84M	.</span><br><span class="line"></span><br><span class="line"># 使用 du -sh * 命令分别查看一级目录中所有文件及子目录的总大小</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# du -sh *</span><br><span class="line">60K	data</span><br><span class="line">9.0M	logs</span><br><span class="line">4.0K	package</span><br><span class="line">24M	resources</span><br><span class="line">51M	SparrowNet-1.0-SNAPSHOT.jar</span><br></pre></td></tr></table></figure>
+
+<p>通过上述示例我们很容易能看出区别，所以此命令我们需要牢记</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年11月10日 15:13</p>
+        <p>最后更新： 2019年11月17日 19:52</p>
         <p>原始链接： <a class="post-url" href="/2019/11/10/内存与磁盘管理/" title="内存与磁盘管理">https://jjw-story.github.io/2019/11/10/内存与磁盘管理/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -285,7 +311,7 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#内存与磁盘管理"><span class="post-toc-text">内存与磁盘管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内存查看命令"><span class="post-toc-text">内存查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#free命令"><span class="post-toc-text">free命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#top命令"><span class="post-toc-text">top命令</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#内存与磁盘管理"><span class="post-toc-text">内存与磁盘管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内存查看命令"><span class="post-toc-text">内存查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#free命令"><span class="post-toc-text">free命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#top命令"><span class="post-toc-text">top命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#磁盘查看命令"><span class="post-toc-text">磁盘查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fdisk命令"><span class="post-toc-text">fdisk命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#df命令"><span class="post-toc-text">df命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#du命令"><span class="post-toc-text">du命令</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     
