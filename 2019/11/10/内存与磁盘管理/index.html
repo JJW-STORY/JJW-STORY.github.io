@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="内存与磁盘管理内存查看命令free命令通过free命令可以查看当前内存的使用情况，使用方法： free [参数] 参数：  -m 将数据按以MB为单位进行显示  -g 将数据按以GB为单位进行显示   注意我们一般不用 -g 参数，因为例如我们内存使用了1990M，但是-g会显示1g，将超出的都舍去了，所以会显示的不精准 下面是使用示例： 12345678910111213141516171819">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-11-17T11:52:07.162Z">
+<meta property="og:updated_time" content="2019-12-15T05:02:11.349Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存与磁盘管理">
 <meta name="twitter:description" content="内存与磁盘管理内存查看命令free命令通过free命令可以查看当前内存的使用情况，使用方法： free [参数] 参数：  -m 将数据按以MB为单位进行显示  -g 将数据按以GB为单位进行显示   注意我们一般不用 -g 参数，因为例如我们内存使用了1990M，但是-g会显示1g，将超出的都舍去了，所以会显示的不精准 下面是使用示例： 12345678910111213141516171819">
@@ -188,10 +188,116 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 首先使用 ls -lh 命令查看，这里只包含一级目录的大小，并没有包含子目录中文件的总大小</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# ls -lh</span><br><span class="line">total 51M</span><br><span class="line">drwxrwxrwx 2 root root 4.0K Nov 15 01:02 data</span><br><span class="line">drwxr-xr-x 2 root root 4.0K Nov 17 00:07 logs</span><br><span class="line">drwxr-xr-x 2 root root 4.0K Oct 19 14:28 package</span><br><span class="line">drwxrwxrwx 5 root root 4.0K Sep 14 17:20 resources</span><br><span class="line">-rw-r--r-- 1 root root  51M Oct 19 14:27 SparrowNet-1.0-SNAPSHOT.jar</span><br><span class="line"></span><br><span class="line"># 使用 du 命令的 -sh 参数查询文件的总大小，包含了子目录中所有文件的大小</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# du -sh</span><br><span class="line">84M	.</span><br><span class="line"></span><br><span class="line"># 使用 du -sh * 命令分别查看一级目录中所有文件及子目录的总大小</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ balyu]# du -sh *</span><br><span class="line">60K	data</span><br><span class="line">9.0M	logs</span><br><span class="line">4.0K	package</span><br><span class="line">24M	resources</span><br><span class="line">51M	SparrowNet-1.0-SNAPSHOT.jar</span><br></pre></td></tr></table></figure>
 
 <p>通过上述示例我们很容易能看出区别，所以此命令我们需要牢记</p>
+<h2 id="常见文件系统"><a href="#常见文件系统" class="headerlink" title="常见文件系统"></a>常见文件系统</h2><p>Linux支持多种文件系统，常见的有：</p>
+<ol>
+<li><p>ext4</p>
+</li>
+<li><p>xfs</p>
+</li>
+<li><p>NTFS(需要安装额外转件)</p>
+</li>
+</ol>
+<p>目前比较流行的是前两种，CentOS7使用的xfs文件系统，之前的版本使用的都是ext4文件系统，这两个操作系统都是足够稳定的，NTFS文件系统Windows使用的文件系统，我们将这种格式的磁盘挂载到Linux系统上的时候，它会是只读状态，因为这种文件系统是有版权的，需要额外安装一个软件才能操作它</p>
+<p>这里我们介绍最常用的ext4文件系统，它分为四个部分：</p>
+<ul>
+<li><p>超级块</p>
+</li>
+<li><p>超级块副本</p>
+</li>
+<li><p>I节点(iNode)</p>
+</li>
+<li><p>数据块(datablock)</p>
+</li>
+</ul>
+<p>超级块是在文件系统最开始的部分的空间，它所存储的主要是磁盘的大小，磁盘中文件所占用的大小，包含了多少个文件，文件的总数，我们在使用df命令很快就能查看出文件的总数及大小，就是因为它查看的是超级块中的信息</p>
+<p>超级块副本是超级块的备份，它不止有一份，当超级块出现故障的时候，可以在这里恢复</p>
+<p>i节点记录的是每一个文件，它记录的是文件的大小，位置，创建时间，修改时间，文件的权限，编号等等信息，但是这里不包括文件的名称，注意：文件的名称是记录在自己文件的父目录的i节点中，当文件过多的时候，也会记录在父目录的数据块中</p>
+<p>数据块就是记录的真实的文件数据，数据块是挂在i节点后的，我们只要能找到文件的i节点，就能找到文件的数据块，就可以通过挂的数据块的个数来知道文件的大小</p>
+<p>所以我们使用ls查看文件的大小的时候，查看的是i节点里面文件的大小信息，而du统计的是i节点挂在的数据块的个数统计文件的大小信息，所以说du查看的是真实的文件大小</p>
+<h2 id="i节点和数据块操作"><a href="#i节点和数据块操作" class="headerlink" title="i节点和数据块操作"></a>i节点和数据块操作</h2><p>我们首先观察cp和mv命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 首先我们创建一个文件并查看文件信息，发现它占用0k大小</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# touch file1</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ls -li</span><br><span class="line">total 0</span><br><span class="line">1179654 -rw-r--r-- 1 root root 0 Dec  1 14:34 file1</span><br><span class="line"></span><br><span class="line"># 然后写入文件123字符，发现大小时4k</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# echo &gt;file1 123</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ls -li</span><br><span class="line">total 4</span><br><span class="line">1179657 -rw-r--r-- 1 root root 4 Dec  1 14:34 file1</span><br><span class="line"></span><br><span class="line"># 然后copy这个文件，发现两个文件占用大小相同，复制的文件创建了一个新的i节点</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# cp file1 file2</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ls -li</span><br><span class="line">total 8</span><br><span class="line">1179657 -rw-r--r-- 1 root root 4 Dec  1 14:34 file1</span><br><span class="line">1179654 -rw-r--r-- 1 root root 4 Dec  1 14:35 file2</span><br><span class="line"></span><br><span class="line"># 然后我们移动file2到当前目录修改名称为file3，发现file2的节点没有发生变化，只是文件名称发生变化</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# mv file2 file3</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ls -li</span><br><span class="line">total 8</span><br><span class="line">1179657 -rw-r--r-- 1 root root 4 Dec  1 14:34 file1</span><br><span class="line">1179654 -rw-r--r-- 1 root root 4 Dec  1 14:35 file3</span><br></pre></td></tr></table></figure>
+
+<p>通过上述示例，我们发现，复制名称是创建了一个新的i节点及文件，而移动操作并不会创建新的i节点及数据块，只是修改了目中的文件的信息，比如上述文件名</p>
+<p>注意：上述移动我们只是移动到当前目录下，所以只需要修改名称，这个过程是非常快的。如果我们将文件移动到此分区的其他目录，我们发现移动也非常快，通过原理我们知道，移动到其他目录，我们也并不需要创建新的i节点及数据块等，只需要将目录链接做修改即可。但是如果我们将文件移动到其他分区，这里因为发生了文件系统的变换，从一个文件系统移动到另一个文件系统，这里就需要在创建新的i节点和数据块，所以这个过程就比较慢了。</p>
+<p>注意：一般我们创建文件，默认大小就是4K的大小，虽然上述示例我们只写入了三个数字，只占用102位，也就是12个字节，但是文件的大小还是4K，所以我们要创建很多小文件的时候，需要注意一下浪费空间，这个当然有办法解决，可以自行google</p>
+<p>上述我们给文件写入数据使用的是echo命令，注意的是，如果我们使用vim来修改文件内容的话，文件的i节点及数据块都会发生变化，这里在CentOS6、7版本都是这样。如果i节点发生变化，那么此文件就已经不是原来的文件，这里主要是vim对于文件一致性的考虑，所以会有这样的操作机制，vim打开的文件实际是一个交换文件，具体可以自行google</p>
+<p>rm命令，其实也不是将文件直接删除，而是将i节点与数据块的链接给断开了，所以我们在删除文件的时候操作也是非常快，不管多大的文件</p>
+<h3 id="利用ext4和xfs文件系统的特性修改文件的权限"><a href="#利用ext4和xfs文件系统的特性修改文件的权限" class="headerlink" title="利用ext4和xfs文件系统的特性修改文件的权限"></a>利用ext4和xfs文件系统的特性修改文件的权限</h3><p>我们之前知道原始的文件的权限就三种，rwx，原始修改文件权限的方式是一改全改，但是当我们有特殊的业务场景，比如我们需要一个文件，user1有读权限，user2有写权限，user3有执行权限，这个时候我们原始的设置权限的方式就不能满足我们的需求了，这个时候我们就可以利用ext4和xfs文件系统的特性来满足此需求，这两个文件系统支持了一个文件访问控制列表，叫facl的功能</p>
+<h4 id="getfacl命令"><a href="#getfacl命令" class="headerlink" title="getfacl命令"></a>getfacl命令</h4><p>我们可以使用getfacl命令来查看文件的控制访问列表，使用方法: getfacl 文件名，示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 普通查看方式</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ll file1</span><br><span class="line">-rw-r--r-- 1 root root 4 Dec  1 14:34 file1</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ls</span><br><span class="line">file1</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# getfacl file1</span><br><span class="line"># file: file1</span><br><span class="line"># owner: root</span><br><span class="line"># group: root</span><br><span class="line">user::rw-</span><br><span class="line">group::r--</span><br><span class="line">other::r--</span><br></pre></td></tr></table></figure>
+
+<p>这里我们使用faclget命令查看的文件控制访问列表跟我们使用ll查询出的信息一致，这是基本的一些控制信息，那我们怎么赋予指定用户或用户组的一些权限呢？使用setfacl命令</p>
+<h4 id="setfacl命令"><a href="#setfacl命令" class="headerlink" title="setfacl命令"></a>setfacl命令</h4><p>我们可以使用setfacl为指定的用户或用户组赋予权限，使用方法:setfacl -m u:用户名称:权限符号 文件名，具体使用示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 设置</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# setfacl -m u:user01:r file1</span><br><span class="line"></span><br><span class="line"># 查看文件权限</span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ls -l file1</span><br><span class="line">-rw-r--r--+ 1 root root 4 Dec  1 14:34 file1</span><br></pre></td></tr></table></figure>
+
+<p>我们通过setfacl命令设置完权限之后，我们使用普通ll命令查看此文件权限的时候，发现权限列表中 <strong>-rw-r–r–+</strong> 多了一个+号，这个+号表示除了我们标准权限之后，此文件还被设置了文件访问控制权限facl的权限，我们必须使用getfacl命令来查看，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# getfacl file1</span><br><span class="line"># file: file1</span><br><span class="line"># owner: root</span><br><span class="line"># group: root</span><br><span class="line">user::rw-</span><br><span class="line">user:user01:r--</span><br><span class="line">group::r--</span><br><span class="line">mask::r--</span><br><span class="line">other::r--</span><br></pre></td></tr></table></figure>
+
+<p>我们发现此文件user01用户有了读的权限，我们还可以给user02设置读和写的权限，设置示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# setfacl -m u:user02:rw file1</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ll</span><br><span class="line">total 4</span><br><span class="line">-rw-rw-r--+ 1 root root 4 Dec  1 14:34 file1</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# getfacl file1</span><br><span class="line"># file: file1</span><br><span class="line"># owner: root</span><br><span class="line"># group: root</span><br><span class="line">user::rw-</span><br><span class="line">user:user01:r--</span><br><span class="line">user:user02:rw-</span><br><span class="line">group::r--</span><br><span class="line">mask::rw-</span><br><span class="line">other::r--</span><br></pre></td></tr></table></figure>
+
+<p>如上我们就设置成功了，user02有了读写权限</p>
+<p>我们还可以为指定的组赋予权限，使用的还是setfacl命令，使用方法：setfacl -m g:组名称:权限 文件名，使用示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# setfacl -m g:group01:x file1</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# ll</span><br><span class="line">total 4</span><br><span class="line">-rw-rwxr--+ 1 root root 4 Dec  1 14:34 file1</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# getfacl file1</span><br><span class="line"># file: file1</span><br><span class="line"># owner: root</span><br><span class="line"># group: root</span><br><span class="line">user::rw-</span><br><span class="line">user:user01:r--</span><br><span class="line">user:user02:rw-</span><br><span class="line">group::r--</span><br><span class="line">group:group01:--x</span><br><span class="line">mask::rwx</span><br><span class="line">other::r--</span><br></pre></td></tr></table></figure>
+
+<p>如上我们就为新建组group01分配了执行权限</p>
+<p>收回权限我们只需要将setfacl命令参数中的 -m 修改为 -x，使用方法：setfacl -x u:用户名称 文件名，使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 收回</span><br><span class="line">root@iZm5ehzqow4ijp2ya2g2drZ test]# setfacl -x u:user02 file1</span><br><span class="line"></span><br><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ test]# getfacl file1</span><br><span class="line"># file: file1</span><br><span class="line"># owner: root</span><br><span class="line"># group: root</span><br><span class="line">user::rw-</span><br><span class="line">user:user01:r--</span><br><span class="line">group::r--</span><br><span class="line">group:group01:--x</span><br><span class="line">mask::r-x</span><br><span class="line">other::r--</span><br></pre></td></tr></table></figure>
+
+<p>注意：收回只能按照用户级别或者用户组级别，而不能收回单个权限编码，例如只收回某个用户的读权限，上述命令收回组权限使用用法与收回用户一样，直降u改为g即可，使用用法：setfacl -x g:用户组名称 文件名</p>
+<p>这样我们就可以非常细粒度及灵活的设置文件的具体权限</p>
+<h2 id="磁盘分区和挂载"><a href="#磁盘分区和挂载" class="headerlink" title="磁盘分区和挂载"></a>磁盘分区和挂载</h2><p>这里我们不详细描述磁盘的分区和挂载，因为用的不会太多，即使使用可以网上自行百度一下，这里只列举一下步骤</p>
+<p>首先第一种情况是需要分区的磁盘容量小于2T：</p>
+<p>首先使用：<strong>fdisk 分区设备</strong> 命令，然后输入 m 查看帮助命令，这里我们输入 n 选择分区类型，一般我们都是将一个磁盘划分为一个主分区，所以这里再选择输入 p，这是会提示我们输入分区号及分区大小，选择完成后，我们就可以选择输入命令，选择是保存还是不保存删除刚才输入的分区信息，保存使用 w ，保存后，我们就可以使用 fdisk -l 查看我们刚才创建的分区了</p>
+<p>注意:上述命令中分区设备示例： /dev/sdd        分好区后，路径是 /dev/sdd1</p>
+<p>接下来使用：<strong>mkfs.</strong> 命令来格式化分区的文件系统类型，使用方法：<strong>mkfs.文件系统类型 分区位置</strong>，这里我们一般选择ext4文件系统，这样我们就给分区格式化好了磁盘格式</p>
+<p>接下来:使用mkdir命令，创建一个目录</p>
+<p>接下来：使用mount命令将刚刚分好区的磁盘挂载到此目录上，使用方法：<strong>mount 分区路径 目录</strong></p>
+<p>这样我们就可以使用mount来查看磁盘的挂载情况，发现我们新添加分好区的磁盘就挂载到了指定的目录上，这样我们操作此目录中的内容，最后就落在了我们挂载的磁盘上</p>
+<p>第二种情况磁盘容量大有2T：</p>
+<p>这时我们就不能使用fdisk命令来为磁盘分区了，我们需要使用parted命令来操作，同样我们可以对标fdisk来操作，使用help来查看具体使用，当然具体流程是一样的，只不过分区的命令不一样，其他流程及命令都一样</p>
+<p>以上我们的操作都是保存在内存中的，如果我们的机器重启，配置就会丢失，如果我们需要固化下来，就需要修改一个配置文件，在此配置文件中进行指定挂载的配置，配置文件的位置：/etc/fstab,</p>
+<p>配置说明： 磁盘分区 挂载目录 文件系统格式 default 0 0</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/sdc1 /mnt/sdc1 ext4 default 0 0</span><br></pre></td></tr></table></figure>
+
+<p>将以上配置信息写入文件，就可以完成永久的挂载配置</p>
+<h2 id="创建交换分区"><a href="#创建交换分区" class="headerlink" title="创建交换分区"></a>创建交换分区</h2><p>swap是在硬盘中开辟的一块区域，之前我们介绍过，它的作用是临时的扩充内存的区域</p>
+<h3 id="新添加磁盘挂载为交换分区"><a href="#新添加磁盘挂载为交换分区" class="headerlink" title="新添加磁盘挂载为交换分区"></a>新添加磁盘挂载为交换分区</h3><p>注意这种方式我们很少用，因为很少用新添加的磁盘作为内存使用。上面我们讲述了如何新添加磁盘然后分区、挂载，现在我们讲述如何新添加磁盘然后分区挂载为交换分区</p>
+<p>查看交换分区大小使用free -m命令</p>
+<ol>
+<li><p>首先我们对新添加的硬盘进行分区，命令与上述一样，首先使用：<strong>fdisk 分区设备</strong> 命令，然后我们输入 n 选择分区类型，然后输入 p 表示将一个磁盘划分为一个主分区，这是会提示我们输入分区号及分区大小，分区编号一般选择 1 ，从1开始，分区大小可以不选择，直接默认使用全部，选择完成后，我们 w 保存配置，这样我们就可以查看我们的分区了</p>
+</li>
+<li><p>如同使用正常的文件系统一样，我们将磁盘分区为交换分区，也需要对它进行格式化，格式化命令：<strong>mkswap 分区位置</strong>， 格式化命令使用示例： mkswap /dev/sdd1</p>
+</li>
+<li><p>格式化完成就需要对此分区进行挂载了，如果是文件系统使用的是mount命令，挂载为内存分区使用的是：<strong>swapon 分区位置</strong>，挂载命令使用示例：swapon /dev/sdd1</p>
+</li>
+<li><p>这样我们就对内存分区扩展完成，可以使用 free -m 命令查看了</p>
+</li>
+</ol>
+<p>如果我们想将此新挂载的swap分区关闭掉，使用命令：<strong>swapoff 分区位置</strong>，使用示例：swapoff /dev/sdd1，这是使用 free -m 命令再次查看，发现就已经被关闭掉了</p>
+<h3 id="使用文件挂载为交换分区"><a href="#使用文件挂载为交换分区" class="headerlink" title="使用文件挂载为交换分区"></a>使用文件挂载为交换分区</h3><p>上述我们是新添加了一块磁盘作为交换分区，但是一般很不常用，一般我们是在已有磁盘开辟一块空间，作为交换分区，挂载方式如下：</p>
+<ol>
+<li><p>首先创建一个文件，文件创建未空洞文件形式，使用命令示例：<strong>dd if=/dev/zero bs=4M count=1024 of=/swapfile</strong>, 这里我们创建了一个每块为4M。一共1024块的大小的文件</p>
+</li>
+<li><p>下面我们需要格式化此文件，但是首先我们需要将此文件的权限处理好，负责可能会报关于权限的错误，所以这里首先：<strong>chmod 600 /swapfile</strong></p>
+</li>
+<li><p>然后格式化此文件，使用命令：<strong>mkswap /swapfile</strong></p>
+</li>
+<li><p>打开挂载此文件，使用命令：<strong>swapon /swapfile</strong></p>
+</li>
+</ol>
+<p>这样我们就可以使用 free -m 命令来查看了</p>
+<p>上述创建挂载方式跟我们普通磁盘文件系统挂载步骤差不多，所以一样都是保存在内存中的，如果我们的机器重启，配置就会丢失，如果我们需要固化下来，就需要修改一个配置文件，在此配置文件中进行指定挂载的配置，配置文件的位置：/etc/fstab</p>
+<p>配置说明： 磁盘分区 挂载目录 文件系统格式 default 0 0</p>
+<p>写入示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## 上述磁盘挂载配置</span><br><span class="line">/dev/sdc1 swap swap default 0 0</span><br><span class="line">## 上述文件挂载配置</span><br><span class="line">/swapfile swap swap default 0 0</span><br></pre></td></tr></table></figure>
+
+<p>将以上配置信息写入文件，就可以完成永久的挂载配置</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年11月17日 19:52</p>
+        <p>最后更新： 2019年12月15日 13:02</p>
         <p>原始链接： <a class="post-url" href="/2019/11/10/内存与磁盘管理/" title="内存与磁盘管理">https://jjw-story.github.io/2019/11/10/内存与磁盘管理/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -311,12 +417,22 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#内存与磁盘管理"><span class="post-toc-text">内存与磁盘管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内存查看命令"><span class="post-toc-text">内存查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#free命令"><span class="post-toc-text">free命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#top命令"><span class="post-toc-text">top命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#磁盘查看命令"><span class="post-toc-text">磁盘查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fdisk命令"><span class="post-toc-text">fdisk命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#df命令"><span class="post-toc-text">df命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#du命令"><span class="post-toc-text">du命令</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#内存与磁盘管理"><span class="post-toc-text">内存与磁盘管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内存查看命令"><span class="post-toc-text">内存查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#free命令"><span class="post-toc-text">free命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#top命令"><span class="post-toc-text">top命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#磁盘查看命令"><span class="post-toc-text">磁盘查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#fdisk命令"><span class="post-toc-text">fdisk命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#df命令"><span class="post-toc-text">df命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#du命令"><span class="post-toc-text">du命令</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常见文件系统"><span class="post-toc-text">常见文件系统</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#i节点和数据块操作"><span class="post-toc-text">i节点和数据块操作</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用ext4和xfs文件系统的特性修改文件的权限"><span class="post-toc-text">利用ext4和xfs文件系统的特性修改文件的权限</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#getfacl命令"><span class="post-toc-text">getfacl命令</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#setfacl命令"><span class="post-toc-text">setfacl命令</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#磁盘分区和挂载"><span class="post-toc-text">磁盘分区和挂载</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建交换分区"><span class="post-toc-text">创建交换分区</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#新添加磁盘挂载为交换分区"><span class="post-toc-text">新添加磁盘挂载为交换分区</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用文件挂载为交换分区"><span class="post-toc-text">使用文件挂载为交换分区</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
+  
+    <a href="/2019/12/29/Lamda/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Lamda
+        
+      </span>
+    </a>
   
   
     <a href="/2019/10/20/Elasticsearch核心技术/" id="article-nav-older" class="article-nav-link-wrap">
@@ -382,10 +498,10 @@
 <div class="sidebar-menu-box" id="sidebar-menu-box">
     <div class="sidebar-menu-box-container">
         <div id="sidebar-menu-box-categories">
-            <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/Python/">Python</a>
+            <a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/Python/">Python</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -418,7 +534,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a>
         </div>
     </div>
 </div>
