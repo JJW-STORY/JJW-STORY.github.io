@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>逻辑卷管理 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="逻辑卷管理什么是逻辑卷许多Linux使用者安装操作系统时都会遇到这样的困境：如何精确评估和分配各个硬盘分区的容量，如果当初评估不准确，一旦系统分区不够用时可能不得不备份、删除相关数据，甚至被迫重新规划分区并重装操作系统，以满足应用系统的需要 LVM逻辑卷相当于在传统的硬盘的底层上面在叠一层，把上面的这一层也当做一个硬盘来对待，只是这个硬盘是一个虚拟的硬盘，RAID其实就是一个逻辑卷的应用，Linu">
+<meta name="keywords" content="command,逻辑卷管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逻辑卷管理">
+<meta property="og:url" content="https://jjw-story.github.io/2020/03/15/逻辑卷管理/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="逻辑卷管理什么是逻辑卷许多Linux使用者安装操作系统时都会遇到这样的困境：如何精确评估和分配各个硬盘分区的容量，如果当初评估不准确，一旦系统分区不够用时可能不得不备份、删除相关数据，甚至被迫重新规划分区并重装操作系统，以满足应用系统的需要 LVM逻辑卷相当于在传统的硬盘的底层上面在叠一层，把上面的这一层也当做一个硬盘来对待，只是这个硬盘是一个虚拟的硬盘，RAID其实就是一个逻辑卷的应用，Linu">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-03-15T09:28:57.415Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="逻辑卷管理">
+<meta name="twitter:description" content="逻辑卷管理什么是逻辑卷许多Linux使用者安装操作系统时都会遇到这样的困境：如何精确评估和分配各个硬盘分区的容量，如果当初评估不准确，一旦系统分区不够用时可能不得不备份、删除相关数据，甚至被迫重新规划分区并重装操作系统，以满足应用系统的需要 LVM逻辑卷相当于在传统的硬盘的底层上面在叠一层，把上面的这一层也当做一个硬盘来对待，只是这个硬盘是一个虚拟的硬盘，RAID其实就是一个逻辑卷的应用，Linu">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-逻辑卷管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      逻辑卷管理
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Linux/">Linux</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-03-15
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="逻辑卷管理"><a href="#逻辑卷管理" class="headerlink" title="逻辑卷管理"></a>逻辑卷管理</h1><h2 id="什么是逻辑卷"><a href="#什么是逻辑卷" class="headerlink" title="什么是逻辑卷"></a>什么是逻辑卷</h2><p>许多Linux使用者安装操作系统时都会遇到这样的困境：如何精确评估和分配各个硬盘分区的容量，如果当初评估不准确，一旦系统分区不够用时可能不得不备份、删除相关数据，甚至被迫重新规划分区并重装操作系统，以满足应用系统的需要</p>
+<p>LVM逻辑卷相当于在传统的硬盘的底层上面在叠一层，把上面的这一层也当做一个硬盘来对待，只是这个硬盘是一个虚拟的硬盘，RAID其实就是一个逻辑卷的应用，Linux中默认使用的就是根目录，逻辑卷去管理磁盘的</p>
+<h2 id="增加逻辑卷"><a href="#增加逻辑卷" class="headerlink" title="增加逻辑卷"></a>增加逻辑卷</h2><p>增加逻辑卷首先我们首先需要添加物理硬盘，然后对添加的物理硬盘做好分区，注意：这里可以添加多块硬盘，然后我们建立上层系统，将几块硬盘做一个整合，整合成一个物理卷，然后再上层查看磁盘状态的时候，我们发现这几个硬盘它是一个整体，只有一块硬盘，这样我们就可以通过上层的系统将这块硬盘划分成不同的逻辑卷（比如，给根目录划分挂载，给boot目录划分挂载，给usr划分挂载，将这些目录进行隔离开，这些隔离开的空间就称为逻辑卷）</p>
+<p>下面是具体步骤：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># 1.将多块分区组成一个物理卷</span><br><span class="line">pvcreate /dev/sdb1 /dev/sdc1 /dev/sdd1</span><br><span class="line"># 注意这里可以使用简写，通配符</span><br><span class="line">pvcreate /dev/sd[b,c,d]1</span><br><span class="line"></span><br><span class="line"># 2.查看我们创建的物理卷，会发现我们添加的三块硬盘已经创建成了三个物理卷，但是他们的 VG 选项都是空的，VG选项表示他们属于哪个卷组，这里我们还没有对他们设置卷组</span><br><span class="line">pvs</span><br><span class="line"></span><br><span class="line"># 3.对物理卷设置卷组</span><br><span class="line">vgcreate vg1 /dev/sdb1 /dev/sdc1 /dev/sdd1</span><br><span class="line">-- 这里 vg1 表示卷组的名称</span><br><span class="line"></span><br><span class="line"># 4.创建成功后我们继续通过 pvs 命令查看，发现这三个分区的 VG 选项就有了值，是我们设置的vg1</span><br><span class="line">-- 注意一个分区只能属于一个卷组</span><br><span class="line"></span><br><span class="line"># 5.我们可以通过 vgs 命令来插件当前机器的卷组，来查看我们创建的卷组信息</span><br><span class="line">vgs</span><br><span class="line">-- 注意查询出来的 #LV 选项表述的就是此物理卷创建了几个逻辑卷，一般我们安装LINUX系统时，会默认创建一个逻辑卷，CENTOS，它里面会有两个逻辑卷，一般默认都是 / 和 boot 逻辑卷，我们先创建的物理卷这里会显示为0，表示还没有创建逻辑卷</span><br><span class="line"></span><br><span class="line"># 6.现在我们就可以创建逻辑卷了</span><br><span class="line"># 使用命令：lvcreate -L [逻辑卷大小] -n [逻辑卷名称] [物理卷名称]</span><br><span class="line">lvcreate -L 100M -n lv1 vg1</span><br><span class="line"></span><br><span class="line"># 7.现在通过lvs查看逻辑卷信息，我们发现里面已经有我们创建好的逻辑卷信息，然后通过vgs查看物理卷，发现vg1这个物理卷已经有了逻辑卷，既 #LV 选项值为1</span><br><span class="line">lvs</span><br><span class="line">vgs</span><br><span class="line"></span><br><span class="line"># 8.逻辑卷的使用，使用方法还是现将逻辑卷进行格式化，然后创建目录进行挂载</span><br><span class="line"># 8.1 创建文件夹</span><br><span class="line">mkdir /mnt/test</span><br><span class="line"># 8.2 格式化逻辑卷</span><br><span class="line">mkfs.xfs /dev/vg1/lv1</span><br><span class="line"># 8.3 mount挂载</span><br><span class="line">挂载成功后，此逻辑卷就可以正常使用</span><br></pre></td></tr></table></figure>
+
+<h2 id="扩充逻辑卷"><a href="#扩充逻辑卷" class="headerlink" title="扩充逻辑卷"></a>扩充逻辑卷</h2><p>很多时候当我们物理卷够用的情况下但是逻辑卷大小分配太小，我们可以直接从物理卷上扩充逻辑卷，有的情况是物理卷也太小，需要先扩充物理卷然后扩充逻辑卷，下面是扩充展示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># 1.扩充物理卷组</span><br><span class="line">首先添加磁盘，然后对新添加的磁盘进行分区，例如这里划分分区为 /dev/sde1</span><br><span class="line"></span><br><span class="line"># 2.将新的分区划分给需要扩充的物理卷组，下面命令 vg1 为物理卷组名称，后面是分区名称</span><br><span class="line">vgextend vg1 /dev/sde1</span><br><span class="line"></span><br><span class="line"># 3.使用pvs命令查看是否划分成功</span><br><span class="line">pvs</span><br><span class="line"></span><br><span class="line"># 4.使用vgs查看物理卷信息</span><br><span class="line">vgs</span><br><span class="line">-- 这里我们发现 vg1 物理卷的大小已经发生了变化，增大了我们新加入的磁盘分区大小</span><br><span class="line"></span><br><span class="line"># 5.扩充我们要扩充的逻辑卷, 下面命令 +10G 表示添加10G大小的空间给逻辑卷，后面是逻辑卷名称</span><br><span class="line">-- 注意：我们物理卷够用的时候，可以直接从这里开始扩充逻辑卷就好，不需要扩充物理卷</span><br><span class="line">lvextend -L +10G /dev/vg1/lv1</span><br><span class="line"></span><br><span class="line"># 6.使用lvs查看逻辑卷大小是否改变，这里发现已经被扩大</span><br><span class="line">lvs</span><br><span class="line"></span><br><span class="line">这里先不要着急，我们虽然看到逻辑卷已经被扩大，但是我们还没有告诉文件系统，文件系统还认为我们的大小没有变，这里需要告诉文件系统</span><br><span class="line"># 7.告诉文件系统</span><br><span class="line">xfs_growfs /dev/vg1/lv1</span><br><span class="line"></span><br><span class="line"># 8.使用 df -h 查看文件夹是否扩容成功</span><br><span class="line">df -h</span><br></pre></td></tr></table></figure>
+
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年03月15日 17:28</p>
+        <p>原始链接： <a class="post-url" href="/2020/03/15/逻辑卷管理/" title="逻辑卷管理">https://jjw-story.github.io/2020/03/15/逻辑卷管理/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/03/15/逻辑卷管理/&title=《逻辑卷管理》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/03/15/逻辑卷管理/&title=《逻辑卷管理》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/03/15/逻辑卷管理/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《逻辑卷管理》 — JJW-STORY&url=https://jjw-story.github.io/2020/03/15/逻辑卷管理/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/03/15/逻辑卷管理/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/03/15/逻辑卷管理/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/command/" class="color3">command</a>
+      
+    <a href="/tags/逻辑卷管理/" class="color1">逻辑卷管理</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#逻辑卷管理"><span class="post-toc-text">逻辑卷管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是逻辑卷"><span class="post-toc-text">什么是逻辑卷</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#增加逻辑卷"><span class="post-toc-text">增加逻辑卷</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#扩充逻辑卷"><span class="post-toc-text">扩充逻辑卷</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/03/22/shell/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Shell
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/02/16/高效员工起航训练营/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">高效员工起航训练营</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2020 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
