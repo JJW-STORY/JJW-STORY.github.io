@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="Docker入门容器技术介绍原始方式的应用程序部署有以下不足：  部署非常慢（需要找机房，安装操作系统及各种环境等）  成本非常高（有些应用程序占用的资源非常少，但是我们还是要部署一个机器，成本很高）  资源浪费（应用程序使用资源很少，导致我们的机器很多资源都在空置，造成浪费）  难于迁移和扩展（我们迁移应用的时候需要重新找机器安装各种环境，扩展同理，也需要我们准备各种环境，有的时候可以通过扩展机">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-04-26T03:14:15.165Z">
+<meta property="og:updated_time" content="2020-05-07T01:51:50.956Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker入门">
 <meta name="twitter:description" content="Docker入门容器技术介绍原始方式的应用程序部署有以下不足：  部署非常慢（需要找机房，安装操作系统及各种环境等）  成本非常高（有些应用程序占用的资源非常少，但是我们还是要部署一个机器，成本很高）  资源浪费（应用程序使用资源很少，导致我们的机器很多资源都在空置，造成浪费）  难于迁移和扩展（我们迁移应用的时候需要重新找机器安装各种环境，扩展同理，也需要我们准备各种环境，有的时候可以通过扩展机">
@@ -278,12 +278,14 @@
 <h3 id="Container操作"><a href="#Container操作" class="headerlink" title="Container操作"></a>Container操作</h3><ol>
 <li><p>创建container即实例化Image：docker run ‘Image tag’，image tag就是我们使用Dockerfile构建image时指定的tag</p>
 </li>
-<li><p>交互式运行container，及后台运行不自动关闭，以便我们可以再次container中进行一些操作：douker run -it ‘Image tag’，如下示例：</p>
+<li><p>交互式运行container，及后台运行不自动关闭，以便我们可以再次container中进行一些操作：docker run -it ‘Image name’，如下示例：</p>
 </li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ docker run jjw-story/hello-docker-c</span><br><span class="line">hello docker</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ docker run -it jjw-story/hello-docker-c</span><br><span class="line">hello docker</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
+<li><p>后台运行container：docker run -d ‘Image name’</p>
+</li>
 <li><p>查看当前所有正在运行的container：docker container ls，如下示例：</p>
 </li>
 <li><p>查看所有的container，包括历史运行的：docker container ls -a 或者 docker ps -a，如下示例：</p>
@@ -292,12 +294,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ docker container ls -a</span><br><span class="line">CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS                         PORTS               NAMES</span><br><span class="line">979454ee2253        jjw-story/hello-docker-c   &quot;/hello&quot;                 4 minutes ago       Exited (0) 4 minutes ago                           sweet_davinci</span><br><span class="line">ad4051fc47ed        jjw-story/hello-docker     &quot;java /HelloWorld&quot;       4 minutes ago       Created                                            clever_goodall</span><br></pre></td></tr></table></figure>
 
 <p>上述查询结果中，COMMAND 展示的就是我们在编写Dockerfile时制定的 CMD 所对应的命令内容</p>
-<ol start="5">
+<ol start="6">
 <li>删除container： docker container rm ‘Container ID’ 或者直接 docker rm ‘Container ID’ 效果是一样的，默认删除的就是container，Container ID是通用 container ls 命令查询出来的，这里的ID我们也可以只写ID的前几位，只要能区分出唯一即可，例如：</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">jw@jjw-PC:~$ docker container ls -a</span><br><span class="line">CONTAINER ID        IMAGE                         COMMAND                  CREATED             STATUS                         PORTS               NAMES</span><br><span class="line">d4d452d8cf2c        jjw-story/hello-docker-c      &quot;/hello&quot;                 3 minutes ago       Exited (0) 3 minutes ago                           competent_varahamihira</span><br><span class="line">6f40251fb684        jjw-story/hello-docker-c      &quot;/hello&quot;                 4 minutes ago       Exited (0) 4 minutes ago                           jovial_keldysh</span><br><span class="line"></span><br><span class="line">jw@jjw-PC:~$ docker container rm 6f</span><br><span class="line">6f</span><br><span class="line">jjw@jjw-PC:~$ docker container ls -a</span><br><span class="line">CONTAINER ID        IMAGE                         COMMAND                  CREATED             STATUS                      PORTS               NAMES</span><br><span class="line">d4d452d8cf2c        jjw-story/hello-docker-c      &quot;/hello&quot;                 5 minutes ago       Exited (0) 5 minutes ago                        competent_varahamihira</span><br></pre></td></tr></table></figure>
 
-<ol start="6">
+<ol start="7">
 <li><p>查看当前所有的container，并只显示id：docker container ls -aq，此命令会显示标题。去除标题：docker container ls -a | awk {‘print$1’}</p>
 </li>
 <li><p>基于上述命令删除所有的container：docker rm $(docker container ls -aq)</p>
@@ -310,7 +312,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2020年04月26日 11:14</p>
+        <p>最后更新： 2020年05月07日 09:51</p>
         <p>原始链接： <a class="post-url" href="/2020/04/20/Docker入门/" title="Docker入门">https://jjw-story.github.io/2020/04/20/Docker入门/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -437,6 +439,16 @@
 
 <nav id="article-nav">
   
+    <a href="/2020/04/28/Docker镜像的构建和发布/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Docker镜像的构建和发布及容器操作
+        
+      </span>
+    </a>
+  
   
     <a href="/2020/04/05/分布式消息队列/" id="article-nav-older" class="article-nav-link-wrap">
       <span class="article-nav-title">分布式消息队列</span>
@@ -504,7 +516,7 @@
             <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 13.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -537,7 +549,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 13.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
         </div>
     </div>
 </div>

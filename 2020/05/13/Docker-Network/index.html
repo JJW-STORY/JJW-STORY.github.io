@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Docker-Network | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="Dcocker网络-现象容器与宿主机的网络隔离首先我们创建一个容器，然后进入此容器查询容器的网关，然后退出口查看宿主机的网关，查看可以发现它们是完全不一样的，由此可见容器的Network Namespace与宿主机是隔离开的，演示如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344#">
+<meta name="keywords" content="Docker,Network">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker-Network">
+<meta property="og:url" content="https://jjw-story.github.io/2020/05/13/Docker-Network/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="Dcocker网络-现象容器与宿主机的网络隔离首先我们创建一个容器，然后进入此容器查询容器的网关，然后退出口查看宿主机的网关，查看可以发现它们是完全不一样的，由此可见容器的Network Namespace与宿主机是隔离开的，演示如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344#">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-05-21T13:18:16.695Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker-Network">
+<meta name="twitter:description" content="Dcocker网络-现象容器与宿主机的网络隔离首先我们创建一个容器，然后进入此容器查询容器的网关，然后退出口查看宿主机的网关，查看可以发现它们是完全不一样的，由此可见容器的Network Namespace与宿主机是隔离开的，演示如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344#">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Docker-Network" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Docker-Network
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Docker/">Docker</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-05-13
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="Dcocker网络-现象"><a href="#Dcocker网络-现象" class="headerlink" title="Dcocker网络-现象"></a>Dcocker网络-现象</h1><h2 id="容器与宿主机的网络隔离"><a href="#容器与宿主机的网络隔离" class="headerlink" title="容器与宿主机的网络隔离"></a>容器与宿主机的网络隔离</h2><p>首先我们创建一个容器，然后进入此容器查询容器的网关，然后退出口查看宿主机的网关，查看可以发现它们是完全不一样的，由此可见容器的Network Namespace与宿主机是隔离开的，演示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"># 1.启动容器</span><br><span class="line">jjw@jjw-PC:~$ docker run -d --name demo01 jjw-story/flask-hello-world</span><br><span class="line">645a63e0a07637efcd5fe85813d30eb5d92b4533b7c7a1458d2c4db5d6142cda</span><br><span class="line"></span><br><span class="line"># 2.进入容器查看网关</span><br><span class="line">jjw@jjw-PC:~$ docker exec -it demo01 /bin/bash</span><br><span class="line">root@645a63e0a076:/app# ip a</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">5: eth0@if6: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default </span><br><span class="line">    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line"></span><br><span class="line"># 3.查看宿主机网关</span><br><span class="line">jw@jjw-PC:~$ ip a</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: enp2s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state DOWN group default qlen 1000</span><br><span class="line">    link/ether d8:d0:90:00:dd:94 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">3: wlp3s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">    link/ether 48:5f:99:ce:dc:3b brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.1.9/24 brd 192.168.1.255 scope global dynamic noprefixroute wlp3s0</span><br><span class="line">       valid_lft 603108sec preferred_lft 603108sec</span><br><span class="line">    inet6 2409:8a00:78ce:bb0:eaf5:3d9b:3a9d:dfd0/64 scope global dynamic noprefixroute </span><br><span class="line">       valid_lft 259159sec preferred_lft 172759sec</span><br><span class="line">    inet6 fe80::d29c:f72a:7c51:83cc/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">4: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default </span><br><span class="line">    link/ether 02:42:ca:69:08:5a brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:caff:fe69:85a/64 scope link </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">6: veth531bf01@if5: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master docker0 state UP group default </span><br><span class="line">    link/ether ae:ba:05:48:45:07 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet6 fe80::acba:5ff:fe48:4507/64 scope link </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+
+<h2 id="容器与容器之间网络是互通的"><a href="#容器与容器之间网络是互通的" class="headerlink" title="容器与容器之间网络是互通的"></a>容器与容器之间网络是互通的</h2><p>我们创建第二个容器，然后进入第二个容器查看网关，发现与第一个容器是不一样的，然后我们在第二个容器中ping第一个容器的ip，发现是可以ping通的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># 1.创建第二个容器</span><br><span class="line">jjw@jjw-PC:~$ docker run -d --name demo02 jjw-story/flask-hello-world</span><br><span class="line">f6606faba1d160e78e4fb1accadadbb4cf61df5feddeabc1b3ef0d25f229fa3d</span><br><span class="line"></span><br><span class="line"># 2.进入容器查看第二个容器的网管</span><br><span class="line">jjw@jjw-PC:~$ docker exec -it demo02 /bin/bash</span><br><span class="line">root@f6606faba1d1:/app# ip a</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">7: eth0@if8: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default </span><br><span class="line">    link/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 3.ping第一个容器的ip地址</span><br><span class="line">root@f6606faba1d1:/app# ping 172.17.0.2</span><br><span class="line">PING 172.17.0.2 (172.17.0.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=1 ttl=64 time=0.169 ms</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=2 ttl=64 time=0.111 ms</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=3 ttl=64 time=0.106 ms</span><br><span class="line">64 bytes from 172.17.0.2: icmp_seq=4 ttl=64 time=0.103 ms</span><br><span class="line">^C</span><br><span class="line">--- 172.17.0.2 ping statistics ---</span><br><span class="line">4 packets transmitted, 4 received, 0% packet loss, time 73ms</span><br><span class="line">rtt min/avg/max/mdev = 0.103/0.122/0.169/0.028 ms</span><br></pre></td></tr></table></figure>
+
+<p>下面一节我们讲述一下原理</p>
+<h1 id="Namespace-网络命名空间"><a href="#Namespace-网络命名空间" class="headerlink" title="Namespace-网络命名空间"></a>Namespace-网络命名空间</h1><p>我们通过在Linux上创建一个可用的Network Namespace来说明它的原理</p>
+<ul>
+<li><p>查看当前机器的Network Namespace： sudo ip netns list</p>
+</li>
+<li><p>删除指定的Network Namespace： sudo ip netns delete [namespace名称]</p>
+</li>
+<li><p>创建Network Namespace： sudo ip netns add [namespace名称]</p>
+</li>
+<li><p>查看Network Namespace的网关及ip地址：sudo ip netns exec [namespace名称] ip a</p>
+</li>
+<li><p>查询各个网口当前的状态： ip link，注意 DOWN表示未启动，UP表示正在与运行，UNKNOWN表示未知</p>
+</li>
+<li><p>修改指定网口的状态： sudo ip netns exec [namespace名称] ip link set dev [网口名称] up</p>
+</li>
+<li><p><strong>l0：</strong>每次我们查询网关的时候都会发现有这样的一个网关，它代表的是localback0，本地回环口</p>
+</li>
+<li><p><strong>我们的网口需要UP起来，它必须是要与另外一个网口成为一对的，也就是说它必须是要两端直连起来的，也就是单个端口是没有办法UP起来的，这个是硬性限制，网络的基础知识，需要注意</strong></p>
+</li>
+</ul>
+<h2 id="创建自己的网口并且是UP状态示例"><a href="#创建自己的网口并且是UP状态示例" class="headerlink" title="创建自己的网口并且是UP状态示例"></a>创建自己的网口并且是UP状态示例</h2><ol>
+<li>添加自定义的Namespace，然后查询此Namespace中网口的ip和状态</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip netns add test1</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns list</span><br><span class="line">test1</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip a</span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br></pre></td></tr></table></figure>
+
+<p>我们发现此网口没有IP地址，并且状态是DOWN</p>
+<ol start="2">
+<li>修改此网口的状态为UP，并查看修改结果</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip link set dev lo up</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip link</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br></pre></td></tr></table></figure>
+
+<p>我们发现这里设置为UP之后，它并不是直接成为UP状态，而是成为了UNKNOWN状态，这是因为我们此端口并没有与另外一个端口成为一对并且直连，所以它并不会UP起来</p>
+<ol start="3">
+<li>我们创建一对相互配对的网口（为了创建出一个UP的端口）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">jw@jjw-PC:~$ sudo ip link add veth-test1 type veth peer name veth-test2</span><br><span class="line">jjw@jjw-PC:~$ ip link</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">2: enp2s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether d8:d0:90:00:dd:94 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">3: wlp3s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP mode DORMANT group default qlen 1000</span><br><span class="line">    link/ether 48:5f:99:ce:dc:3b brd ff:ff:ff:ff:ff:ff</span><br><span class="line">4: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP mode DEFAULT group default </span><br><span class="line">    link/ether 02:42:ca:69:08:5a brd ff:ff:ff:ff:ff:ff</span><br><span class="line">6: veth531bf01@if5: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master docker0 state UP mode DEFAULT group default </span><br><span class="line">    link/ether ae:ba:05:48:45:07 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">8: veth973fc89@if7: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master docker0 state UP mode DEFAULT group default </span><br><span class="line">    link/ether f6:6d:60:62:80:cf brd ff:ff:ff:ff:ff:ff link-netnsid 1</span><br><span class="line">9: veth-test2@veth-test1: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 62:55:74:b2:2f:11 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">10: veth-test1@veth-test2: &lt;BROADCAST,MULTICAST,M-DOWN&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 22:c8:a4:b3:f4:b2 brd ff:ff:ff:ff:ff:ff</span><br></pre></td></tr></table></figure>
+
+<p>创建后我们发现我们已经创建成功，并且他们的名称都是 veth-test2@veth-test1 和 veth-test1@veth-test2，它们有mac地址，但是没有ip地址，状态都为DOWN</p>
+<ol start="4">
+<li>将我们创建的网口添加到我们之前创建的Namespace中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip link set veth-test1 netns test1</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip link</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">10: veth-test1@if9: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 22:c8:a4:b3:f4:b2 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br></pre></td></tr></table></figure>
+
+<p>我们发现我们新创建的网口已经被添加到我们之前创建的Namespace中了</p>
+<ol start="5">
+<li>同理我们创建test2的Namespace，然后将veth-test2这个网口添加到test2这个Namespace中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip netns add test2</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns list</span><br><span class="line">test2</span><br><span class="line">test1 (id: 2)</span><br><span class="line">jjw@jjw-PC:~$ sudo ip link set veth-test2 netns test2</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test2 ip link</span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">9: veth-test2@if10: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 62:55:74:b2:2f:11 brd ff:ff:ff:ff:ff:ff link-netns test1</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li><p>查看本机的ip link，我们发现已经没有了刚才的veth-test2@veth-test1 和 veth-test1@veth-test2，说明我们已经将此两个端口放到了我们创建的两个Namespace中</p>
+</li>
+<li><p>给我们刚刚创建的两个Namespace的端口分配IP地址</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip addr add 192.168.1.1/24 dev veth-test1</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test2 ip addr add 192.168.1.2/24 dev veth-test2</span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li>这时如果我们去查看这两个Namespace的ip和状态，发现我们的网口还是没有ip地址，并且状态还是DOWN，这时我们需要设置将这两个网口启动起来</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip link set dev veth-test1 up</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test2 ip link set dev veth-test2 up</span><br></pre></td></tr></table></figure>
+
+<ol start="9">
+<li>这时我们再去查看这两个Namespace中的新创建网口状态和IP发现就都是正常的了</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip a</span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">12: veth-test1@if11: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">    link/ether 16:af:b8:ee:76:02 brd ff:ff:ff:ff:ff:ff link-netns test2</span><br><span class="line">    inet 192.168.1.1/24 scope global veth-test1</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::14af:b8ff:feee:7602/64 scope link </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ip link</span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">12: veth-test1@if11: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 16:af:b8:ee:76:02 brd ff:ff:ff:ff:ff:ff link-netns test2</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test2 ip a</span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">11: veth-test2@if12: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">    link/ether 36:f9:03:cb:ef:e1 brd ff:ff:ff:ff:ff:ff link-netns test1</span><br><span class="line">    inet 192.168.1.2/24 scope global veth-test2</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::34f9:3ff:fecb:efe1/64 scope link </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test2 ip link</span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">11: veth-test2@if12: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000</span><br><span class="line">    link/ether 36:f9:03:cb:ef:e1 brd ff:ff:ff:ff:ff:ff link-netns test1</span><br></pre></td></tr></table></figure>
+
+<p>现在我们就终于创建好了我们自己的正常的Namespace和互联互通的网口，我们就可以在其中一个Namespace中去ping另外一个Namespace的这个网口，发现就可以通了</p>
+<ol start="10">
+<li>互相ping IP地址</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ sudo ip netns exec test1 ping 192.168.1.2</span><br><span class="line">PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.031 ms</span><br><span class="line">64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.058 ms</span><br><span class="line">64 bytes from 192.168.1.2: icmp_seq=3 ttl=64 time=0.058 ms</span><br><span class="line">^C</span><br><span class="line">--- 192.168.1.2 ping statistics ---</span><br><span class="line">3 packets transmitted, 3 received, 0% packet loss, time 49ms</span><br><span class="line">rtt min/avg/max/mdev = 0.031/0.049/0.058/0.012 ms</span><br></pre></td></tr></table></figure>
+
+<p>综上就是我们Namespace的使用方法及具体作用，如第一节中我们所示，Docker创建的容器他们之间ip能互通，基本使用的就是此原理，与我们的示例原理是一致的</p>
+<h1 id="Docker-Bridge"><a href="#Docker-Bridge" class="headerlink" title="Docker Bridge"></a>Docker Bridge</h1><p>上述我们发现在创建容器后发现容器之间ip是互通的，并且在容器内部是可以ping通外部网络的，并且在我们每次启动一个容器，就会在宿主机器上多出一个网口，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"># 1.查询原本宿主机网口</span><br><span class="line">jw@jjw-PC:~$ ip a</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    ...</span><br><span class="line">2: enp2s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state DOWN group default qlen 1000</span><br><span class="line">    ...</span><br><span class="line">3: wlp3s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">    ...</span><br><span class="line">4: docker0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default </span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line"># 2.启动一个容器</span><br><span class="line">jjw@jjw-PC:~$ docker start demo01</span><br><span class="line">demo01</span><br><span class="line"></span><br><span class="line"># 3.查看现在宿主机网口</span><br><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    ...</span><br><span class="line">2: enp2s0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc pfifo_fast state DOWN group default qlen 1000</span><br><span class="line">    ...</span><br><span class="line">3: wlp3s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">    ...</span><br><span class="line">4: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default </span><br><span class="line">    link/ether 02:42:5b:44:0a:01 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::42:5bff:fe44:a01/64 scope link </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">8: veth54021aa@if7: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master docker0 state UP group default </span><br><span class="line">    link/ether 72:40:50:33:72:99 brd ff:ff:ff:ff:ff:ff link-netnsid 0</span><br><span class="line">    inet6 fe80::7040:50ff:fe33:7299/64 scope link </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
+
+<p>我们发现在上述启动一个容器后，宿主机新添加了一个网口veth54021aa@if7，并且它是与docker0网口相关联的，我们说这个新的网口就是第一节示例中的Network Namespace的一对peer，它们链接了容器的ip和docker0，docker0网口就是我们说的 Docker Bridge</p>
+<p>我们没创建一个容器，它都会创建这样的一个peer，然后与docker0相关联，这就是容器之间ip是互通的原理，也是容器内访问外网的原因</p>
+<p>Docker Bridge是Docker网络最重要的部分</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年05月21日 21:18</p>
+        <p>原始链接： <a class="post-url" href="/2020/05/13/Docker-Network/" title="Docker-Network">https://jjw-story.github.io/2020/05/13/Docker-Network/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/05/13/Docker-Network/&title=《Docker-Network》 — JJW-STORY&pic=/images/blogs/docker.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/05/13/Docker-Network/&title=《Docker-Network》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/05/13/Docker-Network/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Docker-Network》 — JJW-STORY&url=https://jjw-story.github.io/2020/05/13/Docker-Network/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/05/13/Docker-Network/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/05/13/Docker-Network/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Docker/" class="color2">Docker</a>
+      
+    <a href="/tags/Network/" class="color3">Network</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Dcocker网络-现象"><span class="post-toc-text">Dcocker网络-现象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#容器与宿主机的网络隔离"><span class="post-toc-text">容器与宿主机的网络隔离</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#容器与容器之间网络是互通的"><span class="post-toc-text">容器与容器之间网络是互通的</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Namespace-网络命名空间"><span class="post-toc-text">Namespace-网络命名空间</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建自己的网口并且是UP状态示例"><span class="post-toc-text">创建自己的网口并且是UP状态示例</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Docker-Bridge"><span class="post-toc-text">Docker Bridge</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2020/04/28/Docker镜像的构建和发布/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Docker镜像的构建和发布及容器操作</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2020 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 13.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 13.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16.67px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16.67px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
