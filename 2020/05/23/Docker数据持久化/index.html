@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Docker-数据持久化 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="Docker数据持久化简介我们创建的容器里面是可以写数据的,image是只读的,但是container是可以写数据的,但是我们在container里面写的数据仅限于存在于这个容器,如果我们将这个容器停掉或者删除掉,那么我们创建的文件或存储的数据就都没了,所以容器的存储是临时的. 但是有的时候我们就需要将一些数据保存起来,必须我们的数据库容器,这个我们就需要利用Docker的数据持久化技术. Doc">
+<meta name="keywords" content="Docker,数据持久化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker-数据持久化">
+<meta property="og:url" content="https://jjw-story.github.io/2020/05/23/Docker数据持久化/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="Docker数据持久化简介我们创建的容器里面是可以写数据的,image是只读的,但是container是可以写数据的,但是我们在container里面写的数据仅限于存在于这个容器,如果我们将这个容器停掉或者删除掉,那么我们创建的文件或存储的数据就都没了,所以容器的存储是临时的. 但是有的时候我们就需要将一些数据保存起来,必须我们的数据库容器,这个我们就需要利用Docker的数据持久化技术. Doc">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-02T14:08:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker-数据持久化">
+<meta name="twitter:description" content="Docker数据持久化简介我们创建的容器里面是可以写数据的,image是只读的,但是container是可以写数据的,但是我们在container里面写的数据仅限于存在于这个容器,如果我们将这个容器停掉或者删除掉,那么我们创建的文件或存储的数据就都没了,所以容器的存储是临时的. 但是有的时候我们就需要将一些数据保存起来,必须我们的数据库容器,这个我们就需要利用Docker的数据持久化技术. Doc">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Docker数据持久化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Docker-数据持久化
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Docker/">Docker</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-05-23
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="Docker数据持久化简介"><a href="#Docker数据持久化简介" class="headerlink" title="Docker数据持久化简介"></a>Docker数据持久化简介</h1><p>我们创建的容器里面是可以写数据的,image是只读的,但是container是可以写数据的,但是我们在container里面写的数据仅限于存在于这个容器,如果我们将这个容器停掉或者删除掉,那么我们创建的文件或存储的数据就都没了,所以容器的存储是临时的.</p>
+<p>但是有的时候我们就需要将一些数据保存起来,必须我们的数据库容器,这个我们就需要利用Docker的数据持久化技术.</p>
+<h2 id="Docker持久化数据的方案"><a href="#Docker持久化数据的方案" class="headerlink" title="Docker持久化数据的方案"></a>Docker持久化数据的方案</h2><ul>
+<li><p><strong>基于本地文件系统的Volume</strong>:可以在执行docker create 或者 docker run时,通过 -v 参数将主机的目录作为容器的数据卷.这部分功能便是基于本地文件系统的voloum管理.</p>
+</li>
+<li><p><strong>基于plugin的Volume</strong>:支持第三方的存储方案,比如NAS,aws</p>
+</li>
+</ul>
+<p>Volume的类型:</p>
+<ol>
+<li><p>受管理的Volume(data Volume):它是受管理的data volume,由docker后台自动创建,不需要我们通过 -v 参数指定,它的位置是固定的,但是名字是随机的</p>
+</li>
+<li><p>绑定挂载的Volume(bind Volume):具体的挂载位置可以由用户来指定,这样的好处是方便用户来管理</p>
+</li>
+</ol>
+<h1 id="Data-Volume"><a href="#Data-Volume" class="headerlink" title="Data Volume"></a>Data Volume</h1><p>这节主要讲述第一种的数据持久化方案,通过指定主机的目录作为容器的数据卷,我们主要是使用-v参数来指定volume的名称,然后发现不同的容器是可以复用一个volume</p>
+<p>我们通过安装一个MySQL容器并且指定数据持久化的位置(MySQL的Dockerfile中是有指定Volume的,我们只是通过 -v 参数来指定一个Volume名称),然后在此MySQL中创建一个表,然后删除此容器,重新创建一个新的MySQL容器,然后指定Volume是上一次创建的那个Volume,通过进入容器,发现上个容器中创建的表还是存在的,来说明数据持久化的方案是生效的.</p>
+<p>主要命令:</p>
+<ul>
+<li><p>-v 指定容器的数据存储位置及位置名称: docker run -d -v [volume名称]:[具体宿主机文件位置绝对路径] –name [容器名称] [image名称]</p>
+</li>
+<li><p>查看所有的Volume: docker volume ls</p>
+</li>
+<li><p>查看指定Volume的具体信息: docker volume inspect [volume名称]</p>
+</li>
+<li><p>删除指定的Volume: docker volume rm [volume名称]</p>
+</li>
+</ul>
+<p>下面是演示示例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"># 1.docker hub上下载MySQL5.7版本的Image</span><br><span class="line"></span><br><span class="line"># 2.查看Dockerfile发现由如下代码,表明指定了MySQL数据存储的具体宿主机位置</span><br><span class="line">VOLUME /var/lib/mysql</span><br><span class="line"></span><br><span class="line"># 3.启动此Docker容器, -e 指定了环境变量,设置此MySQL的ROOT用户密码. -v 指定了volume的名称地址</span><br><span class="line">jjw@jjw-PC:~$ docker run -d -v mysql:/var/lib/mysql --name mysql01 -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7</span><br><span class="line">28e8bb72065bb5417936b098952dc741969420e80de22d177c3cb50cfe538101</span><br><span class="line"></span><br><span class="line"># 4.查看我们创建的mysql Volume是否创建成功</span><br><span class="line">jjw@jjw-PC:~$ docker volume ls</span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line">local               mysql</span><br><span class="line"></span><br><span class="line"># 5.查看此volume的具体信息</span><br><span class="line">docker volume inspect [volume名称]</span><br><span class="line">jjw@jjw-PC:~$ docker volume inspect mysql</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;CreatedAt&quot;: &quot;2020-06-02T21:34:14+08:00&quot;,</span><br><span class="line">        &quot;Driver&quot;: &quot;local&quot;,</span><br><span class="line">        &quot;Labels&quot;: null,</span><br><span class="line">        &quot;Mountpoint&quot;: &quot;/var/lib/docker/volumes/mysql/_data&quot;,</span><br><span class="line">        &quot;Name&quot;: &quot;mysql&quot;,</span><br><span class="line">        &quot;Options&quot;: null,</span><br><span class="line">        &quot;Scope&quot;: &quot;local&quot;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"># 6.我们进入此MySQL容器中</span><br><span class="line">docker exec -it mysql01 /bin/bash</span><br><span class="line">jjw@jjw-PC:~$ docker exec -it mysql01 /bin/bash</span><br><span class="line">root@28e8bb72065b:/# </span><br><span class="line"></span><br><span class="line"># 7.查看当前数据库中的表并创建一个新的表叫docker</span><br><span class="line">root@c1afa5e97468:/# mysql -u root -p</span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 11</span><br><span class="line">Server version: 5.7.30 MySQL Community Server (GPL)</span><br><span class="line"></span><br><span class="line">show databases</span><br><span class="line">mysql&gt; show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">+--------------------+</span><br><span class="line">4 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">create database docker</span><br><span class="line">mysql&gt; create database docker;</span><br><span class="line">Query OK, 1 row affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">show database</span><br><span class="line">mysql&gt; show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| docker             |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">+--------------------+</span><br><span class="line">5 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line"># 8.退出容器并删除此容器</span><br><span class="line">jjw@jjw-PC:~$ docker rm -f mysql01</span><br><span class="line">mysql01</span><br><span class="line"></span><br><span class="line"># 9.查看volume,发现容器创建的volume还是在的</span><br><span class="line">jjw@jjw-PC:~$ docker volume ls</span><br><span class="line">DRIVER              VOLUME NAME</span><br><span class="line">local               mysql</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 10.我们重新去创建一个MySQL的容器,指定Volume还是上一次的那个Volume</span><br><span class="line">docker run -d -v mysql:/var/lib/mysql --name mysql02 -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql</span><br><span class="line"></span><br><span class="line"># 11.创建完成我们进入此新的容器中,并查看数据库总所有的表,发现我们之前mysql01创建的表还在,说明我们的数据持久化是成功的</span><br><span class="line">jjw@jjw-PC:~$ docker run -d -v mysql:/var/lib/mysql --name mysql02 -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7</span><br><span class="line">881ba147a8b1804edab835d268fd70bb6974a1e643f595d9ff98fff684868e3d</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ docker exec -it mysql02 /bin/bash</span><br><span class="line"></span><br><span class="line">root@881ba147a8b1:/# mysql -u root -p</span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 3</span><br><span class="line">Server version: 5.7.30 MySQL Community Server (GPL)</span><br><span class="line"></span><br><span class="line">show databases;</span><br><span class="line">mysql&gt; show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| docker             |</span><br><span class="line">| mysql              |</span><br><span class="line">| performance_schema |</span><br><span class="line">| sys                |</span><br><span class="line">+--------------------+</span><br><span class="line">5 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<h1 id="bind-volume"><a href="#bind-volume" class="headerlink" title="bind volume"></a>bind volume</h1><p>上一种方式我们创建的Volume需要在Dockerfile中使用 VOLUME 参数指定具体的位置,我们虽然可以通过-v参数修改volume的名称,但是不能修改具体位置.而这一节的这种方式我们是通过绑定的方式,不需要在Dockerfile中去定义,我们只需要在启动docker容器时指定容器的存储目录和本地的目录做一个绑定关系,这样我们当容器的目录中数据发生变化时,会同步到本地的目录中,因为其实它们使用的是同一个目录文件.</p>
+<p>以下我们通过示例来演示,示例内容主要是利用一个Dockerfile,然后在Dockerfile中使用 WORKDIR 指定工作目录,我们不使用 VOLUME 参数指定数据存储目录,然后我们启动容器时使用-v参数绑定一个本机目录,然后再容器中创建文件及修改文件,我们发现在本地的目录中也会创建这样的文件并跟随修改,并且我们在本机修改次文件内容,进入容器发现容器中的文件也跟随修改,因为它们是同一个文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 1.修改Dockerfile,添加WORKDIR参数</span><br><span class="line">WORKDIR /usr/share/test</span><br><span class="line"></span><br><span class="line"># 2.根据此Dockerfile构建image</span><br><span class="line"></span><br><span class="line"># 3.启动容器并指定绑定的目录</span><br><span class="line">docker run -d -v [本机目录绝对路径]:[容器中需要映射的目录] --name [容器名称] [image名称]</span><br><span class="line"></span><br><span class="line"># 4.进入容器内部在被bind的目录下创建一个文件</span><br><span class="line"></span><br><span class="line"># 5.退出容器进入本机绑定的目录发现由我们刚才在容器中创建的目录</span><br><span class="line"></span><br><span class="line"># 6.在本机修改此文件,然后进入容器内部,发现容器内的文件也被修改(因为他们是同一个文件)</span><br></pre></td></tr></table></figure>
+
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年06月02日 22:08</p>
+        <p>原始链接： <a class="post-url" href="/2020/05/23/Docker数据持久化/" title="Docker-数据持久化">https://jjw-story.github.io/2020/05/23/Docker数据持久化/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/05/23/Docker数据持久化/&title=《Docker-数据持久化》 — JJW-STORY&pic=/images/blogs/docker.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/05/23/Docker数据持久化/&title=《Docker-数据持久化》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/05/23/Docker数据持久化/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Docker-数据持久化》 — JJW-STORY&url=https://jjw-story.github.io/2020/05/23/Docker数据持久化/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/05/23/Docker数据持久化/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/05/23/Docker数据持久化/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Docker/" class="color2">Docker</a>
+      
+    <a href="/tags/数据持久化/" class="color1">数据持久化</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Docker数据持久化简介"><span class="post-toc-text">Docker数据持久化简介</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Docker持久化数据的方案"><span class="post-toc-text">Docker持久化数据的方案</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Data-Volume"><span class="post-toc-text">Data Volume</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#bind-volume"><span class="post-toc-text">bind volume</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/06/03/Docker-Compose/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Docker-Compose
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/05/13/Docker-Network/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Docker-Network</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2020 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 12.5px;">Django</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 12.5px;">Django</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
