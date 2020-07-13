@@ -107,6 +107,330 @@
       <div class="outer">
         <section id="main" class="body-wrap">
   
+    <article id="post-MySQL-实践" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/12/MySQL-实践/"  >MySQL-实践</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/MySQL/">MySQL</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/07/12/MySQL-实践/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/mysql.jpg" alt="MySQL-实践" title="MySQL-实践">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                普通索引和唯一索引的选择普通索引和唯一索引的查询过程对比例如：我们查询一个 where k=5 条件的SQL语句，这个查询语句在索引树上查找的过程，先是通过 B+ 树从树根开始，按层搜索到叶子节点，然后可以认为数据页内部通过二分法来定位记录。
+
+对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-07-12</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/MySQL/" class="color1">MySQL</a>
+      
+    <a href="/tags/实践/" class="color3">实践</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/07/12/MySQL-实践/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article id="post-MySQL-基础" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/10/MySQL-基础/"  >MySQL-基础</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/MySQL/">MySQL</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/07/10/MySQL-基础/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/mysql.jpg" alt="MySQL-基础" title="MySQL-基础">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                SQL查询语句的执行过程MySQL 可以分为 Server 层和存储引擎层两部分
+Server 层包括连接器、查询缓存、分析器、优化器、执行器等，涵盖 MySQL 的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。
+而存储引擎层负责数据的存储和提取。其架构模式是插件式的，支持 In...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-07-10</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/入门/" class="color3">入门</a>
+      
+    <a href="/tags/MySQL/" class="color1">MySQL</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/07/10/MySQL-基础/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article id="post-Kebernetes-进阶" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/30/Kebernetes-进阶/"  >Kebernetes-进阶</a>
+    </h1>
+  
+
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/06/30/Kebernetes-进阶/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/docker.jpg" alt="Kebernetes-进阶" title="Kebernetes-进阶">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                Kubectl连接K8s集群配置（Cluster配置）在我们搭建好K8s集群后，需要通过Kubectl 客户端连接集群并进行相关集群管控操作，一般我们只需要安装kubectl工具，然后将集群中生成的config文件，拷贝到我们需要连接集群的电脑的 ${HOME}/.kube/config 目录下，这样就可以操作K8s集群了。
+但是有的时候我们一台客户端电脑需要连接多个K8...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-06-30</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Kebernetes/" class="color1">Kebernetes</a>
+      
+    <a href="/tags/进阶/" class="color3">进阶</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/06/30/Kebernetes-进阶/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article id="post-Kubernetes" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/14/Kubernetes/"  >Kubernetes</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/Kubernetes/">Kubernetes</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/06/14/Kubernetes/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/docker.jpg" alt="Kubernetes" title="Kubernetes">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                Kubernetes介绍Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展。它与Swarm是类似的，并且是竞争产品。Swarm是Docker公司开发内置的，K8s是一个专门的社区，在2017年的时候，Docker公司宣布支持K8s，因为K8s的社区等都比较活跃及完善，所以这场竞争中，是K8s胜利了。
+使用Kubernetes可...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-06-14</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/入门/" class="color3">入门</a>
+      
+    <a href="/tags/Kubernetes/" class="color1">Kubernetes</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/06/14/Kubernetes/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article id="post-Docker-Swarm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/06/06/Docker-Swarm/"  >Docker-Swarm</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/Docker/">Docker</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/06/06/Docker-Swarm/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/docker.jpg" alt="Docker-Swarm" title="Docker-Swarm">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                容器编排介绍（Swarm Mode）我们之前的学习创建的容器都是在一台机器上的，但是实际生产环境中，我们创建的容器不可能都是在一台机器上的，而是在多台物理机器上。在生产环境中我们要部署一个应用，可能涉及很多个容器，而且这些容器不可能都部署在一台机器上，那么我们就需要解决一系列问题，比如：
+
+怎么去管理这么多容器
+怎么方便的横向扩展
+如果容器down了，怎么自动恢复
+如何去...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-06-06</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Docker/" class="color2">Docker</a>
+      
+    <a href="/tags/Swarm/" class="color1">Swarm</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/06/06/Docker-Swarm/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
     <article id="post-Docker-Compose" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -438,333 +762,6 @@
 
 
   
-    <article id="post-分布式消息队列" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/05/分布式消息队列/"  >分布式消息队列</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/MQ/">MQ</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/04/05/分布式消息队列/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/kafka.jpg" alt="分布式消息队列" title="分布式消息队列">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                MQ应用详解分布式消息队列的应用思考点
-生产端的消息可靠性投递 就是有些业务场景我们需要消息是百分之百投递成功的，或者与我们的数据库一定是一个原子性的操作
-
-消费端幂等 在生产端为了保证消息投递可靠的时候，可能会出现重复发送消息的情况，我们的消费端一定要做好消费的幂等，杜绝出现消息重复消费的情况
-
-MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可用的状态
-
-...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-04-05</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/MQ/" class="color3">MQ</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/04/05/分布式消息队列/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-shell" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/22/shell/"  >Shell</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/Linux/">Linux</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/03/22/shell/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/Linux.jpg" alt="Shell" title="Shell">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                Shellshell介绍Shell 是一个用 C 语言编写的程序，它是用户使用 Linux 的桥梁。Shell 既是一种命令语言，又是一种程序设计语言Shell是命令解释器，用来解释用户对操作系统的操作，也就是将我们用户执行的命令，翻译给内核，内核根据命令执行的结果，将结果反馈给用户Shell 脚本（shell script），是一种为 shell 编写的脚本程序，业界所...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-03-22</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/Shell/" class="color1">Shell</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/03/22/shell/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-逻辑卷管理" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/15/逻辑卷管理/"  >逻辑卷管理</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/Linux/">Linux</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/03/15/逻辑卷管理/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/shell.jpg" alt="逻辑卷管理" title="逻辑卷管理">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                逻辑卷管理什么是逻辑卷许多Linux使用者安装操作系统时都会遇到这样的困境：如何精确评估和分配各个硬盘分区的容量，如果当初评估不准确，一旦系统分区不够用时可能不得不备份、删除相关数据，甚至被迫重新规划分区并重装操作系统，以满足应用系统的需要
-LVM逻辑卷相当于在传统的硬盘的底层上面在叠一层，把上面的这一层也当做一个硬盘来对待，只是这个硬盘是一个虚拟的硬盘，RAID其实就是...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-03-15</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/command/" class="color3">command</a>
-      
-    <a href="/tags/逻辑卷管理/" class="color1">逻辑卷管理</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/03/15/逻辑卷管理/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-高效员工起航训练营" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/16/高效员工起航训练营/"  >高效员工起航训练营</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/02/16/高效员工起航训练营/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/efficient.jpg" alt="高效员工起航训练营" title="高效员工起航训练营">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                高效员工起航训练营如何使执行效果达到预期（以终为始）
-明确任务执行完成的目标，以任务实现达到的效果为目标，而不是以执行任务为目标
-任务执行效果未达到预期，应以实际证据来支撑未达成目标的原因，而不是临时应付造原因
-
-有效执行是第一有效的方案（积极主动）
-接收到任务时，应该立即投入到执行中，不要拖拉，总在快要到交付时间的时候才开始，这样可以完成的记住任务所有的需求或要求，避免...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-02-16</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/高效员工起航训练营/" class="color5">高效员工起航训练营</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/02/16/高效员工起航训练营/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-Lamda" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/12/29/Lamda/"  >Lamda</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/Lamda/">Lamda</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2019/12/29/Lamda/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/lamda.jpg" alt="Lamda" title="Lamda">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                Lamda表达式基本语法函数式接口的应用函数式接口就是Java类型系统中的接口，是只包含一个接口方法的特殊接口，我们在定义函数式接口时，可以使用注解 @FunctionalInterface 来完成语义化的检测
-以下是函数式接口的定义代码示例：
-1234567891011121314151617181920212223242526272829303132// 定义函数式接...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2019-12-29</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/Lamda/" class="color1">Lamda</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2019/12/29/Lamda/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -823,10 +820,10 @@ LVM逻辑卷相当于在传统的硬盘的底层上面在叠一层，把上面�
 <div class="sidebar-menu-box" id="sidebar-menu-box">
     <div class="sidebar-menu-box-container">
         <div id="sidebar-menu-box-categories">
-            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 12.5px;">Django</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 14px;">Django</a> <a href="/tags/Docker/" style="font-size: 18px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 14px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践/" style="font-size: 10px;">实践</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -859,7 +856,7 @@ LVM逻辑卷相当于在传统的硬盘的底层上面在叠一层，把上面�
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 12.5px;">Django</a> <a href="/tags/Docker/" style="font-size: 17.5px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 10px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 14px;">Django</a> <a href="/tags/Docker/" style="font-size: 18px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 14px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践/" style="font-size: 10px;">实践</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
         </div>
     </div>
 </div>

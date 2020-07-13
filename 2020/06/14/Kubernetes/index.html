@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Kubernetes | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="Kubernetes介绍Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展。它与Swarm是类似的，并且是竞争产品。Swarm是Docker公司开发内置的，K8s是一个专门的社区，在2017年的时候，Docker公司宣布支持K8s，因为K8s的社区等都比较活跃及完善，所以这场竞争中，是K8s胜利了。 使用Kubernetes可以：  自动化容器的部署和">
+<meta name="keywords" content="入门,Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes">
+<meta property="og:url" content="https://jjw-story.github.io/2020/06/14/Kubernetes/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="Kubernetes介绍Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展。它与Swarm是类似的，并且是竞争产品。Swarm是Docker公司开发内置的，K8s是一个专门的社区，在2017年的时候，Docker公司宣布支持K8s，因为K8s的社区等都比较活跃及完善，所以这场竞争中，是K8s胜利了。 使用Kubernetes可以：  自动化容器的部署和">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-07-10T12:50:14.433Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes">
+<meta name="twitter:description" content="Kubernetes介绍Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展。它与Swarm是类似的，并且是竞争产品。Swarm是Docker公司开发内置的，K8s是一个专门的社区，在2017年的时候，Docker公司宣布支持K8s，因为K8s的社区等都比较活跃及完善，所以这场竞争中，是K8s胜利了。 使用Kubernetes可以：  自动化容器的部署和">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Kubernetes" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Kubernetes
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Kubernetes/">Kubernetes</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-06-14
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="Kubernetes介绍"><a href="#Kubernetes介绍" class="headerlink" title="Kubernetes介绍"></a>Kubernetes介绍</h1><p>Kubernetes（k8s）是自动化容器操作的开源平台，这些操作包括部署，调度和节点集群间扩展。它与Swarm是类似的，并且是竞争产品。Swarm是Docker公司开发内置的，K8s是一个专门的社区，在2017年的时候，Docker公司宣布支持K8s，因为K8s的社区等都比较活跃及完善，所以这场竞争中，是K8s胜利了。</p>
+<p>使用Kubernetes可以：</p>
+<ol>
+<li>自动化容器的部署和复制</li>
+<li>随时扩展或收缩容器规模</li>
+<li>将容器组织成组，并且提供容器间的负载均衡</li>
+<li>很容易地升级应用程序容器的新版本</li>
+<li>提供容器弹性，如果容器失效就替换它，等等…</li>
+</ol>
+<p>Kubernetes解决的问题：</p>
+<ol>
+<li>调度 - 容器应该在哪个机器上运行</li>
+<li>生命周期和健康状况 - 容器在无错的条件下运行</li>
+<li>服务发现 - 容器在哪，怎样与它通信</li>
+<li>监控 - 容器是否运行正常</li>
+<li>认证 - 谁能访问容器</li>
+<li>容器聚合 - 如何将多个容器合并成一个工程</li>
+</ol>
+<h1 id="Kubernetes架构及组件"><a href="#Kubernetes架构及组件" class="headerlink" title="Kubernetes架构及组件"></a>Kubernetes架构及组件</h1><p>Kubernetes属于主从分布式架构，主要由Master Node和Worker Node组成，以及包括客户端命令行工具kubectl和其它附加项（Add on）。</p>
+<h2 id="Master-Node"><a href="#Master-Node" class="headerlink" title="Master Node"></a>Master Node</h2><p>作为控制节点，对集群进行调度管理（它类似于Swarm的Manager节点），它是K8s集群的大脑。Master Node由API Server、Scheduler、Cluster State Store和Controller-Manger Server所组成。</p>
+<h3 id="API-Server"><a href="#API-Server" class="headerlink" title="API Server"></a>API Server</h3><p>API Server是暴露给外接访问的，我们可以通过UI或者CLI通过API Server去跟集群进行交互。</p>
+<p>API Server主要用来处理REST的操作，确保它们生效，并执行相关业务逻辑，以及更新etcd（或者其他存储）中的相关对象。API Server是所有REST命令的入口，它的相关结果状态将被保存在etcd（或其他存储）中。</p>
+<p>另外，API Server也作为集群的网关。默认情况，客户端通过API Server对集群进行访问，客户端需要通过认证，并使用API Server作为访问Node和Pod（以及service）的堡垒和代理/通道。</p>
+<h3 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a>Scheduler</h3><p>Scheduler是一个调度模块，比如我们通过API Server创建一个应用，这个应用有两个容器，那么这两个容器到底要部署在哪个节点上，这就是通过Scheduler模块来进行一些算法来确认的。</p>
+<p>scheduler组件为容器自动选择运行的主机。依据请求资源的可用性，服务请求的质量等约束条件，scheduler监控未绑定的pod，并将其绑定至特定的node节点。Kubernetes也支持用户自己提供的调度器，Scheduler负责根据调度策略自动将Pod部署到合适Node中，调度策略分为预选策略和优选策略，Pod的整个调度过程分为两步：</p>
+<ol>
+<li>预选Node：遍历集群中所有的Node，按照具体的预选策略筛选出符合要求的Node列表。如没有Node符合预选策略规则，该Pod就会被挂起，直到集群中出现符合要求的Node。</li>
+<li>优选Node：预选Node列表的基础上，按照优选策略为待选的Node进行打分和排序，从中获取最优Node。</li>
+</ol>
+<h3 id="Controller-Manager-Server"><a href="#Controller-Manager-Server" class="headerlink" title="Controller-Manager Server"></a>Controller-Manager Server</h3><p>控制管理服务器，主要是控制容器的负载均衡，或者对容器的横向扩展，比如增加节点等。</p>
+<p>它用于执行大部分的集群层次的功能，它既执行生命周期功能(例如：命名空间创建和生命周期、事件垃圾收集、已终止垃圾收集、级联删除垃圾收集、node垃圾收集)，也执行API业务逻辑（例如：pod的弹性扩容）。控制管理提供自愈能力、扩容、应用生命周期管理、服务发现、路由、服务绑定和提供。Kubernetes默认提供Replication Controller、Node Controller、Namespace Controller、Service Controller、Endpoints Controller、Persistent Controller、DaemonSet Controller等控制器。</p>
+<h3 id="etcd（Cluster-state-store）"><a href="#etcd（Cluster-state-store）" class="headerlink" title="etcd（Cluster state store）"></a>etcd（Cluster state store）</h3><p>集群状态存储，Kubernetes默认使用etcd作为集群整体存储，当然也可以使用其它的技术。etcd是一个简单的、分布式的、一致的key-value存储，主要被用来共享配置和服务发现。etcd提供了一个CRUD操作的REST API，以及提供了作为注册的接口，以监控指定的Node。集群的所有状态都存储在etcd实例中，并具有监控的能力，因此当etcd中的信息发生变化时，就能够快速的通知集群中相关的组件。</p>
+<h2 id="Worker-Node"><a href="#Worker-Node" class="headerlink" title="Worker Node"></a>Worker Node</h2><p>作为真正的工作节点，运行业务应用的容器；Worker Node包含kubelet、kube proxy和Fluented、Container Runtime。</p>
+<h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>在Kubernets中，Pod作为基本的执行单元，在Kubernetes中，最小的管理元素不是一个个独立的容器，而是Pod，Pod是最小的，管理，创建，计划的最小单元。Pod指的是具有相同的Name Space（这里的Name Space包含了所有的，最重要的是Network Name Space）的一些Container的组合，容器可能有多个，如果是多个，它们之间共享一个Network Name Space所以它可以拥有多个容器和存储数据卷，能够方便在每个容器中打包一个单一的应用，从而解耦了应用构建时和部署时的所关心的事项，已经能够方便在物理机/虚拟机之间进行迁移。</p>
+<h3 id="Kubelet"><a href="#Kubelet" class="headerlink" title="Kubelet"></a>Kubelet</h3><p>Kubelet是Kubernetes中最主要的控制器，它是Pod和Node API的主要实现者，Kubelet负责驱动容器执行层。在Kubernetes中，应用容器彼此是隔离的，并且与运行其的主机也是隔离的，这是对应用进行独立解耦管理的关键点。</p>
+<p>API准入控制可以拒绝或者Pod，或者为Pod添加额外的调度约束，但是Kubelet才是Pod是否能够运行在特定Node上的最终裁决者，而不是scheduler或者DaemonSet。kubelet默认情况使用cAdvisor进行资源监控。<strong>负责管理Pod、容器、镜像、数据卷等，实现集群（Manager）对节点的管理</strong>，并将容器的运行状态汇报给Kubernetes API Server。</p>
+<h3 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube proxy"></a>kube proxy</h3><p>它是跟网络有关的，（总结就是例如一个service有多个容器，我们对这个service的所有容器提供一个公共的IP，并且实现负载均衡），基于一种公共访问策略（例如：负载均衡），服务提供了一种访问一群pod的途径。<strong>此方式通过创建一个虚拟的IP来实现，客户端能够访问此IP，并能够将服务透明的代理至Pod</strong>。每一个Node都会运行一个kube-proxy，kube proxy通过iptables规则引导访问至服务IP，并将重定向至正确的后端应用，通过这种方式kube-proxy提供了一个高可用的负载均衡解决方案。服务发现主要通过DNS实现。</p>
+<p>在Kubernetes中，kube proxy负责为Pod创建代理服务；引到访问至服务；并实现服务到Pod的路由和转发，以及通过应用的负载均衡。</p>
+<h3 id="Container-Runtime"><a href="#Container-Runtime" class="headerlink" title="Container Runtime"></a>Container Runtime</h3><p>每一个Node都会运行一个Container Runtime，其负责下载镜像和运行容器。这里容器我们一般选择Docker，当然也可以选择其他产品。</p>
+<h3 id="Fluented"><a href="#Fluented" class="headerlink" title="Fluented"></a>Fluented</h3><p>主要是用于日志的采集、存储、查询等。</p>
+<h2 id="Add-on"><a href="#Add-on" class="headerlink" title="Add-on"></a>Add-on</h2><p>Add-on是对Kubernetes核心功能的扩展，例如增加网络和网络策略等能力，在Kunbernetes中可以以附加项的方式扩展Kubernetes的功能，目前主要有网络、服务发现和可视化这三大类的附加项。</p>
+<h2 id="kubectl"><a href="#kubectl" class="headerlink" title="kubectl"></a>kubectl</h2><p>kubectl是Kubernetes集群的命令行工具，通过kubectl能够对集群本身进行管理，并能够在集群上进行容器化应用的安装部署。它用于通过命令行与API Server进行交互，而对Kubernetes进行操作，实现在集群中进行各种资源的增删改查等操作。命令的语法如下所示：kubectl [command] [TYPE] [NAME] [flags]</p>
+<h1 id="Kubernates安装"><a href="#Kubernates安装" class="headerlink" title="Kubernates安装"></a>Kubernates安装</h1><ol>
+<li><p>Kubernates-the-hard-way：最基础的方式，一步一步的安装各种组件，然后安装完成K8s集群，困难度很高</p>
+</li>
+<li><p>minikube：是一个工具，它能快速在我们本地创建一个只有一个节点的K8s集群</p>
+</li>
+<li><p>kuberadm：是一个工具，它能快速在我们本地搭建一个有多个节点的K8s集群</p>
+</li>
+<li><p>kops：快速的在云上创建K8s集群，比如AWS等，操作比较简单</p>
+</li>
+<li><p>Tectonic：企业版的一个工具，节点数量比较少，免费，大于十个节点是收费的</p>
+</li>
+<li><p>Play Way Kubernates：在云上快速搭建一个K8s集群，但是它有时间限制，四个小时后会自动销毁</p>
+</li>
+</ol>
+<p>具体的搭建方法可以Google或者Baidu</p>
+<p>我们这里使用minikube的方式来创建。</p>
+<p>安装完成我们就可以通过一些基础命令开查看K8s集群的状态了，例如：</p>
+<ol>
+<li><p>kubectl config view：查看当前config的基本情况，包括Api的IP地址和端口，以及认证信息，context的名字等</p>
+</li>
+<li><p>kubectl config get-contexts：查看当前的context</p>
+</li>
+<li><p>kubectl cluster-info：查看当前K8s集群的基本情况，节点信息，类似于swarm中的 docker node 命令</p>
+</li>
+<li><p>使用minikube创建的k8s集群我们可以通过 minikube ssh 命令进入到虚拟机中，在这里面我们可以做具体的操作，比如直接操作docker等</p>
+</li>
+</ol>
+<h1 id="Pod详解及基本操作命令"><a href="#Pod详解及基本操作命令" class="headerlink" title="Pod详解及基本操作命令"></a>Pod详解及基本操作命令</h1><p>K8s我们不直接对container进行操作，pod是我们的基本操作单元。之前我们说过，一个Pod中的容器是共享一个Namespace的，他们之间是可以直接通信的。</p>
+<h2 id="基础操作"><a href="#基础操作" class="headerlink" title="基础操作"></a>基础操作</h2><p>创建Pod，K8s中我们创建Pod需要通过一个yml文件来创建，这个yml文件有点类似于我们之前学习docker-compose和swarm的stack的文件，以下是一个示例文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># api的版本</span><br><span class="line">apiVersion: v1</span><br><span class="line"></span><br><span class="line"># yml锁定义的内容的类型，这里是一个Pod</span><br><span class="line">kind: Pod</span><br><span class="line"></span><br><span class="line"># 一些基本的元数据</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-pod</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line"></span><br><span class="line"># 最重要的部分，它是直接定义容器的</span><br><span class="line">spec:</span><br><span class="line"></span><br><span class="line">  # containers表示我们可以定义多个容器，这里只写了一些</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx-container</span><br><span class="line">    image: nginx</span><br><span class="line">    ports:</span><br><span class="line">    - name: nginx-port</span><br><span class="line">      containerPort: 80</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>kubectl create -f [yml文件的路径名称]： 创建Pod</p>
+</li>
+<li><p>kubectl delete -f [yml文件的路径名称]： 删除已经创建的Pod</p>
+</li>
+<li><p>kubectl get pods：查看当前集群中所有的Pod及状态信息等</p>
+</li>
+<li><p>kubectl get pods -o wide：查看当前集群中所有的Pod及状态信息，包含的信息更全面一些，包含了容器的IP信息和运行的节点等</p>
+</li>
+<li><p>kubectl delete pods [Pod名称]：删除指定的Pod</p>
+</li>
+<li><p>kubectl describe [Pod名称]：查看Pod的详细信息，包含名称，节点信息，Namespace，所有的Container的详细信息，我们的Pod中的具体容器信息也能显示出来，这里我们就能够查到容器的Iamge、IP、端口、容器ID、状态等信息</p>
+</li>
+<li><p>kubectl exec -it [Pod名称] -c [Pod中Container名称] /bin/bash：进入Pod中的具体某一个容器，如果我们这里不使用 -c 参数，默认是进入第一个容器中</p>
+</li>
+<li><p>kubectl port-forward [Pod名称] [本地端口:Pod端口]：端口映射，类似于将容器的端口映射到宿主机上，此命令如果停止我们就无法访问</p>
+</li>
+<li><p>kubectl get nodes: 查询K8s集群中所有的节点信息</p>
+</li>
+</ul>
+<h1 id="ReplicationController"><a href="#ReplicationController" class="headerlink" title="ReplicationController"></a>ReplicationController</h1><p>Replication Controller简称RC，RC是Kubernetes系统中的核心概念之一，简单来说，RC可以保证在任意时间运行Pod的副本数量，能够保证Pod总是可用的。如果实际Pod数量比指定的多那就结束掉多余的，如果实际数量比指定的少就新启动一些Pod，当Pod失败、被删除或者挂掉后，RC都会去自动创建新的Pod来保证副本数量，所以即使只有一个Pod，我们也应该使用RC来管理我们的Pod。可以说，通过ReplicationController，Kubernetes实现了集群的高可用性。</p>
+<ul>
+<li>核心命令：</li>
+</ul>
+<ol>
+<li><p><strong>kubectl create -f [rc的yml路径名称]：</strong>根据yml文件创建ReplicationController应用</p>
+</li>
+<li><p><strong>kubectl get rc：</strong>查看我们K8s集群所有的rc的简单信息</p>
+</li>
+<li><p><strong>kubectl get rc -o wide：</strong>查看我们K8s集群所有的rc的详细一些信息</p>
+</li>
+<li><p><strong>kubectl scala rc [rc名称] –replicas=[要扩展后或回收后的Pod总数量]：</strong>扩展或者回收rc应用的pod</p>
+</li>
+<li><p><strong>kubectl delete -f [rc的yml路径名称]：</strong>根据yml文件删除ReplicationController应用</p>
+</li>
+</ol>
+<p>ReplicationController和Pod一样，都是Kubernetes中的对象，因此创建方式类似。通过yaml或json描述文件来定义一个ReplicationController对象。一个最简单的ReplicationController的定义如下 rc-nginx.yml文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: ReplicationController</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line">spec:</span><br><span class="line">  </span><br><span class="line">  # 指定副本数，这里指定为3，那么K8s就会创建三个Pod</span><br><span class="line">  replicas: 3</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: nginx</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
+
+<p>基于此文件，我们就可以通过命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"># 1.通过rc-nginx.yml来创建我们的应用</span><br><span class="line">jjw@jjw-PC:~$ kubectl create -f rc-nginx.yml</span><br><span class="line">replicationcontroller/nginx created</span><br><span class="line"></span><br><span class="line"># 2.查看我们K8s集群创建的此rc的简单信息</span><br><span class="line">jjw@jjw-PC:~$ kubectl get rc</span><br><span class="line">NAME    DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx   3         3         0       32s</span><br><span class="line"></span><br><span class="line"># 3.查看集群中所有Pod的具体信息，这里有三个Pod，因为我们在rc-nginx.yml文件中指定了replicas为3个</span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods</span><br><span class="line">NAME          READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-5p7s2   1/1     Running   0          61s</span><br><span class="line">nginx-ckph9   1/1     Running   0          61s</span><br><span class="line">nginx-rs8qk   1/1     Running   0          61s</span><br><span class="line"></span><br><span class="line"># 4.我们尝试通过命令删除上述查询出的其中一个Pod</span><br><span class="line">jjw@jjw-PC:~$ kubectl delete pods nginx-5p7s2</span><br><span class="line">pod &quot;nginx-5p7s2&quot; deleted</span><br><span class="line"></span><br><span class="line"># 5.删除之后我们再次查看所有Pod，发现有四个，其中一个的状态为Terminating，然后新增了一个，一共三个是Runnig的状态，说明我们通过rc创建的Pod，它能帮我们维持Pod的数目，这里与Swarm中的stack是一样的</span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods</span><br><span class="line">NAME          READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-ckph9   1/1     Running   0          51s</span><br><span class="line">nginx-rs8qk   1/1     Running   0          51s</span><br><span class="line">nginx-6w6zs   1/1     Running   0          4m1s</span><br><span class="line"></span><br><span class="line"># 6.我们通过scala将此rc的Pod数量降为2个</span><br><span class="line">jjw@jjw-PC:~$ kubectl scale rc nginx --replicas=2</span><br><span class="line">replicationcontroller/nginx scaled</span><br><span class="line"></span><br><span class="line"># 7.然后查看rc的具体信息，发现该nginx rc只有两个了</span><br><span class="line">jjw@jjw-PC:~$ kubectl get rc</span><br><span class="line">NAME    DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx   2         2         2       7m22s</span><br><span class="line"></span><br><span class="line"># 8.我们查看每一个Pod的具体信息，它们的IP地址是不同的</span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods -o wide</span><br><span class="line">NAME          READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES</span><br><span class="line">nginx-ckph9   1/1     Running   0          7m45s   172.18.0.6   minikube   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">nginx-rs8qk   1/1     Running   0          7m45s   172.18.0.5   minikube   &lt;none&gt;           &lt;none&gt;</span><br><span class="line"></span><br><span class="line"># 9.我们将其中一个pod的端口映射到当前机器上</span><br><span class="line">jjw@jjw-PC:~$ kubectl port-forward nginx-ckph9 8080:80</span><br><span class="line">Forwarding from 127.0.0.1:8080 -&gt; 80</span><br><span class="line">Forwarding from [::1]:8080 -&gt; 80</span><br><span class="line"></span><br><span class="line"># 10.通过在外部访问，发现我们的8080端口能正确访问映射到pod的80端口</span><br><span class="line">jjw@jjw-PC:~$ curl 127.0.0.1:8080</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    body &#123;</span><br><span class="line">        width: 35em;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line">        font-family: Tahoma, Verdana, Arial, sans-serif;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line"># 11.删除此ReplicationController</span><br><span class="line">jjw@jjw-PC:~$ kubectl delete -f rc-nginx.yml</span><br><span class="line">replicationcontroller &quot;nginx&quot; deleted</span><br></pre></td></tr></table></figure>
+
+<h1 id="ReplicaSet"><a href="#ReplicaSet" class="headerlink" title="ReplicaSet"></a>ReplicaSet</h1><p>在新版本的 Kubernetes 中建议使用 ReplicaSet（简称为RS ）来取代 ReplicationController。ReplicaSet 跟 ReplicationController 没有本质的不同，只是名字不一样，<strong>并且 ReplicaSet 支持集合式的 selector（ReplicationController 仅支持等式）</strong></p>
+<ul>
+<li>核心命令（与ReplicationController的核心命令大概相同）：</li>
+</ul>
+<ol>
+<li><p><strong>kubectl create -f [rs的yml路径名称]：</strong>根据yml文件创建ReplicaSet应用</p>
+</li>
+<li><p><strong>kubectl get rs：</strong>查看我们K8s集群所有的rs的简单信息</p>
+</li>
+<li><p><strong>kubectl get rs -o wide：</strong>查看我们K8s集群所有的rs的详细一些信息</p>
+</li>
+<li><p><strong>kubectl scale rs [rs名称] –replicas=[要扩展后或回收后的Pod总数量]：</strong>扩展或者回收rs应用的pod</p>
+</li>
+<li><p><strong>kubectl delete -f [rs的yml路径名称]：</strong>根据yml文件删除ReplicaSet应用</p>
+</li>
+</ol>
+<p>下面是rs文件示例，rs-nginx.yml:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: ReplicaSet</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx</span><br><span class="line"></span><br><span class="line">  # 注意 labels的定义与RC有所不同</span><br><span class="line">  labels:</span><br><span class="line">    tier: frontend</span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      tier: frontend</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: nginx</span><br><span class="line">      labels:</span><br><span class="line">        tier: frontend</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        image: nginx</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
+
+<p>具体的操作我们发现与RC是没有什么区别的，我们可以通过上面的示例，替换一下命令来测试一下，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">jjw@jjw-PC:~$ kubectl create -f rs-nginx.yml </span><br><span class="line">replicaset.apps/nginx created</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ kubectl get rs</span><br><span class="line">NAME    DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx   3         3         0       10s</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods</span><br><span class="line">NAME          READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-7zzbg   1/1     Running   0          28s</span><br><span class="line">nginx-nzsrh   1/1     Running   0          28s</span><br><span class="line">nginx-zhzbk   1/1     Running   0          28s</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ kubectl scale rs nginx --replicas=4</span><br><span class="line">replicaset.apps/nginx scaled</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods</span><br><span class="line">NAME          READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-7zzbg   1/1     Running   0          91s</span><br><span class="line">nginx-kp4fz   1/1     Running   0          15s</span><br><span class="line">nginx-nzsrh   1/1     Running   0          91s</span><br><span class="line">nginx-zhzbk   1/1     Running   0          91s</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ kubectl delete -f rs-nginx.yml </span><br><span class="line">replicaset.apps &quot;nginx&quot; deleted</span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods</span><br><span class="line">No resources found in default namespace.</span><br></pre></td></tr></table></figure>
+
+<h1 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h1><p>Deployment为Pod和Replica Set提供声明式更新。<strong>（个人理解最大的作用就是更新我们的应用用的，它用来替换我们上面学习的三种创建Pod的方式，它底层使用的还是ReplicaSet，类似与对ReplicaSet又做了一层高级的封装）</strong><br>你只需要在 Deployment 中描述您想要的目标状态是什么，Deployment controller 就会帮您将 Pod 和ReplicaSet 的实际状态改变到您的目标状态。您可以定义一个全新的 Deployment 来创建 ReplicaSet 或者删除已有的 Deployment 并创建一个新的来替换。<br>注意：不能手动管理由 Deployment 创建的 Replica Set，否则就篡越了 Deployment controller 的职责！</p>
+<ul>
+<li>核心命令（与ReplicaSet的核心命令大概相同）：</li>
+</ul>
+<ol>
+<li><p><strong>kubectl create -f [deployment的yml路径名称]：</strong>根据yml文件创建deployment应用</p>
+</li>
+<li><p><strong>kubectl get deployment：</strong>查看我们K8s集群所有的deployment：的简单信息</p>
+</li>
+<li><p><strong>kubectl get deployment -o wide：</strong>查看我们K8s集群所有的deployment的详细一些信息</p>
+</li>
+<li><p><strong>kubectl set image deployment [deployment名称] [要升级的image名称]=[升级的image版本]：</strong>通过命令行直接指定升级的image来升级我们的deployment pod应用</p>
+</li>
+<li><p><strong>kubectl rollout history deployment [deployment名称]：</strong>查看我们的deployment的历史版本，这里默认只有当前和上一个两个版本</p>
+</li>
+<li><p><strong>kubectl rollout undo deployment [deployment名称]：</strong>回滚deployment应用的版本至上一个版本</p>
+</li>
+<li><p><strong>kubectl delete -f [deployment的yml路径名称]：</strong>根据yml文件删除Deployment应用</p>
+</li>
+</ol>
+<p>下面我们通过一个示例来讲解：</p>
+<p>首先定义deployment的yml文件，文件内容如下（deployment-nginx.yml）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># 定义的版本，因为它底层使用的是Replica Set</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line"></span><br><span class="line"># 定义类型为Deployment</span><br><span class="line">kind: Deployment</span><br><span class="line"></span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        # 定义我们nginx的版本，这里故意使用一个低版本，便于我们演示升级Pod</span><br><span class="line">        image: nginx:1.12.2</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br></pre></td></tr></table></figure>
+
+<p>下面演示具体的操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"># 通过此yml文件创建deployment</span><br><span class="line">jjw@jjw-PC:~$ kubectl create -f deployment_nginx.yml </span><br><span class="line">deployment.apps/nginx-deployment created</span><br><span class="line"></span><br><span class="line"># 查看我们K8s集群创建的deployment的简单信息</span><br><span class="line">jjw@jjw-PC:~$ kubectl get deployment</span><br><span class="line">NAME               READY   UP-TO-DATE   AVAILABLE   AGE</span><br><span class="line">nginx-deployment   3/3     3            3           50s</span><br><span class="line"></span><br><span class="line"># 通过命令查看k8s集群中的所有ReplicaSet，我们发现有一个，而且它的名字是我们deployment的名字加上一段字符</span><br><span class="line">jjw@jjw-PC:~$ kubectl get rs</span><br><span class="line">NAME                          DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx-deployment-5cc6c7559b   3         3         3       3m44s</span><br><span class="line"></span><br><span class="line"># 查看所有的Pod信息，我们发现pod的名称又是rs的名称加上一段字符</span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods</span><br><span class="line">NAME                                READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-deployment-5cc6c7559b-c8l5c   1/1     Running   0          5m8s</span><br><span class="line">nginx-deployment-5cc6c7559b-cqdzg   1/1     Running   0          5m8s</span><br><span class="line">nginx-deployment-5cc6c7559b-llzgk   1/1     Running   0          5m8s</span><br><span class="line"></span><br><span class="line"># 查看我们K8s集群创建的deployment的详细信息，这里我们的image版本是1.12.2</span><br><span class="line">jjw@jjw-PC:~$ kubectl get deployment -o wide</span><br><span class="line">NAME               READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES         SELECTOR</span><br><span class="line">nginx-deployment   3/3     3            3           11m   nginx        nginx:1.12.2   app=nginx</span><br><span class="line"></span><br><span class="line"># 通过命令行指定image的版本，升级我们的deployment应用</span><br><span class="line">jjw@jjw-PC:~$ kubectl set image deployment nginx-deployment nginx=nginx:1.13</span><br><span class="line">deployment.apps/nginx-deployment image updated</span><br><span class="line"></span><br><span class="line"># 再次查看我们K8s集群创建的deployment的详细信息，发现这里我们的image版本已经升级为1.13</span><br><span class="line">jjw@jjw-PC:~$ kubectl get deployment -o wide</span><br><span class="line">NAME               READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES       SELECTOR</span><br><span class="line">nginx-deployment   3/3     3            3           14m   nginx        nginx:1.13   app=nginx</span><br><span class="line"></span><br><span class="line"># 然后我们查看ReplicaSet信息，发现之前的rs DESIRED 已经变成了0个，我们又新创建了一个rs</span><br><span class="line">jjw@jjw-PC:~$ kubectl get rs</span><br><span class="line">NAME                          DESIRED   CURRENT   READY   AGE</span><br><span class="line">nginx-deployment-5cc6c7559b   0         0         0       15m</span><br><span class="line">nginx-deployment-76d7bfdc99   3         3         3       2m12s</span><br><span class="line"></span><br><span class="line"># 查看pod信息，发现在运行的有三个，但是都是全新的与之前不一样</span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods</span><br><span class="line">NAME                                READY   STATUS    RESTARTS   AGE</span><br><span class="line">nginx-deployment-76d7bfdc99-9rkbg   1/1     Running   0          3m18s</span><br><span class="line">nginx-deployment-76d7bfdc99-fhm5f   1/1     Running   0          3m38s</span><br><span class="line">nginx-deployment-76d7bfdc99-zprtj   1/1     Running   0          3m12s</span><br><span class="line"></span><br><span class="line"># 查看历史版本信息</span><br><span class="line">jjw@jjw-PC:~$ kubectl rollout history deployment nginx-deployment</span><br><span class="line">deployment.apps/nginx-deployment </span><br><span class="line">REVISION  CHANGE-CAUSE</span><br><span class="line">1         &lt;none&gt;</span><br><span class="line">2         &lt;none&gt;</span><br><span class="line"></span><br><span class="line"># 使用命令回滚到上一个版本</span><br><span class="line">jjw@jjw-PC:~$ kubectl rollout undo deployment nginx-deployment</span><br><span class="line">deployment.apps/nginx-deployment rolled back</span><br><span class="line"></span><br><span class="line"># 查看deployment的信息，发现image的版本恢复到了1.12.2</span><br><span class="line">jjw@jjw-PC:~$ kubectl get deployment -o wide</span><br><span class="line">NAME               READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES         SELECTOR</span><br><span class="line">nginx-deployment   3/3     3            3           22m   nginx        nginx:1.12.2   app=nginx</span><br><span class="line"></span><br><span class="line"># 再次查看历史版本信息，发现序号是递增的</span><br><span class="line">jjw@jjw-PC:~$ kubectl rollout history deployment nginx-deployment</span><br><span class="line">deployment.apps/nginx-deployment </span><br><span class="line">REVISION  CHANGE-CAUSE</span><br><span class="line">2         &lt;none&gt;</span><br><span class="line">3         &lt;none&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上述升级方式并不是滚动升级的，即不是优雅升级，期间会有一段时间服务处于宕机状态，实现滚动升级，我们只需要重新定义depolyment.yml文件，升级后的depolyment.yml文件中添加如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"># 定义的版本，因为它底层使用的是Replica Set</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line"></span><br><span class="line"># 定义类型为Deployment</span><br><span class="line">kind: Deployment</span><br><span class="line"></span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-deployment</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line"></span><br><span class="line">spec:</span><br><span class="line">  replicas: 3</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      labels:</span><br><span class="line">        app: nginx</span><br><span class="line">    spec:</span><br><span class="line">      containers:</span><br><span class="line">      - name: nginx</span><br><span class="line">        # 定义我们nginx的版本，这里故意使用一个低版本，便于我们演示升级Pod</span><br><span class="line">        image: nginx:1.12.2</span><br><span class="line">        ports:</span><br><span class="line">        - containerPort: 80</span><br><span class="line"> #滚动升级策略</span><br><span class="line">  minReadySeconds: 5</span><br><span class="line">  strategy:</span><br><span class="line">    # indicate which strategy we want for rolling update</span><br><span class="line">    type: RollingUpdate</span><br><span class="line">    rollingUpdate:</span><br><span class="line">      maxSurge: 1</span><br><span class="line">      maxUnavailable: 1</span><br></pre></td></tr></table></figure>
+
+<p>具体添加内容解释如下：</p>
+<p>minReadySeconds:<br>    Kubernetes在等待设置的时间后才进行升级<br>    如果没有设置该值，Kubernetes会假设该容器启动起来后就提供服务了<br>    如果没有设置该值，在某些极端情况下可能会造成服务不正常运行<br>maxSurge:<br>    升级过程中最多可以比原先设置多出的POD数量<br>    例如：maxSurage=1，replicas=5,则表示Kubernetes会先启动1一个新的Pod后才删掉一个旧的POD，整个升级过程中最多会有5+1个POD。<br>maxUnavaible:<br>    升级过程中最多有多少个POD处于无法提供服务的状态<br>    当maxSurge不为0时，该值也不能为0<br>    例如：maxUnavaible=1，则表示Kubernetes整个升级过程中最多会有1个POD处于无法服务的状态。</p>
+<p>然后执行命令：</p>
+<p><strong>kubectl apply -f [新的depolyment的yml文件]</strong></p>
+<p>这样就实现了滚动升级</p>
+<p>升级可以暂停和继续，使用如下命令：</p>
+<p><strong>kubectl rollout pause deployment &lt;deployment名称&gt;:</strong>暂停升级</p>
+<p><strong>kubectl rollout resume deployment &lt;deployment名称&gt;:</strong>继续升级</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年07月10日 20:50</p>
+        <p>原始链接： <a class="post-url" href="/2020/06/14/Kubernetes/" title="Kubernetes">https://jjw-story.github.io/2020/06/14/Kubernetes/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/06/14/Kubernetes/&title=《Kubernetes》 — JJW-STORY&pic=/images/blogs/docker.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/06/14/Kubernetes/&title=《Kubernetes》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/06/14/Kubernetes/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Kubernetes》 — JJW-STORY&url=https://jjw-story.github.io/2020/06/14/Kubernetes/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/06/14/Kubernetes/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/06/14/Kubernetes/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/入门/" class="color3">入门</a>
+      
+    <a href="/tags/Kubernetes/" class="color1">Kubernetes</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Kubernetes介绍"><span class="post-toc-text">Kubernetes介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Kubernetes架构及组件"><span class="post-toc-text">Kubernetes架构及组件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Master-Node"><span class="post-toc-text">Master Node</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#API-Server"><span class="post-toc-text">API Server</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Scheduler"><span class="post-toc-text">Scheduler</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Controller-Manager-Server"><span class="post-toc-text">Controller-Manager Server</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#etcd（Cluster-state-store）"><span class="post-toc-text">etcd（Cluster state store）</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Worker-Node"><span class="post-toc-text">Worker Node</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Pod"><span class="post-toc-text">Pod</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Kubelet"><span class="post-toc-text">Kubelet</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#kube-proxy"><span class="post-toc-text">kube proxy</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Container-Runtime"><span class="post-toc-text">Container Runtime</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Fluented"><span class="post-toc-text">Fluented</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Add-on"><span class="post-toc-text">Add-on</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#kubectl"><span class="post-toc-text">kubectl</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Kubernates安装"><span class="post-toc-text">Kubernates安装</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Pod详解及基本操作命令"><span class="post-toc-text">Pod详解及基本操作命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#基础操作"><span class="post-toc-text">基础操作</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ReplicationController"><span class="post-toc-text">ReplicationController</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#ReplicaSet"><span class="post-toc-text">ReplicaSet</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Deployment"><span class="post-toc-text">Deployment</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/06/30/Kebernetes-进阶/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Kebernetes-进阶
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/06/06/Docker-Swarm/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Docker-Swarm</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2020 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 14px;">Django</a> <a href="/tags/Docker/" style="font-size: 18px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 14px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践/" style="font-size: 10px;">实践</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 14px;">Django</a> <a href="/tags/Docker/" style="font-size: 18px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 16px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 14px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践/" style="font-size: 10px;">实践</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 16px;">网络管理</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
