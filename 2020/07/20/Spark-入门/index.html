@@ -3,23 +3,23 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>文本查看命令 | JJW-STORY</title>
+  <title>Spark-入门 | JJW-STORY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="JJW-STORY">
   
-  <meta name="description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
-<meta name="keywords" content="command,文本查看命令">
+  <meta name="description" content="Spark介绍Spark，是一种通用的大数据计算框架，正如传统大数据技术Hadoop的MapReduce、Hive引擎，以及Storm流式实时计算引擎等。 Spark使用Spark RDD、Spark SQL、Spark Streaming、MLlib、GraphX成功解决了大数据领域中，离线批处理、交互式查询、实时流计算、机器学习与图计算等最重要的任务和问题。 Spark主要用于大数据的计算，而">
+<meta name="keywords" content="入门,Spark">
 <meta property="og:type" content="article">
-<meta property="og:title" content="文本查看命令">
-<meta property="og:url" content="https://jjw-story.github.io/2019/07/15/文本查看命令/index.html">
+<meta property="og:title" content="Spark-入门">
+<meta property="og:url" content="https://jjw-story.github.io/2020/07/20/Spark-入门/index.html">
 <meta property="og:site_name" content="JJW-STORY">
-<meta property="og:description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
+<meta property="og:description" content="Spark介绍Spark，是一种通用的大数据计算框架，正如传统大数据技术Hadoop的MapReduce、Hive引擎，以及Storm流式实时计算引擎等。 Spark使用Spark RDD、Spark SQL、Spark Streaming、MLlib、GraphX成功解决了大数据领域中，离线批处理、交互式查询、实时流计算、机器学习与图计算等最重要的任务和问题。 Spark主要用于大数据的计算，而">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-14T06:58:51.714Z">
+<meta property="og:updated_time" content="2020-07-21T06:53:42.494Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="文本查看命令">
-<meta name="twitter:description" content="文本查看命令cat命令显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端 使用方法：cat [参数] 文件 参数说明-n 显示的文本的行编号 -e 显示行结束符号$ 示例： 123456root@CHJ-20190520VPS:/tmp# cat -n -E testtext     1  sdf$     2  $     3  sd$     4  f$">
+<meta name="twitter:title" content="Spark-入门">
+<meta name="twitter:description" content="Spark介绍Spark，是一种通用的大数据计算框架，正如传统大数据技术Hadoop的MapReduce、Hive引擎，以及Storm流式实时计算引擎等。 Spark使用Spark RDD、Spark SQL、Spark Streaming、MLlib、GraphX成功解决了大数据领域中，离线批处理、交互式查询、实时流计算、机器学习与图计算等最重要的任务和问题。 Spark主要用于大数据的计算，而">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -110,14 +110,14 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-文本查看命令" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-Spark-入门" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      文本查看命令
+      Spark-入门
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -125,12 +125,12 @@
               <li>
                   <i class="fa fa-book"></i>
                   
-                      <a href="/categories/Linux/">Linux</a>
+                      <a href="/categories/Spark/">Spark</a>
                   
               </li>
           
         <li>
-          <i class="fa fa-calendar"></i>  2019-07-15
+          <i class="fa fa-calendar"></i>  2020-07-20
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -146,74 +146,61 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h1 id="文本查看命令"><a href="#文本查看命令" class="headerlink" title="文本查看命令"></a>文本查看命令</h1><h2 id="cat命令"><a href="#cat命令" class="headerlink" title="cat命令"></a>cat命令</h2><p>显示文本文件内容，适用于查看整体内容，文件内容不多的，将所有的文本内容都显示到终端</p>
-<p>使用方法：cat [参数] 文件</p>
-<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>显示的文本的行编号</p>
-<p><strong>-e</strong></p>
-<p>显示行结束符号$</p>
-<p>示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# cat -n -E testtext</span><br><span class="line">     1  sdf$</span><br><span class="line">     2  $</span><br><span class="line">     3  sd$</span><br><span class="line">     4  f$</span><br><span class="line">     5  ds$</span><br></pre></td></tr></table></figure>
-
-<h2 id="head命令"><a href="#head命令" class="headerlink" title="head命令"></a>head命令</h2><p>查看文件的开头的内容，默认显示文件开头的前十行</p>
-<p>使用方法：head [参数] 文件</p>
-<h3 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>注意：n 表示行数，意为查看文件的前n行内容</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# head -3 testtext</span><br><span class="line">sdf</span><br><span class="line"></span><br><span class="line">sd</span><br></pre></td></tr></table></figure>
-
-<h2 id="tail命令"><a href="#tail命令" class="headerlink" title="tail命令"></a>tail命令</h2><p>查看文件的末尾的内容，默认显示文件末的后十行</p>
-<p>使用方法：tail [参数] 文件</p>
-<h3 id="参数说明-2"><a href="#参数说明-2" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-n</strong></p>
-<p>注意：n 表示行数，意为查看文件的后n行内容</p>
-<p><strong>-f</strong></p>
-<p>循环读取文本信息，此命令一般用于文件内容在不断变化的文本查看，一般在查看服务器日志内容时使用</p>
-<p>当我们看到文件在一直滚动循环查看，想要停止的时候，使用 ctrl + c命令，退出循环查看，即可停止来具体查看</p>
-<h2 id="wc命令"><a href="#wc命令" class="headerlink" title="wc命令"></a>wc命令</h2><p>wc(Word Count)命令的功能为统计指定文件中的字节数、字数、行数，并将统计结果显示输出。</p>
-<h3 id="参数说明-3"><a href="#参数说明-3" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-l</strong></p>
-<p>统计文本文件的内容行数，一般我们在使用文本查看命令时，不清粗应该使用哪种命令来查看，可以使用此命令来查看文本的行数，然后选择要使用的文本查看命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# wc -l testtext</span><br><span class="line">206 testtext</span><br></pre></td></tr></table></figure>
-
-<p><strong>-c</strong></p>
-<p>统计字节数</p>
-<p><strong>-m</strong></p>
-<p>统计字符数。这个标志不能与 -c 标志一起使用</p>
-<p><strong>-w</strong></p>
-<p>统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串</p>
-<p><strong>-L</strong></p>
-<p>打印最长行的长度</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@CHJ-20190520VPS:/tmp# wc -L testtext</span><br><span class="line">7 testtext</span><br></pre></td></tr></table></figure>
-
-<h2 id="more命令"><a href="#more命令" class="headerlink" title="more命令"></a>more命令</h2><p>分页显示文件内容，还支持直接跳转行等功能，最大的特点是查看每一页文本内容下方都会显示当前当前查看的文本内容所在位置百分比</p>
-<p>使用方法：more 文件名</p>
-<h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><ol>
-<li>Space：显示文本下一屏内容</li>
-<li>Enter：只显示文本下一行内容</li>
-<li>b：显示文本上一屏内容</li>
-<li>q：退出</li>
+            <h1 id="Spark介绍"><a href="#Spark介绍" class="headerlink" title="Spark介绍"></a>Spark介绍</h1><p>Spark，是一种通用的大数据计算框架，正如传统大数据技术Hadoop的MapReduce、Hive引擎，以及Storm流式实时计算引擎等。</p>
+<p>Spark使用Spark RDD、Spark SQL、Spark Streaming、MLlib、GraphX成功解决了大数据领域中，离线批处理、交互式查询、实时流计算、机器学习与图计算等最重要的任务和问题。</p>
+<p>Spark主要用于大数据的计算，而Hadoop以后主要用于大数据的存储（比如HDFS、Hive、HBase等），以及资源调度（Yarn）。Spark+Hadoop的组合，是未来大数据领域最热门的组合，也是最有前景的组合！</p>
+<p>Spark除了一站式的特点之外，另外一个最重要的特点，就是基于内存进行计算，从而让它的速度可以达到MapReduce、Hive的数倍甚至数十倍！</p>
+<h1 id="Spark特点"><a href="#Spark特点" class="headerlink" title="Spark特点"></a>Spark特点</h1><ol>
+<li><p>速度快：Spark基于内存进行计算（当然也有部分计算基于磁盘，比如shuffle）。</p>
+</li>
+<li><p>容易上手开发：Spark的基于RDD的计算模型，比Hadoop的基于Map-Reduce的计算模型要更加易于理解，更加易于上手开发，实现各种复杂功能，比如二次排序、topn等复杂操作时，更加便捷。</p>
+</li>
+<li><p>超强的通用性：Spark提供了Spark RDD、Spark SQL、Spark Streaming、Spark MLlib、Spark GraphX等技术组件，可以一站式地完成大数据领域的离线批处理、交互式查询、流式计算、机器学习、图计算等常见的任务。</p>
+</li>
+<li><p>集成Hadoop：Spark并不是要成为一个大数据领域的“独裁者”，一个人霸占大数据领域所有的“地盘”，而是与Hadoop进行了高度的集成，两者可以完美的配合使用。<strong>Hadoop的HDFS、Hive、HBase负责存储，YARN负责资源调度；Spark复杂大数据计算。</strong>实际上，Hadoop+Spark的组合，是一种“double win”的组合。<strong>Spark本身并不提供大数据的存储</strong>。</p>
+</li>
+<li><p>极高的活跃度：Spark目前是Apache基金会的顶级项目，全世界有大量的优秀工程师是Spark的committer。并且世界上很多顶级的IT公司都在大规模地使用Spark。</p>
+</li>
 </ol>
-<h2 id="less命令"><a href="#less命令" class="headerlink" title="less命令"></a>less命令</h2><p>分页显示文件内容，操作比more更为详细</p>
-<p>使用方法：less [参数] 文件名</p>
-<h3 id="参数说明-4"><a href="#参数说明-4" class="headerlink" title="参数说明"></a>参数说明</h3><p><strong>-m</strong></p>
-<p>显示类似more命令的百分比</p>
-<p><strong>-N</strong></p>
-<p>注意这里是大写N，显示每行的行号</p>
-<h3 id="具体操作-1"><a href="#具体操作-1" class="headerlink" title="具体操作"></a>具体操作</h3><ol>
-<li>Space：显示文本下一屏内容</li>
-<li>b：显示文本上一屏内容</li>
-<li>Enter：前进一行</li>
-<li>v：后退一行</li>
-<li>d：前进半页</li>
-<li>u：后退半页</li>
-<li>/字符串 向下搜索</li>
-<li>?字符串 向上搜索</li>
-<li>左右方向键 相当于水平滚动条</li>
-<li>q键：退出</li>
+<h1 id="Spark与Hadoop对比"><a href="#Spark与Hadoop对比" class="headerlink" title="Spark与Hadoop对比"></a>Spark与Hadoop对比</h1><p>Spark，是分布式计算平台，是一个用scala语言编写的计算框架，基于内存的快速、通用、可扩展的大数据分析引擎。</p>
+<p>Hadoop，是分布式管理、存储、计算的生态系统；包括HDFS，Hive，HBase（存储）、MapReduce（计算）、Yarn（资源调度）</p>
+<p>MapReduce：我们要数图书馆中的所有书。你数1号书架，我数2号书架。这就是“Map”。我们人越多，数书就更快。现在我们到一起，把所有人的统计数加在一起。这就是“Reduce”。</p>
+<p>Hadoop和Spark都是并行计算，两者都是用MR模型进行计算。Hadoop一个作业称为一个Job，Job里面分为Map Task和Reduce Task阶段，每个Task都在自己的进程中运行，当Task结束时，进程也会随之结束；Spark用户提交的任务称为application，一个application对应一个SparkContext，app中存在多个job，每触发一次action操作就会产生一个job。这些job可以并行或串行执行，每个job中有多个stage，stage是shuffle过程中DAGScheduler通过RDD之间的依赖关系划分job而来的，每个stage里面有多个task，组成taskset，由TaskScheduler分发到各个executor中执行；executor的生命周期是和app一样的，即使没有job运行也是存在的，所以task可以快速启动读取内存进行计算。</p>
+<p>ps：一个Application -&gt; 多个job -&gt;一个job多个stage -&gt; 一个stage多个task</p>
+<h2 id="两者的各方面比较"><a href="#两者的各方面比较" class="headerlink" title="两者的各方面比较"></a>两者的各方面比较</h2><ol>
+<li><p>Spark对标于Hadoop中的计算模块MR，但是速度和效率比MR要快得多；</p>
+</li>
+<li><p>Spark没有提供文件管理系统，所以，它必须和其他的分布式文件系统进行集成才能运作，它只是一个计算分析框架，专门用来对分布式存储的数据进行计算处理，它本身并不能存储数据；</p>
+</li>
+<li><p>Spark可以使用Hadoop的HDFS或者其他云数据平台进行数据存储，但是一般使用HDFS；</p>
+</li>
+<li><p>Spark可以使用基于HDFS的HBase数据库，也可以使用HDFS的数据文件，还可以通过jdbc连接使用Mysql数据库数据；Spark可以对数据库数据进行修改删除，而HDFS只能对数据进行追加和全表删除；</p>
+</li>
+<li><p>Spark数据处理速度秒杀Hadoop中MR；</p>
+</li>
+<li><p>Spark处理数据的设计模式与MR不一样，Hadoop是从HDFS读取数据，通过MR将中间结果写入HDFS；然后再重新从HDFS读取数据进行MR，再刷写到HDFS，这个过程涉及多次落盘操作，多次磁盘IO，效率并不高；而Spark的设计模式是读取集群中的数据后，在内存中存储和运算，直到全部运算完毕后，再存储到集群中；</p>
+</li>
+<li><p>Spark是由于Hadoop中MR效率低下而产生的高效率快速计算引擎，批处理速度比MR快近10倍，内存中的数据分析速度比Hadoop快近100倍（源自官网描述）；</p>
+</li>
+<li><p>Spark中RDD一般存放在内存中，如果内存不够存放数据，会同时使用磁盘存储数据；通过RDD之间的血缘连接、数据存入内存中切断血缘关系等机制，可以实现灾难恢复，当数据丢失时可以恢复数据；这一点与Hadoop类似，Hadoop基于磁盘读写，天生数据具备可恢复性；</p>
+</li>
+<li><p>Spark引进了内存集群计算的概念，可在内存集群计算中将数据集缓存在内存中，以缩短访问延迟，对7的补充；</p>
+</li>
+<li><p>Spark中通过DAG图可以实现良好的容错。</p>
+</li>
 </ol>
+<h2 id="部分基本组件对比"><a href="#部分基本组件对比" class="headerlink" title="部分基本组件对比"></a>部分基本组件对比</h2><h3 id="与MapReduce对比"><a href="#与MapReduce对比" class="headerlink" title="与MapReduce对比"></a>与MapReduce对比</h3><p>MapReduce能够完成的各种离线批处理功能，以及常见算法（比如二次排序、topn等），基于Spark RDD的核心编程，都可以实现，并且可以更好地、更容易地实现。而且基于Spark RDD编写的离线批处理程序，运行速度是MapReduce的数倍，<strong>速度上有非常明显的优势</strong>。Spark速度快的原因是：MapReduce的计算模型太死板，必须是map-reduce模式，有时候即使完成一些诸如过滤之类的操作，也必须经过map-reduce过程，这样就必须经过shuffle过程。而MapReduce的shuffle过程是最消耗性能的，因为shuffle中间的过程必须基于磁盘来读写。而Spark的shuffle虽然也要基于磁盘，但是其大量transformation操作，比如单纯的map或者filter等操作，可以直接基于内存进行pipeline操作，速度性能自然大大提升。Spark的劣势是：由于Spark基于内存进行计算，虽然开发容易，但是真正面对大数据的时候（比如一次操作针对10亿以上级别），在没有进行调优的情况下，可能会出现各种各样的问题，比如OOM内存溢出等等。导致Spark程序可能都无法完全运行起来，就报错挂掉了，而MapReduce即使是运行缓慢，但是至少可以慢慢运行完。</p>
+<h3 id="Spark-SQL与Hive-对比"><a href="#Spark-SQL与Hive-对比" class="headerlink" title="Spark SQL与Hive 对比"></a>Spark SQL与Hive 对比</h3><p>Spark SQL实际上并不能完全替代Hive，因为Hive是一种基于HDFS的数据仓库，并且提供了基于SQL模型的，针对存储了大数据的数据仓库，进行分布式交互查询的查询引擎。严格的来说，<strong>Spark SQL能够替代的，是Hive的查询引擎，而不是Hive本身</strong>，实际上即使在生产环境下，Spark SQL也是针对Hive数据仓库中的数据进行查询，Spark本身自己是不提供存储的，自然也不可能替代Hive作为数据仓库的这个功能。</p>
+<p>Spark SQL的一个优点，相较于Hive查询引擎来说，就是速度快，同样的SQL语句，可能使用Hive的查询引擎，由于其底层基于MapReduce，必须经过shuffle过程走磁盘，因此速度是非常缓慢的。很多复杂的SQL语句，在hive中执行都需要一个小时以上的时间。而Spark SQL由于其底层基于Spark自身的基于内存的特点，因此速度达到了Hive查询引擎的数倍以上。<br>而Spark SQL相较于Hive的另外一个优点，就是支持大量不同的数据源，包括hive、json、parquet、jdbc等等。此外，Spark SQL由于身处Spark技术堆栈内，也是基于RDD来工作，因此可以与Spark的其他组件无缝整合使用，配合起来实现许多复杂的功能。比如Spark SQL支持可以直接针对hdfs文件执行sql语句！</p>
+<h3 id="Spark-Streaming与Storm对比"><a href="#Spark-Streaming与Storm对比" class="headerlink" title="Spark Streaming与Storm对比"></a>Spark Streaming与Storm对比</h3><p>Spark Streaming与Storm都可以用于进行实时流计算。但是他们两者的区别是非常大的。其中区别之一，就是，Spark Streaming和Storm的计算模型完全不一样，Spark Streaming是基于RDD的，因此需要将一小段时间内的，比如1秒内的数据，收集起来，作为一个RDD，然后再针对这个batch的数据进行处理。而Storm却可以做到每来一条数据，都可以立即进行处理和计算。因此，Spark Streaming实际上严格意义上来说，只能称作准实时的流计算框架；而Storm是真正意义上的实时计算框架。</p>
+<p>此外，Storm支持的一项高级特性，是Spark Streaming暂时不具备的，即Storm支持在分布式流式计算程序（Topology）在运行过程中，可以动态地调整并行度，从而动态提高并发处理能力。而Spark Streaming是无法动态调整并行度的。<br>但是Spark Streaming也有其优点，首先Spark Streaming由于是基于batch进行处理的，因此相较于Storm基于单条数据进行处理，<strong>具有数倍甚至数十倍的吞吐量</strong>。</p>
+<p>此外，Spark Streaming由于也身处于Spark生态圈内，因此Spark Streaming可以与Spark Core、Spark SQL，甚至是Spark MLlib、Spark GraphX进行无缝整合。流式处理完的数据，可以立即进行各种map、reduce转换操作，可以立即使用sql进行查询，甚至可以立即使用machine learning或者图计算算法进行处理。这种一站式的大数据处理功能和优势，是Storm无法匹敌的。</p>
+<p>对于Storm来说，如果仅仅要求对数据进行简单的流式计算处理，那么选择storm或者spark streaming都无可厚非。但是如果需要对流式计算的中间结果（RDD），进行复杂的后续处理，则使用Spark更好，因为Spark本身提供了很多原语，比如map、reduce、groupByKey、filter等等。</p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年07月14日 14:58</p>
-        <p>原始链接： <a class="post-url" href="/2019/07/15/文本查看命令/" title="文本查看命令">https://jjw-story.github.io/2019/07/15/文本查看命令/</a></p>
+        <p>最后更新： 2020年07月21日 14:53</p>
+        <p>原始链接： <a class="post-url" href="/2020/07/20/Spark-入门/" title="Spark-入门">https://jjw-story.github.io/2020/07/20/Spark-入门/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
                 <img src="/images/logo.png" alt="JJW">
@@ -270,7 +257,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/07/15/文本查看命令/&title=《文本查看命令》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/07/20/Spark-入门/&title=《Spark-入门》 — JJW-STORY&pic=/images/blogs/spark.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -280,22 +267,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/07/15/文本查看命令/&title=《文本查看命令》 — JJW-STORY&source=" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/07/20/Spark-入门/&title=《Spark-入门》 — JJW-STORY&source=" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/07/15/文本查看命令/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/07/20/Spark-入门/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《文本查看命令》 — JJW-STORY&url=https://jjw-story.github.io/2019/07/15/文本查看命令/&via=https://jjw-story.github.io" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Spark-入门》 — JJW-STORY&url=https://jjw-story.github.io/2020/07/20/Spark-入门/&via=https://jjw-story.github.io" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/07/15/文本查看命令/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/07/20/Spark-入门/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -305,7 +292,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/07/15/文本查看命令/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/07/20/Spark-入门/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -317,9 +304,9 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/command/" class="color3">command</a>
+    <a href="/tags/入门/" class="color3">入门</a>
       
-    <a href="/tags/文本查看命令/" class="color2">文本查看命令</a>
+    <a href="/tags/Spark/" class="color1">Spark</a>
       
   </li>
 
@@ -332,26 +319,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文本查看命令"><span class="post-toc-text">文本查看命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#cat命令"><span class="post-toc-text">cat命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#head命令"><span class="post-toc-text">head命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-1"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#tail命令"><span class="post-toc-text">tail命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-2"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#wc命令"><span class="post-toc-text">wc命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-3"><span class="post-toc-text">参数说明</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#more命令"><span class="post-toc-text">more命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#具体操作"><span class="post-toc-text">具体操作</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#less命令"><span class="post-toc-text">less命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#参数说明-4"><span class="post-toc-text">参数说明</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#具体操作-1"><span class="post-toc-text">具体操作</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Spark介绍"><span class="post-toc-text">Spark介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Spark特点"><span class="post-toc-text">Spark特点</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Spark与Hadoop对比"><span class="post-toc-text">Spark与Hadoop对比</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#两者的各方面比较"><span class="post-toc-text">两者的各方面比较</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#部分基本组件对比"><span class="post-toc-text">部分基本组件对比</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#与MapReduce对比"><span class="post-toc-text">与MapReduce对比</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Spark-SQL与Hive-对比"><span class="post-toc-text">Spark SQL与Hive 对比</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Spark-Streaming与Storm对比"><span class="post-toc-text">Spark Streaming与Storm对比</span></a></li></ol></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2019/07/17/打包压缩与解压缩/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          打包压缩与解压缩
-        
-      </span>
-    </a>
   
-  
-    <a href="/2019/07/11/文件管理命令/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">文件管理命令</span>
+    <a href="/2020/07/12/MySQL-实践/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">MySQL-实践</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
