@@ -107,6 +107,203 @@
       <div class="outer">
         <section id="main" class="body-wrap">
   
+    <article id="post-MySQL-实践二" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/31/MySQL-实践二/"  >MySQL-实践二</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/MySQL/">MySQL</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/07/31/MySQL-实践二/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/mysql.jpg" alt="MySQL-实践二" title="MySQL-实践二">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                binlog 和 redo log详解binlog 的写入机制binlog 的写入逻辑比较简单：事务执行过程中，先把日志写到 binlog cache，事务提交的时候，再把 binlog cache 写到 binlog 文件中。一个事务的 binlog 是不能被拆开的，因此不论这个事务多大，也要确保一次性写入。
+系统给 binlog cache 分配了一片内存，每个线程一...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-07-31</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/MySQL/" class="color1">MySQL</a>
+      
+    <a href="/tags/实践二/" class="color4">实践二</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/07/31/MySQL-实践二/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article id="post-Spark-入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/20/Spark-入门/"  >Spark-入门</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/Spark/">Spark</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/07/20/Spark-入门/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/spark.jpg" alt="Spark-入门" title="Spark-入门">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                Spark介绍Spark，是一种通用的大数据计算框架，正如传统大数据技术Hadoop的MapReduce、Hive引擎，以及Storm流式实时计算引擎等。
+Spark使用Spark RDD、Spark SQL、Spark Streaming、MLlib、GraphX成功解决了大数据领域中，离线批处理、交互式查询、实时流计算、机器学习与图计算等最重要的任务和问题。
+Spar...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-07-20</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/入门/" class="color3">入门</a>
+      
+    <a href="/tags/Spark/" class="color1">Spark</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/07/20/Spark-入门/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
+    <article id="post-MySQL-实践一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/07/12/MySQL-实践一/"  >MySQL-实践一</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/MySQL/">MySQL</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/2020/07/12/MySQL-实践一/" >
+                
+                <img src="https://jjw-story.github.io//images/blogs/mysql.jpg" alt="MySQL-实践一" title="MySQL-实践一">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                普通索引和唯一索引的选择普通索引和唯一索引的查询过程对比例如：我们查询一个 where k=5 条件的SQL语句，这个查询语句在索引树上查找的过程，先是通过 B+ 树从树根开始，按层搜索到叶子节点，然后可以认为数据页内部通过二分法来定位记录。
+
+对于普通索引来说，查找到满足条件的第一个记录 (5,500) 后，需要查找下一个记录，直到碰到第一个不满足 k=5 条件的记录。...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2020-07-12</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/MySQL/" class="color1">MySQL</a>
+      
+    <a href="/tags/实践一/" class="color4">实践一</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/2020/07/12/MySQL-实践一/#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
     <article id="post-MySQL-基础" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -559,212 +756,6 @@ Server 层包括连接器、查询缓存、分析器、优化器、执行器等�
 
 
   
-    <article id="post-Docker镜像的构建和发布" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/28/Docker镜像的构建和发布/"  >Docker镜像的构建和发布及容器操作</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/Docker/">Docker</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/04/28/Docker镜像的构建和发布/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/docker.jpg" alt="Docker镜像的构建和发布及容器操作" title="Docker镜像的构建和发布及容器操作">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                Docker镜像的构建Docker镜像的构建有两种方式，第一种是通过Container来构建，第二种是通过Dockerfile来构建，我们一般推荐通过第二种方式来构建，因为第一种我们将此镜像发不出去，我们是黑盒的，我们不知道它内部是不是有什么不安全的东西在里面，所以推荐使用第二种方式来创建
-通过Container构建Docker镜像在通常的使用中，我们会在已经创建的容器中...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-04-28</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/Docker/" class="color2">Docker</a>
-      
-    <a href="/tags/镜像的构建和发布及容器操作/" class="color4">镜像的构建和发布及容器操作</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/04/28/Docker镜像的构建和发布/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-Docker入门" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/20/Docker入门/"  >Docker入门</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/Docker/">Docker</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/04/20/Docker入门/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/docker.jpg" alt="Docker入门" title="Docker入门">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                Docker入门容器技术介绍原始方式的应用程序部署有以下不足：
-
-部署非常慢（需要找机房，安装操作系统及各种环境等）
-
-成本非常高（有些应用程序占用的资源非常少，但是我们还是要部署一个机器，成本很高）
-
-资源浪费（应用程序使用资源很少，导致我们的机器很多资源都在空置，造成浪费）
-
-难于迁移和扩展（我们迁移应用的时候需要重新找机器安装各种环境，扩展同理，也需要我们准备各种环...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-04-20</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/Docker/" class="color2">Docker</a>
-      
-    <a href="/tags/入门/" class="color3">入门</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/04/20/Docker入门/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-分布式消息队列" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/04/05/分布式消息队列/"  >分布式消息队列</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/MQ/">MQ</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2020/04/05/分布式消息队列/" >
-                
-                <img src="https://jjw-story.github.io//images/blogs/kafka.jpg" alt="分布式消息队列" title="分布式消息队列">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                MQ应用详解分布式消息队列的应用思考点
-生产端的消息可靠性投递 就是有些业务场景我们需要消息是百分之百投递成功的，或者与我们的数据库一定是一个原子性的操作
-
-消费端幂等 在生产端为了保证消息投递可靠的时候，可能会出现重复发送消息的情况，我们的消费端一定要做好消费的幂等，杜绝出现消息重复消费的情况
-
-MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可用的状态
-
-...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2020-04-05</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/MQ/" class="color3">MQ</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/2020/04/05/分布式消息队列/#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -826,7 +817,7 @@ MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可�
             <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/Flink/" style="font-size: 15px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践一/" style="font-size: 10px;">实践一</a> <a href="/tags/实践三/" style="font-size: 10px;">实践三</a> <a href="/tags/实践二/" style="font-size: 10px;">实践二</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践一/" style="font-size: 10px;">实践一</a> <a href="/tags/实践三/" style="font-size: 10px;">实践三</a> <a href="/tags/实践二/" style="font-size: 10px;">实践二</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -859,7 +850,7 @@ MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可�
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/Flink/" style="font-size: 15px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践一/" style="font-size: 10px;">实践一</a> <a href="/tags/实践三/" style="font-size: 10px;">实践三</a> <a href="/tags/实践二/" style="font-size: 10px;">实践二</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch核心技术/" style="font-size: 10px;">Elasticsearch核心技术</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础入门/" style="font-size: 10px;">基础入门</a> <a href="/tags/实践一/" style="font-size: 10px;">实践一</a> <a href="/tags/实践三/" style="font-size: 10px;">实践三</a> <a href="/tags/实践二/" style="font-size: 10px;">实践二</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
         </div>
     </div>
 </div>
