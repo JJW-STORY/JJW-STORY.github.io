@@ -16,17 +16,17 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="Flink入门Flink简介Apache Flink是一个面向数据流处理和批量数据处理的可分布式的开源计算框架，它基于同一个Flink流式执行模型（streaming execution model），能够支持流处理和批处理两种应用类型。 由于流处理和批处理所提供的SLA(服务等级协议)是完全不相同， 流处理一般需要支持低延迟、Exactly-once保证，而批处理需要支持高吞吐、高效处理，所以在">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/docker.jpg">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E6%9E%B6%E6%9E%84.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/%E7%A6%BB%E7%BA%BF%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/%E6%9C%89%E7%8A%B6%E6%80%81%E7%9A%84%E6%B5%81%E5%BC%8F%E5%A4%84%E7%90%86.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/Lambda%E6%9E%B6%E6%9E%84.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/Kappa%E6%9E%B6%E6%9E%84.png">
-<meta property="og:updated_time" content="2021-02-05T08:32:51.923Z">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/data-stream.jpg">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/transaction-process.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/offline-analysis.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/stateful-stream-process.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/lambda.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/kappa.png">
+<meta property="og:updated_time" content="2021-02-05T08:47:53.626Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flink-入门">
 <meta name="twitter:description" content="Flink入门Flink简介Apache Flink是一个面向数据流处理和批量数据处理的可分布式的开源计算框架，它基于同一个Flink流式执行模型（streaming execution model），能够支持流处理和批处理两种应用类型。 由于流处理和批处理所提供的SLA(服务等级协议)是完全不相同， 流处理一般需要支持低延迟、Exactly-once保证，而批处理需要支持高吞吐、高效处理，所以在">
-<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/flink/docker.jpg">
+<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/flink/data-stream.jpg">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -165,7 +165,7 @@
 <li><p>有界流：有定义流的开始，也有定义流的结束。有界流可以在摄取所有数据后再进行计算。有界流所有数据可以被排序，所以并不需要有序摄取。有界流处理通常被称为批处理。</p>
 </li>
 </ul>
-<p><img src="/images/blogs/flink/docker.jpg" alt="avatar"></p>
+<p><img src="/images/blogs/flink/data-stream.jpg" alt="avatar"></p>
 <p>Apache Flink 擅长处理无界和有界数据集 精确的时间控制和状态化使得 Flink 的运行时(runtime)能够运行任何处理无界流的应用。有界流则由一些专为固定大小数据集特殊设计的算法和数据结构进行内部处理，产生了出色的性能。</p>
 <h2 id="Flink的应用场景"><a href="#Flink的应用场景" class="headerlink" title="Flink的应用场景"></a>Flink的应用场景</h2><ol>
 <li><p>实时数仓。当下游要构建实时数仓时，上游则可能需要实时的 Stream ETL。这个过程会进行实时清洗或扩展数据，清洗完成后写入到下游的实时数仓的整个链路中，可保证数据查询的时效性，形成实时数据采集、实时数据处理以及下游的实时 Query。</p>
@@ -178,20 +178,20 @@
 </li>
 </ol>
 <h2 id="流式处理的演变"><a href="#流式处理的演变" class="headerlink" title="流式处理的演变"></a>流式处理的演变</h2><h3 id="传统事务处理架构"><a href="#传统事务处理架构" class="headerlink" title="传统事务处理架构"></a>传统事务处理架构</h3><p>传统的事务处理一般分为两层：计算层和存储层。计算层可以是我们的各个业务系统，计算层在数据计算时，可能需要用到一些外部数据，或者还要去修改这些外部数据，这样我们就需要跟传统的一些关系型数据库交互。所以我们的业务系统在收到请求时，需要去关系型数据库去查取数据，或者修改数据，然后进行计算，将计算结果包装成响应返回给用户。具体架构如下：</p>
-<p><img src="/images/blogs/flink/%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E6%9E%B6%E6%9E%84.png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/transaction-process.png" alt="avatar"></p>
 <p>在使用过程中就会发现一些问题，因为数据量太大，数据来源多种多样，可能来自于mysql,sqlserver,orcale等多个关系型数据库，和一些非结构化的数据，比如前端埋点数据，可能为JSON或其他格式，一个单纯的关系型数据库根本无法处理。并且关系型数据库的数据存储会受到限制，存储的数据是有限的，所以我们一般只会存储一些与业务强关联的数据，但我们的一些埋点数据，我们是不需要把它存储起来的，或者说不需要存储到关系型数据库中，这个时候我们分析处理架构就诞生了。</p>
 <h3 id="离线分析处理架构"><a href="#离线分析处理架构" class="headerlink" title="离线分析处理架构"></a>离线分析处理架构</h3><p>将数据从业务数据库或业务日志复制到数仓，再进行分析查询。基本过程就是，将数据拉取经过ETL处理之后，放到Data Warehouse中，然后直接基于数仓进行计算，生成我们需要的报表，或者将计算结果返回给用户。具体架构如下：</p>
-<p><img src="/images/blogs/flink/%E7%A6%BB%E7%BA%BF%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86.png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/offline-analysis.png" alt="avatar"></p>
 <p>这个过程就是我们大数据离线计算的基本应用流程，优点在于：我们能处理的数据更多更加的丰富。缺点在于：我们需要把所有的数据都提取出来放到数仓中，所以这个过程的实时性就无法保证，我们的传统事务处理架构，它是能保证处理结果的实时性的。基于这个问题，流式处理架构又产生了。</p>
 <h3 id="有状态的流式处理架构"><a href="#有状态的流式处理架构" class="headerlink" title="有状态的流式处理架构"></a>有状态的流式处理架构</h3><p>流式处理架构的产生主要是为了解决传统事务处理架构和离线分析处理架构存在的问题，我们为了保证处理的实时性，直接将数据保存在本地内存中，传统数据处理架构中，我们将数据存储在关系型数据库中，流式处理直接将数据存储在本地内存中，我们成为本地状态。优点在于内存数据的读取更快，当数据存储大小受限时，直接扩展集群即可。流式处理架构可以实现每一条请求或者数据到达，经过流式处理，都可以快速得到一条对应的响应。</p>
 <p>流式处理像一个管道，数据从一边流入，进行处理后，从另一边流出，但后边如果像继续使用，也可以拿出来消费。</p>
 <p>为了保证容错性，架构中还有check point机制，既定时周期性的将本地状态保存在远程的存储空间中，这样当出现故障我们可以通过远程存储中把它恢复出来。具体架构如下：</p>
-<p><img src="/images/blogs/flink/%E6%9C%89%E7%8A%B6%E6%80%81%E7%9A%84%E6%B5%81%E5%BC%8F%E5%A4%84%E7%90%86.png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/stateful-stream-process.png" alt="avatar"></p>
 <p>这样我们就解决了传统处理和离线处理架构中存储大和高延迟的问题。当数据量大时，可以做成分布式，但是分布式可能存在网络延迟带来的乱序问题，这时我们怎么保证数据处理的正确性呢，因为我们流式处理架构是集群架构，我们无法保证当因为网络或者其他问题导致数据延迟到达而产生的的问题（例如我们要统计截止当天结束的某些数据，但是有些数据因为延迟导致它在当天时间节点结束后才到达，这样就会导致计算出现误差甚至错误），此流式架构就无法解决此问题，所以流式处理架构有了一些演变，就产生了lambda架构。</p>
 <h3 id="Lambda架构"><a href="#Lambda架构" class="headerlink" title="Lambda架构"></a>Lambda架构</h3><p>为了解决数据的正确性问题，Lambda架构使用两套系统，同时保证低延迟和结果准确性（流处理保证数据的实时性，批处理保证数据的准确性）。</p>
 <p>当有数据输入时，来一条处理一条，隔一段时间，采用批处理的方式，处理一批数据，保证结果的准确性，所以用户这边看到的情况是，数据实时显示，但隔一段时间后，数据可能还会变化。</p>
 <p>具体架构如下：</p>
-<p><img src="/images/blogs/flink/Lambda%E6%9E%B6%E6%9E%84.png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/lambda.png" alt="avatar"></p>
 <p><strong>Batch Layer：</strong>该层主要利用分布式处理系统处理大批量的数据，在数据集上预先计算查询函数，并构建查询所对应的Batch View。即所谓的批处理，适合处理离线数据。</p>
 <p><strong>Speed Layer：</strong>该层的目的是提供低延时的 Real-time View，处理的都是实时的增量数据。</p>
 <p><strong>Serving Layer：</strong>Serving Layer 用于响应用户的查询请求，它将 Batch Views 和 Real-time Views 的结果进行了合并，得到最后的结果。</p>
@@ -202,7 +202,7 @@
 <li>实时与批量计算结果不一致引起的数据口径问题。</li>
 </ol>
 <h3 id="Kappa架构"><a href="#Kappa架构" class="headerlink" title="Kappa架构"></a>Kappa架构</h3><p>与 Lambda 架构不同的是，Kappa 架构去掉了批处理层这一体系结构，而只保留了Speed层。你只需要在业务逻辑改变又或者是代码更改的时候进行数据的重新处理。具体架构如下：</p>
-<p><img src="/images/blogs/flink/Kappa%E6%9E%B6%E6%9E%84.png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/kappa.png" alt="avatar"></p>
 <p>其核心思想就是，使用系统(例如：Kafka)保存历史消息数据, 然后通过回放数据，利用 Real-time Layer 这一层的流处理框架(Flink , Spark Streaming , Storm)来完成业务上的批处理需求。核心步骤如下:</p>
 <ol>
 <li><p>数据需要可以被重放(重新处理)。例如, 用 Kafka 来保存数据，你需要几天的数据量就保存几天。</p>
@@ -216,7 +216,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2021年02月05日 16:32</p>
+        <p>最后更新： 2021年02月05日 16:47</p>
         <p>原始链接： <a class="post-url" href="/2021/02/05/Flink入门/" title="Flink-入门">https://jjw-story.github.io/2021/02/05/Flink入门/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
