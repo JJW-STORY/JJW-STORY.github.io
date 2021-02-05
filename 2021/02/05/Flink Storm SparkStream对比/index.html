@@ -17,13 +17,13 @@
 <meta property="og:description" content="Flink、SparkStream和Storm对比概述Flink、Spark Streaming、Storm都可以进行实时计算，但各有特点。 在大数据处理领域，批处理任务和流处理任务一般被认为是两种不同的任务，一个大数据框架一般会被设计为只能处理其中一种任务。例如Storm只支持流处理任务，而MapReduce、Spark只支持批处理任务。Spark Streaming是采用了一种micro-ba">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/storm.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/spark-streaming.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/d-stream.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/process-flow.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/stateful.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/fault-tolerant.png">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/flink/framework-contrast.png">
-<meta property="og:updated_time" content="2021-02-05T09:17:06.797Z">
+<meta property="og:updated_time" content="2021-02-05T09:25:43.580Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flink-Flink Storm SparkStream对比">
 <meta name="twitter:description" content="Flink、SparkStream和Storm对比概述Flink、Spark Streaming、Storm都可以进行实时计算，但各有特点。 在大数据处理领域，批处理任务和流处理任务一般被认为是两种不同的任务，一个大数据框架一般会被设计为只能处理其中一种任务。例如Storm只支持流处理任务，而MapReduce、Spark只支持批处理任务。Spark Streaming是采用了一种micro-ba">
@@ -166,9 +166,9 @@
 <p>Apache Storm的主要亮点是，它是一个容错，快速，没有“单点故障”（SPOF）分布式应用程序，但是<strong>Storm不支持有状态计算</strong>。</p>
 <h3 id="SparkStreaming"><a href="#SparkStreaming" class="headerlink" title="SparkStreaming"></a>SparkStreaming</h3><p>SparkStreaming是对于Spark核心API的拓展，从而支持对于实时数据流的可拓展，高吞吐量和容错性流处理。</p>
 <p>Spark Streaming内部的基本工作原理如下：接收实时输入数据流，然后将数据拆分成多个batch，比如每收集1秒的数据封装为一个batch，然后将每个batch交给Spark的计算引擎进行处理，最后会生产出一个结果数据流，其中的数据，也是由一个一个的batch所组成的。</p>
-<p><img src="/images/blogs/flink/png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/spark-streaming.png" alt="avatar"></p>
 <p>Spark Streaming提供了一种高级的抽象，叫做DStream，英文全称为Discretized Stream，中文翻译为“离散流”，它代表了一个持续不断的数据流。DStream的内部，其实一系列持续不断产生的RDD。RDD是Spark Core的核心抽象，即，不可变的，分布式的数据集。DStream中的每个RDD都包含了一个时间段内的数据，即DStream就是多个RDD组成的一个序列，所以SparkStreaming是以微批来模拟流，并不是一个纯实时的场景。</p>
-<p><img src="/images/blogs/flink/png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/d-stream.png" alt="avatar"></p>
 <p>SparkStreaming支持有状态计算。Spark Streaming 通过 updateStateByKey 操作保存任意的状态。为使用这个功能，需要做下面两步：</p>
 <ol>
 <li><p>定义状态，状态可以是一个任意的数据类型。</p>
@@ -180,16 +180,16 @@
 <p>SparkStreaming的反压：SparkStreaming 从v1.5开始引入反压机制（back-pressure）,由于它是微批处理，所以通过估计当前系统处理数据的速率，动态调节数据接收速率来适配集群数据处理能力(和Flink不同，Flink不需要反压)。</p>
 <h3 id="Flink"><a href="#Flink" class="headerlink" title="Flink"></a>Flink</h3><p>Flink 被设计成能用上千个点在大规模集群上运行。除了支持独立集群部署外，Flink 还支持 YARN 和Mesos 方式部署。当Flink系统启动时，首先启动JobManager和一至多个TaskManager。JobManager负责协调Flink系统，TaskManager则是执行并行程序的worker。当系统以本地形式启动时，一个JobManager和一个TaskManager会启动在同一个JVM中。</p>
 <p>当一个程序被提交后，系统会创建一个Client来进行预处理，将程序转变成一个并行数据流的（parallel data flow）形式，交给JobManager和TaskManager执行。</p>
-<p><img src="/images/blogs/flink/png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/process-flow.png" alt="avatar"></p>
 <p>Flink 保存点提供了一个状态化的版本机制，使得能以无丢失状态和最短停机时间的方式更新应用或者回退历史数据。</p>
-<p><img src="/images/blogs/flink/png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/stateful.png" alt="avatar"></p>
 <h2 id="容错性对比"><a href="#容错性对比" class="headerlink" title="容错性对比"></a>容错性对比</h2><h3 id="消息传输正确性保证语义"><a href="#消息传输正确性保证语义" class="headerlink" title="消息传输正确性保证语义"></a>消息传输正确性保证语义</h3><p><strong>At Most Once：</strong>在框架中每条消息传输零次或者一次，也就是说，消息可能会丢失。</p>
 <p><strong>At Least Once：</strong>在框架中每条消息会进行多次传输尝试，至少需要有一次成功。也就是说，消息不会丢失，但可能会重复。</p>
 <p><strong>Exactly Once：</strong>在框架中每条消息有且只有一次，也就是说，消息既不会丢失也不会重复。这种消息传递类型是目前各大流式框架需要提供的功能。</p>
 <h3 id="容错性对比-1"><a href="#容错性对比-1" class="headerlink" title="容错性对比"></a>容错性对比</h3><p>Storm的容错通过ack机制实现，每个bolt或spout处理完成一条data后会发送一条ack消息给acker bolt。当该条data被所有节点都处理过后，它会收到来自所有节点ack， 这样一条data处理就是成功的。storm可以保证数据不丢失，但是只能达到<strong>at least once</strong>语义。此外，因为需要每条data都做ack，所以容错的开销很大。</p>
 <p>Spark依赖checkpoint机制来进行容错，只要batch执行到doCheckpoint操作前挂了，那么该batch就会被完整的重新计算。spark可以保证计算过程的<strong>exactly once</strong>。</p>
 <p>Flink使用Chandy-Chandy-Lamport Algorithm 来做Asynchronous Distributed Snapshots（异步分布式快照），其本质也是checkpoint。如下图，flink定时往流里插入一个barrier（隔栏），这些barriers把数据分割成若干个小的部分，当barrier流到某个operator时，operator立即会对barrier对应的一小部分数据做checkpoint并且把barrier传给下游（checkpoint操作是异步的，并不会打断数据的处理），直到所有的sink operator做完自己checkpoint后，一个完整的checkpoint才算完成。当出现failure时，flink会从最新完整的checkpoint点开始恢复。</p>
-<p><img src="/images/blogs/flink/png" alt="avatar"></p>
+<p><img src="/images/blogs/flink/fault-tolerant.png" alt="avatar"></p>
 <p>flink的checkpoint机制非常轻量，barrier不会打断streaming的流动，而且做checkpoint操作也是异步的。其次，相比storm需要ack每条data，flink做的是small batch的checkpoint，容错的代价相对要低很多。最重要的是flink的checkpoint机制能保证<strong>exactly once</strong>。</p>
 <h2 id="吞吐量和延迟"><a href="#吞吐量和延迟" class="headerlink" title="吞吐量和延迟"></a>吞吐量和延迟</h2><h3 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a>吞吐量</h3><p>Storm的容错机制需要对每条data进行ack，因此容错开销对吞吐量影响巨大，吞吐量下降甚至可以达到70%。所以storm在打开ack容错机制后，吞吐量下降非常明显。</p>
 <p>Spark是mirco-batch级别的计算，各种优化做的也很好，它的吞吐量是最大的。但是需要提一下，有状态计算（如updateStateByKey算子）需要通过额外的rdd来维护状态，导致开销较大，对吞吐量影响也较大。</p>
@@ -213,7 +213,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2021年02月05日 17:17</p>
+        <p>最后更新： 2021年02月05日 17:25</p>
         <p>原始链接： <a class="post-url" href="/2021/02/05/Flink Storm SparkStream对比/" title="Flink-Flink Storm SparkStream对比">https://jjw-story.github.io/2021/02/05/Flink Storm SparkStream对比/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
