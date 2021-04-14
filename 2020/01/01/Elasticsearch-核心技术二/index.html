@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/data-mget-detail.png">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/index-search-detail.png">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/data-search-detail.png">
-<meta property="og:updated_time" content="2021-04-11T06:34:05.288Z">
+<meta property="og:updated_time" content="2021-04-14T01:15:43.464Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch-核心技术二">
 <meta name="twitter:description" content="文档写入流程Index/Bulk 基本流程新建、索引（这里的索引是动词，指写入操作，将文档添加到 Lucene 的过程称为索引文档）和删除请求都是写操作。写操作必须先在主分片执行成功后才能复制到相关的副分片。下面是基本步骤：  客户端向 NODE1 发送写请求。  NODE1 使用文档 ID 来确定文档属于分片0，通过集群状态中的内容路由表信息获知分片0的主分片位于NODE3，因此请求被转发到NO">
@@ -381,7 +381,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2021年04月11日 14:34</p>
+        <p>最后更新： 2021年04月14日 09:15</p>
         <p>原始链接： <a class="post-url" href="/2020/01/01/Elasticsearch-核心技术二/" title="Elasticsearch-核心技术二">https://jjw-story.github.io/2020/01/01/Elasticsearch-核心技术二/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">

@@ -18,7 +18,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/replica-recovery.png">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/replica-primary-recovery.png">
-<meta property="og:updated_time" content="2021-04-11T06:42:00.046Z">
+<meta property="og:updated_time" content="2021-04-14T01:16:52.447Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch-核心技术三">
 <meta name="twitter:description" content="索引恢复流程索引恢复是 ES 数据恢复过程。待恢复的数据是客户端写入成功，但未执行刷盘（flush）的 Lucene 分段。例如，当节点异常重启时，写入磁盘的数据先到文件系统的缓忡，未必来得及刷盘，如果不通过某种方式将未刷盘的数据找回来，则会丢失－些数据，这是保持数据完整性的体现。另一方面，由于写入操作在多个分片副本上没有来得及全部执行，副分片需要同步成和主分片完全一致，这是数据副本一致性的体现。">
@@ -388,7 +388,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2021年04月11日 14:42</p>
+        <p>最后更新： 2021年04月14日 09:16</p>
         <p>原始链接： <a class="post-url" href="/2020/01/08/Elasticsearch-核心技术三/" title="Elasticsearch-核心技术三">https://jjw-story.github.io/2020/01/08/Elasticsearch-核心技术三/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">

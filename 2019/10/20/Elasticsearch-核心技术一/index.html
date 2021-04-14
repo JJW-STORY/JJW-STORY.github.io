@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="ES基本概念和原理分片在分布式系统中，单机无法存储规模巨大的数据，要依靠大规模集群处理和存储这些数据，一般通过增加机器数量来提高系统水平扩展能力。因此，需要将数据分成若干小块分配到各个机器上。然后通过某种路由策略找到某个数据块所在的位置。 ES 将数据副本分为主从两部分，即主分片 primary shard 和副分片 replica shard。主数据作为权威数据，写过程中先写主分片，成功后再写副">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/cluster-start.png">
-<meta property="og:updated_time" content="2021-04-11T11:08:15.990Z">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/cluster-start.png">
+<meta property="og:updated_time" content="2021-04-14T01:15:19.086Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch-核心技术一">
 <meta name="twitter:description" content="ES基本概念和原理分片在分布式系统中，单机无法存储规模巨大的数据，要依靠大规模集群处理和存储这些数据，一般通过增加机器数量来提高系统水平扩展能力。因此，需要将数据分成若干小块分配到各个机器上。然后通过某种路由策略找到某个数据块所在的位置。 ES 将数据副本分为主从两部分，即主分片 primary shard 和副分片 replica shard。主数据作为权威数据，写过程中先写主分片，成功后再写副">
-<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/cluster-start.png">
+<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/cluster-start.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -211,11 +211,11 @@
 <h5 id="部落节点-Tribe-node"><a href="#部落节点-Tribe-node" class="headerlink" title="部落节点(Tribe node)"></a>部落节点(Tribe node)</h5><p>tribes （部落）功能允许部落节点在多个集群之间充当联合客户端。它不做主节点，也不做数据节点，仅用于路由请求，本质上是 个智能负载均衡器（从负载均衡器的定义来说，智能和非智能的区别在于是否知道访问的内容存在于哪个节点〉，从 5.0版本开始，这个角色被协调节点取代。</p>
 <h2 id="集群健康状态"><a href="#集群健康状态" class="headerlink" title="集群健康状态"></a>集群健康状态</h2><p>从数据完整性的角度划分，集群健康状态分为：</p>
 <ul>
-<li><p>Green ，所有的主分片和副分片都正常运行。</p>
+<li><p>Green，所有的主分片和副分片都正常运行。</p>
 </li>
-<li><p>Yellow ，所有的主分片都正常运行，但不是所有的副分片都正常运行 存在单点故障风险。</p>
+<li><p>Yellow，所有的主分片都正常运行，但不是所有的副分片都正常运行 存在单点故障风险。</p>
 </li>
-<li><p>Red ，有主分片没能正常运行。</p>
+<li><p>Red，有主分片没能正常运行。</p>
 </li>
 </ul>
 <p>每个索引也有上述 种状态，假设丢失了一个副分片，该分片所属的索引和整个集群变为Yellow 状态，其他索引仍为 Green。</p>
@@ -248,7 +248,7 @@
 </li>
 </ul>
 <h1 id="集群启动流程"><a href="#集群启动流程" class="headerlink" title="集群启动流程"></a>集群启动流程</h1><p>集群启动的整体流程如下图所示：</p>
-<p><img src="/images/blogs/elasticseatch/cluster-start.png" alt="avatar"></p>
+<p><img src="/images/blogs/elasticsearch/cluster-start.png" alt="avatar"></p>
 <h2 id="选举主节点"><a href="#选举主节点" class="headerlink" title="选举主节点"></a>选举主节点</h2><p>假设有若干节点正在启动，集群启动的第一件事是从己知的活跃机器列表中选择一个作为主节点，选主之后的流程由主节点触发。</p>
 <p>ES 的选主算法是基于 Bully 算法的改进，主要思路是对节点 ID 排序，取 ID 值最大的节点作为 Master，每个节点都运行这个流程，选主的目的是确定唯一的主节点，初学者可能认为选举出的主节点应该持有最新的元数据信息，实际上这个问题在实现上被分解为两步：先确定唯一的、 大家公认的主节点，再想办法把最新的机器元数据复制到选举出节点上。</p>
 <p>基于节点 ID 排序的简单选举算法有三个附加约定条件：</p>
@@ -454,7 +454,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2021年04月11日 19:08</p>
+        <p>最后更新： 2021年04月14日 09:15</p>
         <p>原始链接： <a class="post-url" href="/2019/10/20/Elasticsearch-核心技术一/" title="Elasticsearch-核心技术一">https://jjw-story.github.io/2019/10/20/Elasticsearch-核心技术一/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">

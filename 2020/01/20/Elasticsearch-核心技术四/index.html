@@ -16,17 +16,17 @@
 <meta property="og:site_name" content="JJW-STORY">
 <meta property="og:description" content="写入速度优化在ES的默认设置下，是综合考虑数据可靠性与搜索实时性、写入速度等因素的。当离开默认设置、追求极致的写入速度时，很多是以牺牲可靠性和搜索实时性为代价的。有时候务上对数据可靠性和搜索实时性要求并不高，对写入速度要求很高，此时可以调整一些策略，最大化写入速度。 接下来的优化基于集群正常运行的前提下，如果是集群首次批量导入数据，则可以将副本数设置为 0， 导入完毕再将副本数调整回去，这样副分片">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/trie-tree.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/index-structure.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/fst-structure.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/fst-structure-detail.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/fst-majorization.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/origin-file.png">
-<meta property="og:updated_time" content="2021-04-12T03:29:36.464Z">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/trie-tree.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/index-structure.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/fst-structure.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/fst-structure-detail.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/fst-majorization.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/origin-file.png">
+<meta property="og:updated_time" content="2021-04-14T01:18:58.699Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Elasticsearch-核心技术四">
 <meta name="twitter:description" content="写入速度优化在ES的默认设置下，是综合考虑数据可靠性与搜索实时性、写入速度等因素的。当离开默认设置、追求极致的写入速度时，很多是以牺牲可靠性和搜索实时性为代价的。有时候务上对数据可靠性和搜索实时性要求并不高，对写入速度要求很高，此时可以调整一些策略，最大化写入速度。 接下来的优化基于集群正常运行的前提下，如果是集群首次批量导入数据，则可以将副本数设置为 0， 导入完毕再将副本数调整回去，这样副分片">
-<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/elasticseatch/trie-tree.png">
+<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/trie-tree.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -365,12 +365,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A 开头的 term ……………. Xxx 页</span><br><span class="line">C 开头的 term ……………. Yyy 页</span><br></pre></td></tr></table></figure>
 
 <p>如果所有的 term 都是英文字符的话，可能这个 term index 就真的是 26 个英文字符表构成的了。但是实际的情况是，term 未必都是英文字符，term 可以是任意的 byte 数组。而且 26 个英文字符也未必是每一个字符都有均等的 term，比如 x 字符开头的 term 可能一个都没有，而 s 开头的 term 又特别多。实际的 term index 是一棵 trie 树（Trie Trees数据结构，简称字典树/单词查找树/键树）：</p>
-<p><img src="/images/blogs/elasticseatch/trie-tree.png" alt="avatar"></p>
+<p><img src="/images/blogs/elasticsearch/trie-tree.png" alt="avatar"></p>
 <p>这棵树不会包含所有的 term，它包含的是 term 的一些前缀。<strong>通过 term index 可以快速地定位到 term dictionary 的某个 offset，然后从这个位置再往后顺序查找。</strong>现在我们可以回答“为什么 Elasticsearch/Lucene 检索可以比 mysql 快了。Mysql 只有 term dictionary 这一层，是以 b-tree 排序的方式存储在磁盘上的。检索一个 term 需要若干次的 random access 的磁盘操作。而 Lucene 在 term dictionary 的基础上添加了 term index 来加速检索，term index 以树的形式缓存在内存中。从 term index 查到对应的 term dictionary 的 block 位置之后，再去磁盘上找 term，大大减少了磁盘的 random access 次数。</p>
 <p><strong>可以形象地理解为，Term Dictionary 就是新华字典的正文部分包含了所有的词汇，Term Index 就是新华字典前面的索引页，用于表明词汇在哪一页。</strong></p>
 <p>但是 term index 即不能知道某个Term在Dictionary(.tim)文件上具体的位置，也不能仅通过FST就能确切的知道Term是否真实存在。它只能告诉你，查询的Term可能在这些Blocks上，到底存不存在FST并不能给出确切的答案，因为FST是通过Dictionary的每个Block的前缀构成，所以通过FST只可以直接找到这个Block在.tim文件上具体的File Pointer，并无法直接找到Terms。</p>
 <h2 id="Lucene-索引实现"><a href="#Lucene-索引实现" class="headerlink" title="Lucene 索引实现"></a>Lucene 索引实现</h2><p>Lucene经多年演进优化，现在的一个索引文件结构如图所示，基本可以分为三个部分：词典、倒排表、正向文件、列式存储DocValues。</p>
-<p><img src="/images/blogs/elasticseatch/index-structure.png" alt="avatar"></p>
+<p><img src="/images/blogs/elasticsearch/index-structure.png" alt="avatar"></p>
 <h2 id="FST"><a href="#FST" class="headerlink" title="FST"></a>FST</h2><p>Lucene 的tip文件即为 Term Index 结构，tim文件即为 Term Dictionary 结构。tip中存储的就是多个FST，FST中存储的是&lt;单词前缀，以该前缀开头的所有Term的压缩块在磁盘中的位置&gt;。即为前文提到的从 term index 查到对应的 term dictionary 的 block 位置之后，再去磁盘上找 term，大大减少了磁盘的 random access 次数。它的特点就是：</p>
 <ol>
 <li><p>词查找复杂度为O(len(str))。</p>
@@ -381,7 +381,7 @@
 </li>
 </ol>
 <p>我们往索引库里插入四个单词abd、abe、acf、acg,看看它的索引文件内容。</p>
-<p><img src="/images/blogs/elasticseatch/fst-structure.png" alt="avatar"></p>
+<p><img src="/images/blogs/elasticsearch/fst-structure.png" alt="avatar"></p>
 <p>tip部分，每列一个FST索引，所以会有多个FST，每个FST存放前缀和后缀块指针，这里前缀就为a、ab、ac。tim里面存放后缀块和词的其他信息如倒排表指针、TFDF等，doc文件里就为每个单词的倒排表。所以它的检索过程分为三个步骤：</p>
 <ol>
 <li><p>内存加载tip文件，通过FST匹配前缀找到后缀词块位置。</p>
@@ -392,7 +392,7 @@
 </li>
 </ol>
 <p>这里就会有两个问题，第一就是前缀如何计算，第二就是后缀如何写磁盘并通过FST定位，下面将描述下Lucene构建FST过程:<br>　　<br>已知FST要求输入有序，所以Lucene会将解析出来的文档单词预先排序，然后构建FST，我们假设输入为abd,abd,acf,acg，那么整个构建过程如下：</p>
-<p><img src="/images/blogs/elasticseatch/fst-structure-detail.png" alt="avatar"></p>
+<p><img src="/images/blogs/elasticsearch/fst-structure-detail.png" alt="avatar"></p>
 <ol>
 <li><p>插入abd时，没有输出。</p>
 </li>
@@ -410,7 +410,7 @@
 <li><p>前缀计算基于byte，而不是char，这样可以减少后缀数，防止后缀数太多，影响性能。如对宇(e9 b8 a2)、守(e9 b8 a3)、安(e9 b8 a4)这三个汉字，FST构建出来，不是只有根节点，三个汉字为后缀，而是从unicode码出发，以e9、b8为前缀，a2、a3、a4为后缀，如下图：</p>
 </li>
 </ol>
-<p><img src="/images/blogs/elasticseatch/fst-majorization.png" alt="avatar"></p>
+<p><img src="/images/blogs/elasticsearch/fst-majorization.png" alt="avatar"></p>
 <h2 id="倒排表（PostingList）结构"><a href="#倒排表（PostingList）结构" class="headerlink" title="倒排表（PostingList）结构"></a>倒排表（PostingList）结构</h2><p>倒排表就是文档号集合，但怎么存，怎么取也有很多讲究，Lucene现使用的倒排表结构叫Frame of reference,它主要有两个特点：</p>
 <ol>
 <li>数据压缩。</li>
@@ -420,7 +420,7 @@
 <p>Lucene 为什么要将 PostingList 设计成跳跃列表呢，这是为了做加速文档的交集运算。当查询的条件是两个 MUST 时，需要对两个词汇的 PostingList 进行交集计算。计算交集时会选择短的列表作为「驱动列表」，驱动列表的指针在往前走时，另外一个列表也要跟着往前跳。就好比一个大人和一个小孩走路，大人走得快，小孩就得跟着跑才能追赶上。同时因为跳跃列表的高层都在内存中，所以跳起来会非常的快，这样的交集运算就会有比较好的性能。</p>
 <p>综上所述，倒排索引的 Key 和 Value 都是部分放在内存中，从这点来说 FST 和 Skiplist 的结构具有一定的相似性，它们都是有高度的数据结构，高层的数据留在内存中，底层的数据淘汰到磁盘上，查找方向是先定位高层再定位底层。</p>
 <h2 id="正向文件"><a href="#正向文件" class="headerlink" title="正向文件"></a>正向文件</h2><p>正向文件指的就是原始文档，Lucene对原始文档也提供了存储功能，它存储特点就是分块+压缩，fdt文件就是存放原始文档的文件，它占了索引库90%的磁盘空间，fdx文件为索引文件，通过文档号（自增数字）快速得到文档位置，它们的文件结构如下： </p>
-<p><img src="/images/blogs/elasticseatch/origin-file.png" alt="avatar"></p>
+<p><img src="/images/blogs/elasticsearch/origin-file.png" alt="avatar"></p>
 <ul>
 <li><p>fnm中为元信息存放了各列类型、列名、存储方式等信息。</p>
 </li>
@@ -474,7 +474,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2021年04月12日 11:29</p>
+        <p>最后更新： 2021年04月14日 09:18</p>
         <p>原始链接： <a class="post-url" href="/2020/01/20/Elasticsearch-核心技术四/" title="Elasticsearch-核心技术四">https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
