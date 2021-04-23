@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Redis-实践四 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="Reids SCAN 遍历数据重复原理SCAN的遍历顺序关于scan命令的遍历顺序，我们可以用一个小栗子来具体看一下。 12345678910111213141516127.0.0.1:6379&amp;gt; keys *1) &amp;quot;db_number&amp;quot;2) &amp;quot;key1&amp;quot;3) &amp;quot;myKey&amp;quot;127.0.0.1:6379&amp;gt; scan 0 MAT">
+<meta name="keywords" content="Redis,实践四">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis-实践四">
+<meta property="og:url" content="https://jjw-story.github.io/2021/04/20/Redis-实践四/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="Reids SCAN 遍历数据重复原理SCAN的遍历顺序关于scan命令的遍历顺序，我们可以用一个小栗子来具体看一下。 12345678910111213141516127.0.0.1:6379&amp;gt; keys *1) &amp;quot;db_number&amp;quot;2) &amp;quot;key1&amp;quot;3) &amp;quot;myKey&amp;quot;127.0.0.1:6379&amp;gt; scan 0 MAT">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/redis/scan-order.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/redis/redis-6.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/redis/redis-mencached.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/redis/redis-rocksDB.png">
+<meta property="og:updated_time" content="2021-04-23T07:43:07.572Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis-实践四">
+<meta name="twitter:description" content="Reids SCAN 遍历数据重复原理SCAN的遍历顺序关于scan命令的遍历顺序，我们可以用一个小栗子来具体看一下。 12345678910111213141516127.0.0.1:6379&amp;gt; keys *1) &amp;quot;db_number&amp;quot;2) &amp;quot;key1&amp;quot;3) &amp;quot;myKey&amp;quot;127.0.0.1:6379&amp;gt; scan 0 MAT">
+<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/redis/scan-order.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Redis-实践四" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Redis-实践四
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Redis/">Redis</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2021-04-20
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="Reids-SCAN-遍历数据重复原理"><a href="#Reids-SCAN-遍历数据重复原理" class="headerlink" title="Reids SCAN 遍历数据重复原理"></a>Reids SCAN 遍历数据重复原理</h1><h2 id="SCAN的遍历顺序"><a href="#SCAN的遍历顺序" class="headerlink" title="SCAN的遍历顺序"></a>SCAN的遍历顺序</h2><p>关于scan命令的遍历顺序，我们可以用一个小栗子来具体看一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) &quot;db_number&quot;</span><br><span class="line">2) &quot;key1&quot;</span><br><span class="line">3) &quot;myKey&quot;</span><br><span class="line">127.0.0.1:6379&gt; scan 0 MATCH * COUNT 1</span><br><span class="line">1) &quot;2&quot;</span><br><span class="line">2) 1) &quot;db_number&quot;</span><br><span class="line">127.0.0.1:6379&gt; scan 2 MATCH * COUNT 1</span><br><span class="line">1) &quot;1&quot;</span><br><span class="line">2) 1) &quot;myKey&quot;</span><br><span class="line">127.0.0.1:6379&gt; scan 1 MATCH * COUNT 1</span><br><span class="line">1) &quot;3&quot;</span><br><span class="line">2) 1) &quot;key1&quot;</span><br><span class="line">127.0.0.1:6379&gt; scan 3 MATCH * COUNT 1</span><br><span class="line">1) &quot;0&quot;</span><br><span class="line">2) (empty list or set)</span><br></pre></td></tr></table></figure>
+
+<p>我们的Redis中有3个key，我们每次只遍历一个一维数组中的元素。如上所示，SCAN命令的遍历顺序是:0-&gt;2-&gt;1-&gt;3</p>
+<p>这个顺序看起来有些奇怪。我们把它转换成二进制就好理解一些了:00-&gt;10-&gt;01-&gt;11</p>
+<p>我们发现每次这个序列是高位加1的。普通二进制的加法，是从右往左相加、进位。而这个序列是从左往右相加、进位的。这一点我们在redis的源码中也得到印证。在dict.c文件的dictScan函数中对游标进行了如下处理:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">v = rev(v);</span><br><span class="line">v++;</span><br><span class="line">v = rev(v);</span><br></pre></td></tr></table></figure>
+
+<p>意思是，将游标倒置，加一后，再倒置，也就是我们所说的“高位加1”的操作。</p>
+<p>这里大家可能会有疑问了，为什么要使用这样的顺序进行遍历，而不是用正常的0、1、2……这样的顺序呢，这是因为需要考虑遍历时发生字典扩容与缩容的情况（不得不佩服开发者考虑问题的全面性）。我们来看一下在SCAN遍历过程中，发生扩容时，遍历会如何进行。加入我们原始的数组有4个元素，也就是索引有两位，这时需要把它扩充成3位，并进行rehash。</p>
+<p><img src="/images/blogs/redis/scan-order.png" alt="avatar"></p>
+<p><strong>原来挂接在xx下的所有元素被分配到0xx和1xx下。在上图中，当我们即将遍历10时，dict进行了rehash，这时，scan命令会从010开始遍历，而000和100（原00下挂接的元素）不会再被重复遍历。</strong></p>
+<p><strong>再来看看缩容的情况。假设dict从3位缩容到2位，当即将遍历110时，dict发生了缩容，这时scan会遍历10。这时010下挂接的元素会被重复遍历，但010之前的元素都不会被重复遍历了。所以，缩容时还是可能会有些重复元素出现的。</strong></p>
+<h1 id="Redis-Cluster集群不支持Pipeline"><a href="#Redis-Cluster集群不支持Pipeline" class="headerlink" title="Redis Cluster集群不支持Pipeline"></a>Redis Cluster集群不支持Pipeline</h1><p>我们知道，Redis 集群的键空间被分割为 16384 个槽（slot），集群的最大节点数量也是 16384 个。每个主节点都负责处理 16384 个哈希槽的其中一部分。具体的redis命令，会根据key计算出一个槽位（slot），然后根据槽位去特定的节点redis上执行操作。一次pipeline会批量执行多个命令，那么每个命令都需要根据“key”运算一个槽位，然后根据槽位去特定的机器执行命令，也就是说一次pipeline操作会使用多个节点的redis连接，而目前Redis Cluster无法跨集群节点去执行命令，JedisCluster是无法支持的，所以Redis Cluster集群不支持Pipeline。</p>
+<p>但是我们可以通过开发一个客户端来进行支持，设计思路如下：</p>
+<ol>
+<li><p>首先要根据key计算出此次pipeline会使用到的节点对应的连接（也就是jedis对象，通常每个节点对应一个Pool）。</p>
+</li>
+<li><p>相同槽位的key，使用同一个jedis.pipeline去执行命令。</p>
+</li>
+<li><p>合并此次pipeline所有的response返回。</p>
+</li>
+<li><p>连接释放返回到池中。</p>
+</li>
+</ol>
+<h1 id="Redis的使用规范建议"><a href="#Redis的使用规范建议" class="headerlink" title="Redis的使用规范建议"></a>Redis的使用规范建议</h1><h2 id="键值对使用规范"><a href="#键值对使用规范" class="headerlink" title="键值对使用规范"></a>键值对使用规范</h2><h4 id="规范一：key-的命名规范"><a href="#规范一：key-的命名规范" class="headerlink" title="规范一：key 的命名规范"></a>规范一：key 的命名规范</h4><p>一个 Redis 实例默认可以支持 16 个数据库，我们可以把不同的业务数据分散保存到不同的数据库中。但是，在使用不同数据库时，客户端需要使用 SELECT 命令进行数据库切换，相当于增加了一个额外的操作。</p>
+<p>其实，我们可以通过合理命名 key，减少这个操作。具体的做法是，把业务名作为前缀，然后用冒号分隔，再加上具体的业务数据名。这样一来，我们可以通过 key 的前缀区分不同的业务数据，就不用在多个数据库间来回切换了。</p>
+<p>这里有一个地方需要注意一下。key 本身是字符串，底层的数据结构是 SDS。SDS 结构中会包含字符串长度、分配空间大小等元数据信息。从 Redis 3.2 版本开始，当 key 字符串的长度增加时，SDS 中的元数据也会占用更多内存空间。所以，我们在设置 key 的名称时，要注意控制 key 的长度。否则，如果 key 很长的话，就会消耗较多内存空间，而且，SDS 元数据也会额外消耗一定的内存空间。</p>
+<h4 id="规范二：避免使用-bigkey"><a href="#规范二：避免使用-bigkey" class="headerlink" title="规范二：避免使用 bigkey"></a>规范二：避免使用 bigkey</h4><p>Redis 是使用单线程读写数据，bigkey 的读写操作会阻塞线程，降低 Redis 的处理效率。所以，在应用 Redis 时，关于 value 的设计规范，非常重要的一点就是避免 bigkey。bigkey 通常有两种情况：</p>
+<ol>
+<li><p>情况一：键值对的值大小本身就很大，例如 value 为 1MB 的 String 类型数据。为了避免 String 类型的 bigkey，在业务层，我们要尽量把 String 类型的数据大小控制在10KB 以下。</p>
+</li>
+<li><p>情况二：键值对的值是集合类型，集合元素个数非常多，例如包含 100 万个元素的Hash 集合类型数据。为了避免集合类型的 bigkey，我给你的设计规范建议是，尽量把集合类型的元素个数控制在 1 万以下。</p>
+</li>
+</ol>
+<p>这里，还有个地方需要注意下，Redis 的 4 种集合类型 List、Hash、Set 和 Sorted Set，在集合元素个数小于一定的阈值时，会使用内存紧凑型的底层数据结构进行保存，从而节省内存。例如，假设 Hash 集合的 hash-max-ziplist-entries 配置项是 1000，如果 Hash集合元素个数不超过 1000，就会使用 ziplist 保存数据。紧凑型数据结构虽然可以节省内存，但是会在一定程度上导致数据的读写性能下降。</p>
+<h4 id="规范三：使用高效序列化方法和压缩方法"><a href="#规范三：使用高效序列化方法和压缩方法" class="headerlink" title="规范三：使用高效序列化方法和压缩方法"></a>规范三：使用高效序列化方法和压缩方法</h4><p>Redis 中的字符串都是使用二进制安全的字节数组来保存的，所以，我们可以把业务数据序列化成二进制数据写入到 Redis 中。但是，不同的序列化方法，在序列化速度和数据序列化后的占用内存空间这两个方面，效果是不一样的。比如说，<strong>protostuff 和 kryo</strong> 这两种序列化方法，就要比 Java 内置的序列化方法（java-build-in-serializer）效率更高。</p>
+<h4 id="规范四：使用整数对象共享池"><a href="#规范四：使用整数对象共享池" class="headerlink" title="规范四：使用整数对象共享池"></a>规范四：使用整数对象共享池</h4><p>整数是常用的数据类型，Redis 内部维护了 0 到 9999 这 1 万个整数对象，并把这些整数作为一个共享池使用。换句话说，如果一个键值对中有 0 到 9999 范围的整数，Redis 就不会为这个键值对专门创建整数对象了，而是会复用共享池中的整数对象。这样一来，即使大量键值对保存了 0 到 9999 范围内的整数，在 Redis 实例中，其实只保存了一份整数对象，可以节省内存空间。</p>
+<p>基于这个特点，我建议你，在满足业务数据需求的前提下，能用整数时就尽量用整数，这样可以节省实例内存。</p>
+<p>那什么时候不能用整数对象共享池呢？主要有两种情况。</p>
+<ol>
+<li><p>第一种情况是，如果 Redis 中设置了 maxmemory，而且启用了 LRU 策略（allkeys-lru或 volatile-lru 策略），那么，整数对象共享池就无法使用了。这是因为，LRU 策略需要统计每个键值对的使用时间，如果不同的键值对都共享使用一个整数对象，LRU 策略就无法进行统计了。</p>
+</li>
+<li><p>第二种情况是，如果集合类型数据采用 ziplist 编码，而集合元素是整数，这个时候，也不能使用共享池。因为 ziplist 使用了紧凑型内存结构，判断整数对象的共享情况效率低。</p>
+</li>
+</ol>
+<h2 id="数据保存规范"><a href="#数据保存规范" class="headerlink" title="数据保存规范"></a>数据保存规范</h2><h4 id="规范一：使用-Redis-保存热数据"><a href="#规范一：使用-Redis-保存热数据" class="headerlink" title="规范一：使用 Redis 保存热数据"></a>规范一：使用 Redis 保存热数据</h4><p>虽然 Redis 支持使用 RDB 快照和 AOF 日志持久化保存数据，但是，这两个机制都是用来提供数据可靠性保证的，并不是用来扩充数据容量的。而且，内存成本本身就比较高，如果把业务数据都保存在 Redis 中，会带来较大的内存成本压力。</p>
+<p>所以，一般来说，在实际应用 Redis 时，我们会更多地把它作为缓存保存热数据，这样既可以充分利用 Redis 的高性能特性，还可以把宝贵的内存资源用在服务热数据上，就是俗话说的“好钢用在刀刃上”。</p>
+<h4 id="规范二：不同的业务数据分实例存储"><a href="#规范二：不同的业务数据分实例存储" class="headerlink" title="规范二：不同的业务数据分实例存储"></a>规范二：不同的业务数据分实例存储</h4><p>虽然我们可以使用 key 的前缀把不同业务的数据区分开，但是，如果所有业务的数据量都很大，而且访问特征也不一样，我们把这些数据保存在同一个实例上时，这些数据的操作就会相互干扰。那么，我建议你把不同的业务数据放到不同的 Redis 实例中。这样一来，既可以避免单实例的内存使用量过大，也可以避免不同业务的操作相互干扰。</p>
+<h4 id="规范三：在数据保存时，要设置过期时间"><a href="#规范三：在数据保存时，要设置过期时间" class="headerlink" title="规范三：在数据保存时，要设置过期时间"></a>规范三：在数据保存时，要设置过期时间</h4><p>对于 Redis 来说，内存是非常宝贵的资源，而且，Redis 通常用于保存热数据。热数据一般都有使用的时效性。所以，在数据保存时，我建议你根据业务使用数据的时长，设置数据的过期时间。不然的话，写入 Redis 的数据会一直占用内存，如果数据持续增多，就可能达到机器的内存上限，造成内存溢出，导致服务崩溃。</p>
+<h4 id="规范四：控制-Redis-实例的容量"><a href="#规范四：控制-Redis-实例的容量" class="headerlink" title="规范四：控制 Redis 实例的容量"></a>规范四：控制 Redis 实例的容量</h4><p>Redis 单实例的内存大小都不要太大，根据我自己的经验值，建议你设置在 2~6GB 。这样一来，无论是 RDB 快照，还是主从集群进行数据同步，都能很快完成，不会阻塞正常请求的处理。</p>
+<h2 id="命令使用规范"><a href="#命令使用规范" class="headerlink" title="命令使用规范"></a>命令使用规范</h2><h4 id="规范一：线上禁用部分命令"><a href="#规范一：线上禁用部分命令" class="headerlink" title="规范一：线上禁用部分命令"></a>规范一：线上禁用部分命令</h4><p>Redis 是单线程处理请求操作，如果我们执行一些涉及大量操作、耗时长的命令，就会严重阻塞主线程，导致其它请求无法得到正常处理，这类命令主要有 3 种：</p>
+<ul>
+<li><p><strong>KEYS</strong>，按照键值对的 key 内容进行匹配，返回符合匹配条件的键值对，该命令需要对Redis 的全局哈希表进行全表扫描，严重阻塞 Redis 主线程；</p>
+</li>
+<li><p><strong>FLUSHALL</strong>，删除 Redis 实例上的所有数据，如果数据量很大，会严重阻塞 Redis 主线程；</p>
+</li>
+<li><p><strong>FLUSHDB</strong>，删除当前数据库中的数据，如果数据量很大，同样会阻塞 Redis 主线程。</p>
+</li>
+</ul>
+<p>所以，我们在线上应用 Redis 时，就需要禁用这些命令。具体的做法是，管理员用rename-command 命令在配置文件中对这些命令进行重命名，让客户端无法使用这些命令。</p>
+<p>当然，你还可以使用其它命令替代这 3 个命令：</p>
+<ol>
+<li><p>对于 KEYS 命令来说，你可以用 SCAN 命令代替 KEYS 命令，分批返回符合条件的键值对，避免造成主线程阻塞；</p>
+</li>
+<li><p>对于 FLUSHALL、FLUSHDB 命令来说，你可以加上 ASYNC 选项，让这两个命令使用后台线程异步删除数据，可以避免阻塞主线程。</p>
+</li>
+</ol>
+<h4 id="规范二：慎用-MONITOR-命令"><a href="#规范二：慎用-MONITOR-命令" class="headerlink" title="规范二：慎用 MONITOR 命令"></a>规范二：慎用 MONITOR 命令</h4><p>Redis 的 MONITOR 命令在执行后，会持续输出监测到的各个命令操作，所以，我们通常会用 MONITOR 命令返回的结果，检查命令的执行情况。但是，MONITOR 命令会把监控到的内容持续写入输出缓冲区。如果线上命令的操作很多，输出缓冲区很快就会溢出了，这就会对 Redis 性能造成影响，甚至引起服务崩溃。</p>
+<h4 id="规范三：慎用全量操作命令"><a href="#规范三：慎用全量操作命令" class="headerlink" title="规范三：慎用全量操作命令"></a>规范三：慎用全量操作命令</h4><p>对于集合类型的数据来说，如果想要获得集合中的所有元素，一般不建议使用全量操作的命令（例如 Hash 类型的 HGETALL、Set 类型的 SMEMBERS）。这些操作会对 Hash 和Set 类型的底层数据结构进行全量扫描，如果集合类型数据较多的话，就会阻塞 Redis 主线程。</p>
+<p>如果想要获得集合类型的全量数据，我给你三个小建议：</p>
+<ol>
+<li><p>第一个建议是，你可以使用 SSCAN、HSCAN 命令分批返回集合中的数据，减少对主线程的阻塞。</p>
+</li>
+<li><p>第二个建议是，你可以化整为零，把一个大的 Hash 集合拆分成多个小的 Hash 集合。这个操作对应到业务层，就是对业务数据进行拆分，按照时间、地域、用户 ID 等属性把一个大集合的业务数据拆分成多个小集合数据。例如，当你统计用户的访问情况时，就可以按照天的粒度，把每天的数据作为一个 Hash 集合。</p>
+</li>
+<li><p>最后一个建议是，如果集合类型保存的是业务数据的多个属性，而每次查询时，也需要返回这些属性，那么，你可以使用 String 类型，将这些属性序列化后保存，每次直接返回 String 数据就行，不用再对集合类型做全量扫描。</p>
+</li>
+</ol>
+<h1 id="Redis-6-0的新特性"><a href="#Redis-6-0的新特性" class="headerlink" title="Redis 6.0的新特性"></a>Redis 6.0的新特性</h1><p><img src="/images/blogs/redis/redis-6.png" alt="avatar"></p>
+<p>Redis 6.0 的哪些新特性帮助最大？</p>
+<p>Redis 6.0 提供的多 IO 线程和客户端缓存这两大特性，对于我们使用 Redis 帮助最大。多 IO 线程可以让 Redis 在并发量非常大时，让其性能再上一个台阶，性能提升近 1 倍，对于单机 Redis 性能要求更高的业务场景，非常有帮助。</p>
+<p>而客户端缓存可以让 Redis 的数据缓存在客户端，相当于每个应用进程多了一个本地缓存，Redis 数据没有变化时，业务直接在应用进程内就能拿到数据，这不仅节省了网络带宽，降低了 Redis 的请求压力，还充分利用了业务应用的资源，对应用性能的提升也非常大。</p>
+<p>另外，基于用户的命令粒度 ACL 控制机制也非常有用。当 Redis 以云化的方式对外提供服务时，就会面临多租户（比如多用户或多个微服务）的应用场景。有了 ACL 新特性，我们就可以安全地支持多租户共享访问 Redis 服务了</p>
+<h1 id="基于NVM内存的实践"><a href="#基于NVM内存的实践" class="headerlink" title="基于NVM内存的实践"></a>基于NVM内存的实践</h1><p>NVM 的三大特点：性能高、容量大、数据可以持久化保存。软件系统可以像访问传统 DRAM 内存一样，访问 NVM 内存。目前，Intel 已经推出了 NVM 内存产品 Optane AEP。</p>
+<p>这款 NVM 内存产品给软件提供了两种使用模式，分别是 Memory 模式和 App Direct 模式。在 Memory 模式时，Redis 可以利用 NVM 容量大的特点，实现大容量实例，保存更多数据。在使用 App Direct 模式时，Redis 可以直接在持久化内存上进行数据读写，在这种情况下，Redis 不用再使用 RDB 或 AOF 文件了，数据在机器掉电后也不会丢失。而且，实例可以直接使用持久化内存上的数据进行恢复，恢复速度特别快。</p>
+<p>NVM 内存是近年来存储设备领域中一个非常大的变化，它既能持久化保存数据，还能像内存一样快速访问，这必然会给当前基于 DRAM 和硬盘的系统软件优化带来新的机遇。现在，很多互联网大厂已经开始使用 NVM 内存了，希望你能够关注这个重要趋势，为未来的发展做好准备。</p>
+<p>可以解决Redis现在的问题：</p>
+<ol>
+<li>RDB 文件创建时的 fork 操作会阻塞主线程；</li>
+<li>AOF 文件记录日志时，需要在数据可靠性和写性能之间取得平衡；</li>
+<li>使用 RDB 或 AOF 恢复数据时，恢复效率受 RDB 和 AOF 大小的限制。</li>
+</ol>
+<h1 id="Redis-和-Memcached、RocksDB-的对比"><a href="#Redis-和-Memcached、RocksDB-的对比" class="headerlink" title="Redis 和 Memcached、RocksDB 的对比"></a>Redis 和 Memcached、RocksDB 的对比</h1><p>Memcached 和 RocksDB 分别是典型的内存键值数据库和硬盘键值数据库，应用得也非常广泛。和 Redis 相比，它们有什么优势和不足呢？是否可以替代 Redis 呢？</p>
+<h3 id="Redis-和-Memcached-的比较"><a href="#Redis-和-Memcached-的比较" class="headerlink" title="Redis 和 Memcached 的比较"></a>Redis 和 Memcached 的比较</h3><p>和 Redis 相似，Memcached 也经常被当做缓存来使用。不过，Memcached 有一个明显的优势，就是它的集群规模可以很大。Memcached 集群并不是像 Redis Cluster 或Codis 那样，使用 Slot 映射来分配数据和实例的对应保存关系，而是使用一致性哈希算法把数据分散保存到多个实例上，而一致性哈希的优势就是可以支持大规模的集群。所以，如果我们需要部署大规模缓存集群，Memcached 会是一个不错的选择。</p>
+<p>不过，在使用 Memcached 时，有个地方需要注意，Memcached 支持的数据类型比Redis 少很多。Memcached 只支持 String 类型的键值对，而 Redis 可以支持包括 String在内的多种数据类型，当业务应用有丰富的数据类型要保存的话，使用 Memcached 作为替换方案的优势就没有了。</p>
+<p><img src="/images/blogs/redis/redis-mencached.png" alt="avatar"></p>
+<h3 id="Redis-和-RocksDB-的比较"><a href="#Redis-和-RocksDB-的比较" class="headerlink" title="Redis 和 RocksDB 的比较"></a>Redis 和 RocksDB 的比较</h3><p>和 Redis 不同，RocksDB 可以把数据直接保存到硬盘上。这样一来，单个 RocksDB 可以保存的数据量要比 Redis 多很多，而且数据都能持久化保存下来。RocksDB 还能支持表结构（即列族结构），而 Redis 的基本数据模型就是键值对。所以，如果你需要一个大容量的持久化键值数据库，并且能按照一定表结构保存数据，RocksDB 是一个不错的替代方案。</p>
+<p>RocksDB 毕竟是要把数据写入底层硬盘进行保存的，而且在进行数据查询时，如果RocksDB 要读取的数据没有在内存中缓存，那么，RocksDB 就需要到硬盘上的文件中进行查找，这会拖慢 RocksDB 的读写延迟，降低带宽。在性能方面，RocksDB 是比不上 Redis 的。而且，RocksDB 只是一个动态链接库，并没有像 Redis 那样提供了客户端 - 服务器端访问模式，以及主从集群和切片集群的功能。所以，我们在使用 RocksDB 替代 Redis 时，需要结合业务需求重点考虑替换的可行性。</p>
+<p><img src="/images/blogs/redis/redis-rocksDB.png" alt="avatar"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>集群的可扩展性是我们评估集群方案的一个重要维度，你一定要关注，集群中元数据是用Slot 映射表，还是一致性哈希维护的。如果是 Slot 映射表，那么，是用中心化的第三方存储系统来保存，还是由各个实例来扩散保存，这也是需要考虑清楚的。Redis Cluster、Codis 和 Memcached 采用的方式各不相同。</p>
+<ul>
+<li><p>Redis Cluster：使用 Slot 映射表并由实例扩散保存。</p>
+</li>
+<li><p>Codis：使用 Slot 映射表并由第三方存储系统保存。</p>
+</li>
+<li><p>Memcached：使用一致性哈希。</p>
+</li>
+</ul>
+<p>从可扩展性来看，Memcached 优于 Codis，Codis 优于 Redis Cluster。所以，如果实际业务需要大规模集群，建议你优先选择 Codis 或者是基于一致性哈希的 Redis 切片集群方案。</p>
+<p>Redis的客户端分片方案ShardedJedis就是用的一致性哈希来进行分片的。一致性hash可以支持集群扩容，而且使用一致性哈希在进行集群扩容时，假设新加入节点在一致性哈希圆环上是A，沿逆时针方向的前一个集群节点是B，那么数据迁移只需要迁移B和A之间的数据，相比于普通的哈希后取模方法，一致性哈希能减少数据迁移量。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2021年04月23日 15:43</p>
+        <p>原始链接： <a class="post-url" href="/2021/04/20/Redis-实践四/" title="Redis-实践四">https://jjw-story.github.io/2021/04/20/Redis-实践四/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2021/04/20/Redis-实践四/&title=《Redis-实践四》 — JJW-STORY&pic=/images/blogs/redis.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2021/04/20/Redis-实践四/&title=《Redis-实践四》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2021/04/20/Redis-实践四/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Redis-实践四》 — JJW-STORY&url=https://jjw-story.github.io/2021/04/20/Redis-实践四/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2021/04/20/Redis-实践四/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2021/04/20/Redis-实践四/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Redis/" class="color1">Redis</a>
+      
+    <a href="/tags/实践四/" class="color4">实践四</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Reids-SCAN-遍历数据重复原理"><span class="post-toc-text">Reids SCAN 遍历数据重复原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#SCAN的遍历顺序"><span class="post-toc-text">SCAN的遍历顺序</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Redis-Cluster集群不支持Pipeline"><span class="post-toc-text">Redis Cluster集群不支持Pipeline</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Redis的使用规范建议"><span class="post-toc-text">Redis的使用规范建议</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#键值对使用规范"><span class="post-toc-text">键值对使用规范</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范一：key-的命名规范"><span class="post-toc-text">规范一：key 的命名规范</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范二：避免使用-bigkey"><span class="post-toc-text">规范二：避免使用 bigkey</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范三：使用高效序列化方法和压缩方法"><span class="post-toc-text">规范三：使用高效序列化方法和压缩方法</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范四：使用整数对象共享池"><span class="post-toc-text">规范四：使用整数对象共享池</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数据保存规范"><span class="post-toc-text">数据保存规范</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范一：使用-Redis-保存热数据"><span class="post-toc-text">规范一：使用 Redis 保存热数据</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范二：不同的业务数据分实例存储"><span class="post-toc-text">规范二：不同的业务数据分实例存储</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范三：在数据保存时，要设置过期时间"><span class="post-toc-text">规范三：在数据保存时，要设置过期时间</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范四：控制-Redis-实例的容量"><span class="post-toc-text">规范四：控制 Redis 实例的容量</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#命令使用规范"><span class="post-toc-text">命令使用规范</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范一：线上禁用部分命令"><span class="post-toc-text">规范一：线上禁用部分命令</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范二：慎用-MONITOR-命令"><span class="post-toc-text">规范二：慎用 MONITOR 命令</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#规范三：慎用全量操作命令"><span class="post-toc-text">规范三：慎用全量操作命令</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Redis-6-0的新特性"><span class="post-toc-text">Redis 6.0的新特性</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#基于NVM内存的实践"><span class="post-toc-text">基于NVM内存的实践</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Redis-和-Memcached、RocksDB-的对比"><span class="post-toc-text">Redis 和 Memcached、RocksDB 的对比</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Redis-和-Memcached-的比较"><span class="post-toc-text">Redis 和 Memcached 的比较</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Redis-和-RocksDB-的比较"><span class="post-toc-text">Redis 和 RocksDB 的比较</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-text">总结</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2021/04/02/Redis-实践三/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Redis-实践三</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2021 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
