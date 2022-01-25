@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>分布式消息队列 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="MQ应用详解分布式消息队列的应用思考点 生产端的消息可靠性投递 就是有些业务场景我们需要消息是百分之百投递成功的，或者与我们的数据库一定是一个原子性的操作  消费端幂等 在生产端为了保证消息投递可靠的时候，可能会出现重复发送消息的情况，我们的消费端一定要做好消费的幂等，杜绝出现消息重复消费的情况  MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可用的状态  MQ的低延迟 在流量非常大">
+<meta name="keywords" content="MQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式消息队列">
+<meta property="og:url" content="https://jjw-story.github.io/2020/04/05/分布式消息队列/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="MQ应用详解分布式消息队列的应用思考点 生产端的消息可靠性投递 就是有些业务场景我们需要消息是百分之百投递成功的，或者与我们的数据库一定是一个原子性的操作  消费端幂等 在生产端为了保证消息投递可靠的时候，可能会出现重复发送消息的情况，我们的消费端一定要做好消费的幂等，杜绝出现消息重复消费的情况  MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可用的状态  MQ的低延迟 在流量非常大">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-26T03:04:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式消息队列">
+<meta name="twitter:description" content="MQ应用详解分布式消息队列的应用思考点 生产端的消息可靠性投递 就是有些业务场景我们需要消息是百分之百投递成功的，或者与我们的数据库一定是一个原子性的操作  消费端幂等 在生产端为了保证消息投递可靠的时候，可能会出现重复发送消息的情况，我们的消费端一定要做好消费的幂等，杜绝出现消息重复消费的情况  MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可用的状态  MQ的低延迟 在流量非常大">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-分布式消息队列" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      分布式消息队列
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/MQ/">MQ</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-04-05
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="MQ应用详解"><a href="#MQ应用详解" class="headerlink" title="MQ应用详解"></a>MQ应用详解</h1><h2 id="分布式消息队列的应用思考点"><a href="#分布式消息队列的应用思考点" class="headerlink" title="分布式消息队列的应用思考点"></a>分布式消息队列的应用思考点</h2><ol>
+<li><p>生产端的消息可靠性投递 就是有些业务场景我们需要消息是百分之百投递成功的，或者与我们的数据库一定是一个原子性的操作</p>
+</li>
+<li><p>消费端幂等 在生产端为了保证消息投递可靠的时候，可能会出现重复发送消息的情况，我们的消费端一定要做好消费的幂等，杜绝出现消息重复消费的情况</p>
+</li>
+<li><p>MQ的高可用 我们要保证MQ的节点在挂掉一个或多个，MQ还是可用的状态</p>
+</li>
+<li><p>MQ的低延迟 在流量非常大的时候，我们如何保证消息的低延迟</p>
+</li>
+<li><p>MQ的消息的可靠性 就是如果我们的消息落到了MQ中，如何保证消息肯定不会丢失，比如某个磁盘出现问题，还能使消息不丢失（一般都是使用分片、副本的概念解决）</p>
+</li>
+<li><p>MQ消息的堆积能力 当消息量非常大，消费者消费速度跟不上的时候，我们的MQ能否堆积一个很大的消息量</p>
+</li>
+<li><p>扩展性等</p>
+</li>
+</ol>
+<h2 id="主流的分布式消息队列"><a href="#主流的分布式消息队列" class="headerlink" title="主流的分布式消息队列"></a>主流的分布式消息队列</h2><p>目前业界主流的消息中间件有： ActiveMQ、RabbitMQ、RocketMQ、Kafka</p>
+<h2 id="如何进行技术选型"><a href="#如何进行技术选型" class="headerlink" title="如何进行技术选型"></a>如何进行技术选型</h2><ol>
+<li><p>各个MQ的性能、优缺点、响应的业务场景、</p>
+</li>
+<li><p>集群架构模式，分布式、可扩展性、高可用、可维护性</p>
+</li>
+<li><p>综合成本问题，集群规模，人员成本（既看公司的技术栈，公司整体比较熟悉哪种MQ的使用等等的综合考虑）</p>
+</li>
+<li><p>未来的方向、规划、思考</p>
+</li>
+</ol>
+<h2 id="JMS及其专业术语"><a href="#JMS及其专业术语" class="headerlink" title="JMS及其专业术语"></a>JMS及其专业术语</h2><p>JMS（Java Message Service）规范，也就是Java消息服务，它定义了Java中访问消息中间件的接口的规范。在这里注意，JMS只是接口，并没有给予实现，实现JMS接口的消息中间件称为 “JMS Provider”，目前知名的开源 MOM （Message Oriented Middleware，也就是消息中间件）系统包括Apache的ActiveMQ、RocketMQ、Kafka，以及RabbitMQ，可以说他们都 “基本遵循” 或 “参考” JMS规范，都有自己的特点和优势</p>
+<p>专业术语：</p>
+<ul>
+<li><p>JMS（Java Message Service）：实现JMS 接口的消息中间件；</p>
+</li>
+<li><p>Provider（MessageProvider）：消息的生产者；</p>
+</li>
+<li><p>Consumer（MessageConsumer）：消息的消费者；</p>
+</li>
+<li><p>PTP（Point to Point）：即点对点的消息模型，这也是非常经典的模型；</p>
+</li>
+<li><p>Pub / Sub（Publish/Subscribe）：，即发布/订阅的消息模型；</p>
+</li>
+<li><p>Queue：队列目标，也就是我们常说的消息队列，一般都是会真正的进行物理存储；</p>
+</li>
+<li><p>Topic：主题目标；</p>
+</li>
+<li><p>ConnectionFactory：连接工厂，JMS 用它创建连接；</p>
+</li>
+<li><p>Connection：JMS 客户端到JMS Provider 的连接；</p>
+</li>
+<li><p>Destination：消息的目的地；</p>
+</li>
+<li><p>Session：会话，一个发送或接收消息的线程（这里Session可以类比Mybatis的Session）；</p>
+</li>
+</ul>
+<h2 id="ActiveMQ"><a href="#ActiveMQ" class="headerlink" title="ActiveMQ"></a>ActiveMQ</h2><h3 id="ActiveMQ介绍"><a href="#ActiveMQ介绍" class="headerlink" title="ActiveMQ介绍"></a>ActiveMQ介绍</h3><p>ActiveMQ 是一个完全支持JMS1.1和J2EE 1.4规范的 JMS Provider实现，尽管JMS规范出台已经是很久的事情了，但是JMS在早些年的 “J2EE应用” 时期扮演着特殊的地位，可以说那个年代ActiveMQ在业界应用最广泛，当然如果现在想要有更强大的性能和海量数据处理能力，ActiveMQ还需要不断的升级版本，不断的提升性能和架构设计的重构。</p>
+<p>就算现在我们 80% 以上的业务我们使用ActiveMQ已经足够满足需求，其丰富的API、多种集群构建模式使得他成为业界老牌消息中间件，在中小型企业中应用广泛！</p>
+<p>当然如果你想针对大规模、高并发应用服务做消息中间件技术选型，譬如淘宝、京东这种大型的电商网站，尤其是双11这种特殊时间，ActiveMQ可能就显得力不从心了</p>
+<h3 id="ActiveMQ消息投递模式"><a href="#ActiveMQ消息投递模式" class="headerlink" title="ActiveMQ消息投递模式"></a>ActiveMQ消息投递模式</h3><ul>
+<li><p>点对点：生产者向队列投递一条消息，只有一个消费者能够监听得到这条消息（PTP)</p>
+</li>
+<li><p>发布订阅：生产者向队列投递一条消息，所有监听该队列的消费者都能够监听得到这条消息（P/S)</p>
+</li>
+</ul>
+<h3 id="ActiveMQ各项指标"><a href="#ActiveMQ各项指标" class="headerlink" title="ActiveMQ各项指标"></a>ActiveMQ各项指标</h3><p>衡量一个MOM，我们主要从三方面考虑即可，即服务性能、存储堆积能力、可扩展性。</p>
+<ol>
+<li><p>服务性能：ActiveMQ的性能一般，在早期传统行业为王的时代还是比较流行的，但现如今面对高并发、大数据的业务场景，往往力不从心！</p>
+</li>
+<li><p>数据存储：默认采用kahadb存储（索引文件形式存储），也可以使用高性能的google leveldb（内存数据库存储）， 或者可以使用MySql、Oracle进程消息存储（关系型数据库存储）。</p>
+</li>
+<li><p>集群架构：ActiveMQ 可以与zookeeper进行构建 主备集群模型，并且多套的主备模型直接可以采用Network的方式构建分布式集群。</p>
+</li>
+</ol>
+<h3 id="ActiveMQ集群架构模式"><a href="#ActiveMQ集群架构模式" class="headerlink" title="ActiveMQ集群架构模式"></a>ActiveMQ集群架构模式</h3><p>ActiveMQ最经典的两种集群架构模式，Master-Slave 、Network 集群模式</p>
+<p>Master-Slave: 顾名思义，就是主从方式，当然这里要理解为主备的方式，也就是双机热备机制；Master Slave 背后的想法是，消息被复制到slave broker，因此即使master broker遇到了像硬件故障之类的错误，你也可以立即切换到slave broker而不丢失任何消息。 Master Slave是目前ActiveMQ推荐的高可靠性和容错的解决方案。</p>
+<ul>
+<li><p>zookeeper的作用就是为了当绿色的主节点宕机时，进行及时切换到备份的灰色节点上去，使其进行主从角色的互换，用于实现高可用性的方案。</p>
+</li>
+<li><p>Master-Slave集群模型的缺点也显而易见，就是不能做到分布式的topic、queue，当消息量巨大时，我们的MQ集群压力过大，没办法满足分布式的需求</p>
+</li>
+</ul>
+<p>Network：这里可以理解为网络通信方式，也可以说叫Network of brokers。这种方式真正解决了分布式消息存储和故障转移、broker切换的问题。可以理解消息会进行均衡；从ActiveMQ1.1版本起，ActiveMQ支持networks of brokers。它支持分布式的queues和topics。一个broker会相同对待所有的订阅（subscription）：不管他们是来自本地的客户连接，还是来自远程broker，它都会递送有关的消息拷贝到每个订阅。远程broker得到这个消息拷贝后，会依次把它递送到其内部的本地连接上。（说白了就是部署多套MQ集群，以每个集群为单位进行通信，每个集群有自己的主从节点，有自己的zookeeper节点）</p>
+<ul>
+<li><p>Network集群模型的关键点： 这种方案需要两套或多套（Master-Slave）的集群模型才可以搞定，部署非常麻烦，需要两套或多套集群直接相互交叉配置，相互间能够感知到彼此的存在</p>
+</li>
+<li><p>Network虽然解决了分布式消息队列这个难题，但是还有很多潜在的问题，最典型的就是资源浪费问题，并且也可能达不到所预期的效果；通常采用Master-Slave模型是传统型互联网公司的首选，作为互联网公司往往会选择开箱即用的消息中间件，从运维、部署、使用各个方面都要优于ActiveMQ，当然ActiveMQ毕竟是 “老牌传统强Q”，Apache的顶级项目之一，目前正在进行新版本的重构（对于5.X版本）与落地。</p>
+</li>
+</ul>
+<h2 id="RibbitMQ"><a href="#RibbitMQ" class="headerlink" title="RibbitMQ"></a>RibbitMQ</h2><p>RibbitMQ四种集群模式</p>
+<h3 id="主备模式"><a href="#主备模式" class="headerlink" title="主备模式"></a>主备模式</h3><p>warren（兔子窝）：经典的主备模式，正常情况由主节点提供服务，从节点只是备份数据，当主节点挂掉，从节点会代替主节点提供服务。与Active不同的是，主从实现不是通过zookeeper来实现的，它使用Haproxy实现的，Haproxy跟Nginx有点类似</p>
+<h3 id="远程模式"><a href="#远程模式" class="headerlink" title="远程模式"></a>远程模式</h3><p>早起版本提供的一种多活的模式，主要是服务异地的容灾，与上述ActiveMQ的NetWork模式非常类似，主要是在不同的地方部署不同的集群，可以提高容灾能力及处理性能，现在的版本已经不推荐使用</p>
+<p>远距离通信和复制，可以实现多活的一种模式，简称Shovel模式，就是我们可以把消息进行不同的数据中心的复制工作，可以让跨地域的两个MQ集群互联，当其中的某一个集群处理消息处理不过来的时候，可以把消息转发到另外一个集群进行处理。集群之间的通信使用MQ的amqp协议来做通信的。此模式的配置非常麻烦，现在已经很少使用，只做了解就行。</p>
+<h3 id="镜像模式"><a href="#镜像模式" class="headerlink" title="镜像模式"></a>镜像模式</h3><p>业界使用最为广泛的模型，非常经典的Mirror镜像模式，保证数据100%的不丢失，镜像模式其实就是数据的备份。可靠性非常高，因为数据发过来之后，它需要将数据同步到MQ镜像集群中所有的节点，所有节点都会对数据做备份存储，它的模型跟ES的很像，但是它的副本是在所有的节点上。但是缺点也很明显，就是每个节点都存储了所有的数据，如果我们要扩容的话只能增加所有节点的磁盘大小，而不能通过增加机器来实现</p>
+<h3 id="多活模型"><a href="#多活模型" class="headerlink" title="多活模型"></a>多活模型</h3><p>这种模式也是实现异地数据复制的主流模式，因为Shovel模式配置比较复杂，所以一般实现异地集群都是使用这种多活模型。这种模型需要依赖RabbitMQ的federation插件，可以实现持续可靠的AMQP数据通信，配置与应用很简单。</p>
+<p>部署架构采用多中心模式，在两套或多套数据中心中各部署一套Rabbit集群，各中心的RabbitMQ服务除了为业务提供正常消息服务外，中心之间需要实现部分队列消息共享。集群可以是不同RibbitMQ版本的集群</p>
+<h2 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>RocketMQ是一款分布式、队列模型的消息中间件，由阿里巴巴自主研发的一款适用于高并发、高可靠性、海量数据场景的消息中间件。早期开源2.x版本名为MetaQ；15年迭代3.x版本，更名为RocketMQ，16年开始贡献到Apache，经过1年多的孵化，最终成为Apache顶级的开源项目，更新非常频繁，社区活跃度也非常高；RocketMQ参考借鉴了优秀的开源消息中间件Apache Kafka，其消息的路由、存储、集群划分都借鉴了Kafka优秀的设计思路，并结合自身的 “双十一” 场景进行了合理的扩展和API丰富。</p>
+<h3 id="优秀的能力与支持"><a href="#优秀的能力与支持" class="headerlink" title="优秀的能力与支持"></a>优秀的能力与支持</h3><ul>
+<li><p>支持集群模型、负载均衡、水平扩展能力</p>
+</li>
+<li><p>亿级别的消息堆积能力</p>
+</li>
+<li><p>采用零拷贝的原理、顺序写盘、随机读（索引文件）</p>
+</li>
+<li><p>丰富的API使用</p>
+</li>
+<li><p>代码优秀，底层通信框架采用Netty NIO框架</p>
+</li>
+<li><p>NameServer 代替 Zookeeper</p>
+</li>
+<li><p>强调集群无单点，可扩展，任意一点高可用，水平可扩展</p>
+</li>
+<li><p>消息失败重试机制、消息可查询</p>
+</li>
+<li><p>开源社区活跃度、是否足够成熟（经过双十一考验）</p>
+</li>
+</ul>
+<h3 id="专业术语"><a href="#专业术语" class="headerlink" title="专业术语"></a>专业术语</h3><ul>
+<li><p>Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息。</p>
+</li>
+<li><p>Consumer：消息消费者，负责消费消息，一般是后台系统负责异步消费。</p>
+</li>
+<li><p>Push Consumer：Consumer的一种，需要向Consumer对象注册监听。</p>
+</li>
+<li><p>Pull Consumer：Consumer的一种，需要主动请求Broker拉取消息。</p>
+</li>
+<li><p>Producer Group：生产者集合，一般用于发送一类消息。</p>
+</li>
+<li><p>Consumer Group：消费者集合，一般用于接受一类消息进行消费。</p>
+</li>
+<li><p>Broker ： MQ消息服务（中转角色，用于消息存储与生产消费转发）</p>
+</li>
+</ul>
+<h3 id="集群架构模型"><a href="#集群架构模型" class="headerlink" title="集群架构模型"></a>集群架构模型</h3><p>RocketMQ为我们提供了丰富的集群架构模型，包括单点模式、主从模式、双主模式、以及生产上使用最多的双主双从模式（或者说多主多从模式）</p>
+<ol>
+<li><p>Producer集群就是生产者集群（他们在同一个生产者组 Producer Group）</p>
+</li>
+<li><p>Consumer集群就是消费者集群（他们在同一个消费者组 Consumer Group）</p>
+</li>
+<li><p>NameServer集群作为超轻量级的配置中心，只做集群元数据存储和心跳工作，不必保障节点间数据强一致性，也就是说NameServer集群是一个多机热备的概念。</p>
+</li>
+<li><p>对于Broker而言，通常Master与Slave为一组服务，他们互为主从节点，通过NameServer与外部的Client端暴露统一的集群入口。Broker就是消息存储的核心MQ服务了。</p>
+</li>
+</ol>
+<p>RocketMQ作为国内顶级的消息中间件，其性能主要依赖于天然的分布式Topic/Queue，并且其内存与磁盘都会存储消息数据，借鉴了Kafka的 “空中接力” 概念，所谓 “空中接力” 就是指数据不一定要落地，RocketMQ提供了同步/异步双写、同步/异步复制的特性。在真正的生产环境中应该选择符合自己业务的配置。下面针对于RocketMQ的高性能及其瓶颈在这里加以说明：</p>
+<p>RocketMQ目前其主要瓶颈最终会落在IOPS上面，当高峰期来临的时候，磁盘读写能力是主要的性能瓶颈，为什么瓶颈在IOPS? 根本原因还是因为云环境导致的问题，云环境的SSD物理存储显然和自建机房SSD会有不小的差距，这一点我们无论是从数据库的磁盘性能、还是搜索服务（ElasticSearch）的磁盘性能，都能给出准确的瓶颈点，单机IOPS达到1万左右就是云存储SSD的性能瓶颈，这个也解释了 “木桶短板原理” 的效应，在真正的生产中，CPU的工作主要在等待IO操作，高并发下 CPU资源接近极限，但是IOPS还是达不到我们想要的效果。</p>
+<h3 id="与KAFKA对比"><a href="#与KAFKA对比" class="headerlink" title="与KAFKA对比"></a>与KAFKA对比</h3><p>既然RocketMQ有Kafka所有的优点，那么它两的区别在哪呢？</p>
+<h4 id="消息投递实时性"><a href="#消息投递实时性" class="headerlink" title="消息投递实时性"></a>消息投递实时性</h4><ol>
+<li><p>Kafka使用短轮询方式，实时性取决于轮询间隔时间</p>
+</li>
+<li><p>RocketMQ使用长轮询，同Push方式实时性一致，消息的投递延时通常在几个毫秒。</p>
+</li>
+</ol>
+<h4 id="严格的消息顺序"><a href="#严格的消息顺序" class="headerlink" title="严格的消息顺序"></a>严格的消息顺序</h4><ul>
+<li><p>Kafka支持消息顺序，但是一台Broker宕机后，就会产生消息乱序</p>
+</li>
+<li><p>RocketMQ支持严格的消息顺序，在顺序消息场景下，一台Broker宕机后，发送消息会失败，但是不会乱序</p>
+</li>
+</ul>
+<h4 id="namesrv-VS-zk"><a href="#namesrv-VS-zk" class="headerlink" title="namesrv VS zk"></a>namesrv VS zk</h4><ol>
+<li><p>kafka和rocketMq在协调节点选择上的差异，kafka通过zookeeper来进行协调，而rocketMq通过自身的namesrv进行协调。</p>
+</li>
+<li><p>kafka在具备选举功能，在Kafka里面，Master/Slave的选举，有2步：第1步，先通过ZK在所有机器中，选举出一个KafkaController；第2步，再由这个Controller，决定每个partition的Master是谁，Slave是谁。因为有了选举功能，所以kafka某个partition的master挂了，该partition对应的某个slave会升级为主对外提供服务。</p>
+</li>
+<li><p>rocketMQ不具备选举，Master/Slave的角色也是固定的。当一个Master挂了之后，你可以写到其他Master上，但不能让一个Slave切换成Master。那么rocketMq是如何实现高可用的呢，其实很简单，rocketMq的所有broker节点的角色都是一样，上面分配的topic和对应的queue的数量也是一样的，Mq只能保证当一个broker挂了，把原本写到这个broker的请求迁移到其他broker上面，而并不是这个broker对应的slave升级为主。</p>
+</li>
+</ol>
+<h4 id="吞吐量"><a href="#吞吐量" class="headerlink" title="吞吐量"></a>吞吐量</h4><ol>
+<li><p>kafka在消息存储过程中会根据topic和partition的数量创建物理文件，也就是说我们创建一个topic并指定了3个partition，那么就会有3个物理文件目录，也就说说partition的数量和对应的物理文件是一一对应的。</p>
+</li>
+<li><p>rocketMq在消息存储方式就一个物流问题，也就说传说中的commitLog，rocketMq的queue的数量其实是在consumeQueue里面体现的，在真正存储消息的commitLog其实就只有一个物理文件。</p>
+</li>
+<li><p>kafka的多文件并发写入 VS rocketMq的单文件写入，性能差异kafka完胜可想而知。</p>
+</li>
+<li><p>kafka的大量文件存储会导致一个问题，也就说在partition特别多的时候，磁盘的访问会发生很大的瓶颈，毕竟单个文件看着是append操作，但是多个文件之间必然会导致磁盘的寻道。</p>
+</li>
+</ol>
+<p>在性能上Kafka是完胜的</p>
+<h2 id="KAFKA"><a href="#KAFKA" class="headerlink" title="KAFKA"></a>KAFKA</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Kafka是LinkedIn开源的分布式消息系统，目前归属于Apache顶级项目</p>
+<p>主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始就是用于日志收集</p>
+<p>0.8版本开始支持复制，不支持事务，对消息的重复、丢失、错误没有严格要求，适合产生大量数据的互联网服务的数据收集业务</p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
+<li><p>有分布式的特性，就是支持分区的概念，一个主题下可以有多个分区</p>
+</li>
+<li><p>有跨平台的特性，支持不同语言的客户端</p>
+</li>
+<li><p>堆积能力特别强，且并不影响消息的接收和发送</p>
+</li>
+<li><p>实时性非常强</p>
+</li>
+</ol>
+<h3 id="高性能的原因（重点）"><a href="#高性能的原因（重点）" class="headerlink" title="高性能的原因（重点）"></a>高性能的原因（重点）</h3><h4 id="顺序写"><a href="#顺序写" class="headerlink" title="顺序写"></a>顺序写</h4><p>就是顺序写盘，可以提高磁盘的利用率，就是一个一个的写，而不是随机写，这样会大大提高写的性能。</p>
+<p>每个topic有不同的分区，而每个分区下包含若干个只能追加写的提交日志：新消息被追加到文件的最末端。最直接的证明就是Kafka源码中只调用了FileChannel.write(ByteBuffer)，而没有调用过带offset参数的write方法，说明它不会执行随机写操作。</p>
+<h4 id="Page-Cache"><a href="#Page-Cache" class="headerlink" title="Page Cache"></a>Page Cache</h4><p>首先，Kafka重度依赖底层操作系统提供的PageCache功能。当上层有写操作时，操作系统只是将数据写入PageCache，同时标记Page属性为Dirty。当读操作发生时，先从PageCache中查找，如果发生缺页才进行磁盘调度，最终返回需要的数据。实际上PageCache是把尽可能多的空闲内存都当做了磁盘缓存来使用。同时如果有其他进程申请内存，回收PageCache的代价又很小，所以现代的OS都支持PageCache。</p>
+<p>使用PageCache功能同时可以避免在JVM内部缓存数据，JVM为我们提供了强大的GC能力，同时也引入了一些问题不适用与Kafka的设计。</p>
+<ul>
+<li><p>如果在Heap内管理缓存，JVM的GC线程会频繁扫描Heap空间，带来不必要的开销。如果Heap过大，执行一次Full GC对系统的可用性来说将是极大的挑战。</p>
+</li>
+<li><p>所有在在JVM内的对象都不免带有一个Object Overhead(千万不可小视)，内存的有效空间利用率会因此降低。</p>
+</li>
+<li><p>所有的In-Process Cache在OS中都有一份同样的PageCache。所以通过只在PageCache中做缓存至少可以提高一倍的缓存空间。</p>
+</li>
+<li><p>如果Kafka重启，所有的In-Process Cache都会失效，而OS管理的PageCache依然可以继续使用。</p>
+</li>
+</ul>
+<h4 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h4><p>首先介绍一下传统的网络I/O操作流程，大体上分为以下4步：</p>
+<ol>
+<li><p>OS从硬盘把数据读到内核区的PageCache。</p>
+</li>
+<li><p>用户进程把数据从内核区Copy到用户区。</p>
+</li>
+<li><p>然后用户进程再把数据写入到Socket，数据流入内核区的Socket Buffer上。</p>
+</li>
+<li><p>OS再把数据从Buffer中Copy到网卡的Buffer上，这样完成一次发送。</p>
+</li>
+</ol>
+<p>整个过程一共经历了四次拷贝，同一份数据在内核Buffer与用户Buffer之间重复拷贝，效率低下。其中2、3两步没有必要，完全可以直接在内核区完成数据拷贝。</p>
+<p>零拷贝技术就是省略了第2、3步，不难看出，Kafka的设计初衷是尽一切努力在内存中完成数据交换，无论是对外作为一整个消息系统，或是内部同底层操作系统的交互。如果Producer和Consumer之间生产和消费进度上配合得当，完全可以实现数据交换零I/O。这也就是我为什么说Kafka使用“硬盘”并没有带来过多性能损失的原因。</p>
+<h3 id="主要特点"><a href="#主要特点" class="headerlink" title="主要特点"></a>主要特点</h3><ol>
+<li><p>同时为发布和订阅提供高吞吐量。据了解，Kafka每秒可以生产约25万消息（50 MB），每秒处理55万消息（110 MB）。</p>
+</li>
+<li><p>可进行持久化操作。将消息持久化到磁盘，因此可用于批量消费，例如ETL，以及实时应用程序。通过将数据持久化到硬盘以及replication防止数据丢失。</p>
+</li>
+<li><p>分布式系统，易于向外扩展。所有的producer、broker和consumer都会有多个，均为分布式的。无需停机即可扩展机器。</p>
+</li>
+<li><p>消息被处理的状态是在consumer端维护，而不是由server端维护。当失败时能自动平衡。</p>
+</li>
+<li><p>支持online和offline的场景。</p>
+</li>
+</ol>
+<h3 id="Kafka的架构"><a href="#Kafka的架构" class="headerlink" title="Kafka的架构"></a>Kafka的架构</h3><p>Kafka的整体架构非常简单，是显式分布式架构，producer、broker（kafka）和consumer都可以有多个。Producer，consumer实现Kafka注册的接口，数据从producer发送到broker，broker承担一个中间缓存和分发的作用。broker分发注册到系统中的consumer。broker的作用类似于缓存，即活跃的数据和离线处理系统之间的缓存。客户端和服务器端的通信，是基于简单，高性能，且与编程语言无关的TCP协议。</p>
+<h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ul>
+<li><p>Topic：特指Kafka处理的消息源（feeds of messages）的不同分类。</p>
+</li>
+<li><p>Partition：Topic物理上的分组，一个topic可以分为多个partition，每个partition是一个有序的队列。partition中的每条消息都会被分配一个有序的id（offset）。</p>
+</li>
+<li><p>Message：消息，是通信的基本单位，每个producer可以向一个topic（主题）发布一些消息。</p>
+</li>
+<li><p>Producers：消息和数据生产者，向Kafka的一个topic发布消息的过程叫做producers。</p>
+</li>
+<li><p>Consumers：消息和数据消费者，订阅topics并处理其发布的消息的过程叫做consumers。</p>
+</li>
+<li><p>Broker：缓存代理，Kafka集群中的一台或多台服务器统称为broker。</p>
+</li>
+</ul>
+<h4 id="发送消息的流程"><a href="#发送消息的流程" class="headerlink" title="发送消息的流程"></a>发送消息的流程</h4><ol>
+<li><p>Producer根据指定的partition方法（round-robin、hash等），将消息发布到指定topic的partition里面</p>
+</li>
+<li><p>kafka集群接收到Producer发过来的消息后，将其持久化到硬盘，并保留消息指定时长（可配置），而不关注消息是否被消费。</p>
+</li>
+<li><p>Consumer从kafka集群pull数据，并控制获取消息的offset</p>
+</li>
+</ol>
+<h3 id="kafka的优秀设计"><a href="#kafka的优秀设计" class="headerlink" title="kafka的优秀设计"></a>kafka的优秀设计</h3><p>从kafka的吞吐量、负载均衡、消息拉取、扩展性来说一说kafka的优秀设计。</p>
+<h4 id="高吞吐"><a href="#高吞吐" class="headerlink" title="高吞吐"></a>高吞吐</h4><p>高吞吐是kafka需要实现的核心目标之一，为此kafka做了以下一些设计：</p>
+<ol>
+<li><p>内存访问：直接使用 linux 文件系统的cache，来高效缓存数据，对数据进行读取和写入。</p>
+</li>
+<li><p>数据磁盘持久化：消息不在内存中cache，直接写入到磁盘，充分利用磁盘的顺序读写性能。</p>
+</li>
+<li><p>zero-copy：减少IO操作步骤，采用linux Zero-Copy提高发送性能。传统的数据发送需要发送4次上下文切换，采用sendfile系统调用之后，数据直接在内核态交换，系统上下文切换减少为2次。根据测试结果，可以提高60%的数据发送性能。Zero-Copy详细的技术细节可以参考：<a href="https://www.ibm.com/developerworks/linux/library/j-zerocopy/" target="_blank" rel="noopener">https://www.ibm.com/developerworks/linux/library/j-zerocopy/</a></p>
+</li>
+<li><p>对消息的处理：支持数据批量发送、支持数据压缩机制</p>
+</li>
+<li><p>主题分区：Topic划分为多个partition，提高生产/消费端处理消息的parallelism（并行度），数据在磁盘上存取代价为O(1)。kafka以topic来进行消息管理，每个topic包含多个part（ition），每个part对应一个逻辑log，有多个segment组成。每个segment中存储多条消息，消息id由其逻辑位置决定，即从消息id可直接定位到消息的存储位置，避免id到位置的额外映射。每个part在内存中对应一个index，记录每个segment中的第一条消息偏移。发布者发到某个topic的消息会被均匀的分布到多个part上（随机或根据用户指定的回调函数进行分布），broker收到发布消息往对应part的最后一个segment上添加该消息，当某个segment上的消息条数达到配置值或消息发布时间超过阈值时，segment上的消息会被flush到磁盘，只有flush到磁盘上的消息订阅者才能订阅到，segment达到一定的大小后将不会再往该segment写数据，broker会创建新的segment。</p>
+</li>
+</ol>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><ol>
+<li><p>producer根据用户指定的算法，将消息发送到指定的partition</p>
+</li>
+<li><p>存在多个partiiton，每个partition有自己的replica，每个replica分布在不同的Broker节点上</p>
+</li>
+<li><p>多个partition需要选取出lead partition，lead partition负责读写，并由zookeeper负责fail over</p>
+</li>
+<li><p>通过zookeeper管理broker与consumer的动态加入与离开</p>
+</li>
+</ol>
+<h4 id="消息的拉取"><a href="#消息的拉取" class="headerlink" title="消息的拉取"></a>消息的拉取</h4><ol>
+<li><p>简化kafka设计（由于kafka broker会持久化数据，broker没有内存压力，因此，consumer非常适合采取pull的方式消费数据）</p>
+</li>
+<li><p>consumer根据消费能力自主控制消息拉取速度</p>
+</li>
+<li><p>consumer根据自身情况自主选择消费模式，例如批量，重复消费，从尾端开始消费等</p>
+</li>
+</ol>
+<h4 id="可扩展性"><a href="#可扩展性" class="headerlink" title="可扩展性"></a>可扩展性</h4><p>当需要增加broker结点时，新增的broker会向zookeeper注册，而producer及consumer会根据注册在zookeeper上的watcher感知这些变化，并及时作出调整。</p>
+<h3 id="KAFKA应用场景"><a href="#KAFKA应用场景" class="headerlink" title="KAFKA应用场景"></a>KAFKA应用场景</h3><ol>
+<li><p>消息队列：比起大多数的消息系统来说，Kafka有更好的吞吐量，内置的分区，冗余及容错性，这让Kafka成为了一个很好的大规模消息处理应用的解决方案。消息系统一般吞吐量相对较低，但是需要更小的端到端延时，并常常依赖于Kafka提供的强大的持久性保障。在这个领域，Kafka足以媲美传统消息系统，如ActiveMQ或RabbitMQ。</p>
+</li>
+<li><p>行为跟踪：Kafka的另一个应用场景是跟踪用户浏览页面、搜索及其他行为，以发布-订阅的模式实时记录到对应的topic里。那么这些结果被订阅者拿到后，就可以做进一步的实时处理，或实时监控，或放到hadoop/离线数据仓库里处理。</p>
+</li>
+<li><p>元信息监控：作为操作记录的监控模块来使用，即汇集记录一些操作信息，可以理解为运维性质的数据监控吧。</p>
+</li>
+<li><p>日志收集：日志收集方面，其实开源产品有很多，包括Scribe、Apache Flume。很多人使用Kafka代替日志聚合（log aggregation）。日志聚合一般来说是从服务器上收集日志文件，然后放到一个集中的位置（文件服务器或HDFS）进行处理。然而Kafka忽略掉文件的细节，将其更清晰地抽象成一个个日志或事件的消息流。这就让Kafka处理过程延迟更低，更容易支持多数据源和分布式数据处理。比起以日志为中心的系统比如Scribe或者Flume来说，Kafka提供同样高效的性能和因为复制导致的更高的耐用性保证，以及更低的端到端延迟。</p>
+</li>
+<li><p>流处理：这个场景可能比较多，也很好理解。保存收集流数据，以提供之后对接的Storm或其他流式计算框架进行处理。很多用户会将那些从原始topic来的数据进行阶段性处理，汇总，扩充或者以其他的方式转换到新的topic下再继续后面的处理。例如一个文章推荐的处理流程，可能是先从RSS数据源中抓取文章的内容，然后将其丢入一个叫做“文章”的topic中；后续操作可能是需要对这个内容进行清理，比如回复正常数据或者删除重复数据，最后再将内容匹配的结果返还给用户。这就在一个独立的topic之外，产生了一系列的实时数据处理的流程。Strom和Samza是非常著名的实现这种类型数据转换的框架。</p>
+</li>
+<li><p>事件源：事件源是一种应用程序设计的方式，该方式的状态转移被记录为按时间顺序排序的记录序列。Kafka可以存储大量的日志数据，这使得它成为一个对这种方式的应用来说绝佳的后台。比如动态汇总（News feed）</p>
+</li>
+<li><p>持久性日志（commit log）：Kafka可以为一种外部的持久性日志的分布式系统提供服务。这种日志可以在节点间备份数据，并为故障节点数据回复提供一种重新同步的机制。Kafka中日志压缩功能为这种用法提供了条件。在这种用法中，Kafka类似于Apache BookKeeper项目。</p>
+</li>
+</ol>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年04月26日 11:04</p>
+        <p>原始链接： <a class="post-url" href="/2020/04/05/分布式消息队列/" title="分布式消息队列">https://jjw-story.github.io/2020/04/05/分布式消息队列/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/04/05/分布式消息队列/&title=《分布式消息队列》 — JJW-STORY&pic=/images/blogs/kafka.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/04/05/分布式消息队列/&title=《分布式消息队列》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/04/05/分布式消息队列/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《分布式消息队列》 — JJW-STORY&url=https://jjw-story.github.io/2020/04/05/分布式消息队列/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/04/05/分布式消息队列/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/04/05/分布式消息队列/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/MQ/" class="color3">MQ</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#MQ应用详解"><span class="post-toc-text">MQ应用详解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分布式消息队列的应用思考点"><span class="post-toc-text">分布式消息队列的应用思考点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#主流的分布式消息队列"><span class="post-toc-text">主流的分布式消息队列</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何进行技术选型"><span class="post-toc-text">如何进行技术选型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JMS及其专业术语"><span class="post-toc-text">JMS及其专业术语</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ActiveMQ"><span class="post-toc-text">ActiveMQ</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ActiveMQ介绍"><span class="post-toc-text">ActiveMQ介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ActiveMQ消息投递模式"><span class="post-toc-text">ActiveMQ消息投递模式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ActiveMQ各项指标"><span class="post-toc-text">ActiveMQ各项指标</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ActiveMQ集群架构模式"><span class="post-toc-text">ActiveMQ集群架构模式</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RibbitMQ"><span class="post-toc-text">RibbitMQ</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#主备模式"><span class="post-toc-text">主备模式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#远程模式"><span class="post-toc-text">远程模式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#镜像模式"><span class="post-toc-text">镜像模式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#多活模型"><span class="post-toc-text">多活模型</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#RocketMQ"><span class="post-toc-text">RocketMQ</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概述"><span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#优秀的能力与支持"><span class="post-toc-text">优秀的能力与支持</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#专业术语"><span class="post-toc-text">专业术语</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#集群架构模型"><span class="post-toc-text">集群架构模型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#与KAFKA对比"><span class="post-toc-text">与KAFKA对比</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#消息投递实时性"><span class="post-toc-text">消息投递实时性</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#严格的消息顺序"><span class="post-toc-text">严格的消息顺序</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#namesrv-VS-zk"><span class="post-toc-text">namesrv VS zk</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#吞吐量"><span class="post-toc-text">吞吐量</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#KAFKA"><span class="post-toc-text">KAFKA</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#介绍"><span class="post-toc-text">介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#特点"><span class="post-toc-text">特点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#高性能的原因（重点）"><span class="post-toc-text">高性能的原因（重点）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#顺序写"><span class="post-toc-text">顺序写</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Page-Cache"><span class="post-toc-text">Page Cache</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#零拷贝"><span class="post-toc-text">零拷贝</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#主要特点"><span class="post-toc-text">主要特点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Kafka的架构"><span class="post-toc-text">Kafka的架构</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#基本概念"><span class="post-toc-text">基本概念</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#发送消息的流程"><span class="post-toc-text">发送消息的流程</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#kafka的优秀设计"><span class="post-toc-text">kafka的优秀设计</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#高吞吐"><span class="post-toc-text">高吞吐</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#负载均衡"><span class="post-toc-text">负载均衡</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#消息的拉取"><span class="post-toc-text">消息的拉取</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#可扩展性"><span class="post-toc-text">可扩展性</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#KAFKA应用场景"><span class="post-toc-text">KAFKA应用场景</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/04/20/Docker入门/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Docker入门
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/03/22/shell/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Shell</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

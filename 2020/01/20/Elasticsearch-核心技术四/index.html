@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Elasticsearch-核心技术四 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="写入速度优化在ES的默认设置下，是综合考虑数据可靠性与搜索实时性、写入速度等因素的。当离开默认设置、追求极致的写入速度时，很多是以牺牲可靠性和搜索实时性为代价的。有时候务上对数据可靠性和搜索实时性要求并不高，对写入速度要求很高，此时可以调整一些策略，最大化写入速度。 接下来的优化基于集群正常运行的前提下，如果是集群首次批量导入数据，则可以将副本数设置为 0， 导入完毕再将副本数调整回去，这样副分片">
+<meta name="keywords" content="Elasticsearch,核心技术四">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch-核心技术四">
+<meta property="og:url" content="https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="写入速度优化在ES的默认设置下，是综合考虑数据可靠性与搜索实时性、写入速度等因素的。当离开默认设置、追求极致的写入速度时，很多是以牺牲可靠性和搜索实时性为代价的。有时候务上对数据可靠性和搜索实时性要求并不高，对写入速度要求很高，此时可以调整一些策略，最大化写入速度。 接下来的优化基于集群正常运行的前提下，如果是集群首次批量导入数据，则可以将副本数设置为 0， 导入完毕再将副本数调整回去，这样副分片">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/trie-tree.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/index-structure.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/fst-structure.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/fst-structure-detail.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/fst-majorization.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/origin-file.png">
+<meta property="og:updated_time" content="2021-04-20T07:44:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch-核心技术四">
+<meta name="twitter:description" content="写入速度优化在ES的默认设置下，是综合考虑数据可靠性与搜索实时性、写入速度等因素的。当离开默认设置、追求极致的写入速度时，很多是以牺牲可靠性和搜索实时性为代价的。有时候务上对数据可靠性和搜索实时性要求并不高，对写入速度要求很高，此时可以调整一些策略，最大化写入速度。 接下来的优化基于集群正常运行的前提下，如果是集群首次批量导入数据，则可以将副本数设置为 0， 导入完毕再将副本数调整回去，这样副分片">
+<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/elasticsearch/trie-tree.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Elasticsearch-核心技术四" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Elasticsearch-核心技术四
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Elasticsearch/">Elasticsearch</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-01-20
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="写入速度优化"><a href="#写入速度优化" class="headerlink" title="写入速度优化"></a>写入速度优化</h1><p>在ES的默认设置下，是综合考虑数据可靠性与搜索实时性、写入速度等因素的。当离开默认设置、追求极致的写入速度时，很多是以牺牲可靠性和搜索实时性为代价的。有时候务上对数据可靠性和搜索实时性要求并不高，对写入速度要求很高，此时可以调整一些策略，最大化写入速度。</p>
+<p>接下来的优化基于集群正常运行的前提下，如果是集群首次批量导入数据，则可以将副本数设置为 0， 导入完毕再将副本数调整回去，这样副分片只需要复制，节省了构建索引过程。</p>
+<p>综合来说，提升写入速度从以下几方面入手：</p>
+<ul>
+<li><p>加大 translog flush 间隔，目的是降低 iops、writeblock。</p>
+</li>
+<li><p>加大 index refresh 间隔，除了降低I/O，更重要的是降低了 segment merge 频率。</p>
+</li>
+<li><p>调整 bulk 请求。</p>
+</li>
+<li><p>优化磁盘间的任务均匀情况，将 shard 尽量均匀分布到物理主机的各个磁盘。</p>
+</li>
+<li><p>优化节点间的任务分布，将任务尽量均匀地发到各节点。</p>
+</li>
+<li><p>优化 Lucene 层建立索引的过程，目的是降低 CPU 占用率及I/O，例如，禁用 _all 字段。</p>
+</li>
+</ul>
+<h4 id="translog-flush-间隔调整"><a href="#translog-flush-间隔调整" class="headerlink" title="translog flush 间隔调整"></a>translog flush 间隔调整</h4><p>从ES 2.X 开始，在默认设置下，translog 的持久化策略为: 每个请求都 flush。这是影响写入速度的最大因素。但是只有这样，写操作才有可能是可靠的。如果系统接受一定概率的数据丢失（例如，数据写入主分片成功，尚未复制到副分片时，主机断电。由于数据既没有刷到 Lucene, translog 也没有刷盘，恢复时 translog 没有这个数据，数据丢失），则调整 translog 持久化策略为周期性和一定大小的时候 flush。我们可以加大到 5s 到 30s。</p>
+<h4 id="索引刷新间隔-refresh-interval"><a href="#索引刷新间隔-refresh-interval" class="headerlink" title="索引刷新间隔 refresh_interval"></a>索引刷新间隔 refresh_interval</h4><p>默认情况下索引的 refresh_interval 为 1 秒，这意味着数据写 1 秒后就可以被搜到，每次索引的 refresh 会产生一个新的 Lucene 段，这会导致频繁的 segment merge 行为，如果不需要这么高的搜索实时性，应该降低索引 refresh 周期，例如：index.refresh_interval: 120s。</p>
+<h4 id="段合并优化"><a href="#段合并优化" class="headerlink" title="段合并优化"></a>段合并优化</h4><p>segment merge 操作对系统I/O和内存占用都比较高，ES 2.0 开始，merge 行为不再由 ES 控制，而是由 Lucene 控制。</p>
+<p>我们可以配置段合并的最大线程数，以及每层分段的数量，取值越小则最终 segment 越少，因此需要 merge 的操作更多，可以考虑适当增加此值。</p>
+<h4 id="indexing-buffer"><a href="#indexing-buffer" class="headerlink" title="indexing buffer"></a>indexing buffer</h4><p>indexing buffer 在为 doc 建立索引时使用，当缓冲满时会刷入磁盘，生成一个新的 segment，这是除 refresh_interval 刷新索引外，另一个生成新 segment 的机会。每 shard 有自己的 indexing buffer，下面的这个 buffer 大小的配置需要除以这个节点上所有 shard 的数量：</p>
+<p>indices.memory.index_buffer_size</p>
+<p>在执行大量的索引操作时，indices.memory.index_buffer_size 的默认值设置可能不够，这和用堆内存、单节点上的 shard 数量相关，可以考虑适当增大该值。</p>
+<h4 id="使用-bulk-请求"><a href="#使用-bulk-请求" class="headerlink" title="使用 bulk 请求"></a>使用 bulk 请求</h4><p>批量写比单个索引请求只写单个文档的效率高得多，但是要注 bulk 请求的整体字节数不要太大，太大的请求可能会给集群带来内存压力，因此每个请求最好避免超过几十兆字节，即使较大的请求看上去执行得更好。</p>
+<p>建立索引的过程属于计算密集型任务，应该使用固定大小的线 池配置，来不及处理的任务放入队列。线程池最大线程数 应配置为 CPU 核心数＋ ，这也是 bulk 线程地的默认设置，可以避免过多的上下文切换 队列大小可以适当增加，但一定要严格控制大小，过大的队列导致较高的 GC 压力，并可能导致 FGC 频繁发生。</p>
+<h4 id="磁盘间的任务均衡"><a href="#磁盘间的任务均衡" class="headerlink" title="磁盘间的任务均衡"></a>磁盘间的任务均衡</h4><p>如果部署方案是为 path data 配置多个路径来使用多块磁盘，ES 在分配 shard 时，落到各磁盘上的 shard 可能并不均匀，这种不均匀能会导致某些磁盘繁忙，利用率在较长时间内持续达到 100%，这种不均匀达到一定程度会对写入性能产生负面影响。</p>
+<p>ES 理多路径时，会预估 shard 会使用的空间，从磁盘可用空间中减去这部分。这种机制只存在于一次索引创建的过程中，下一次的索引创建，磁盘可用空间并不是上次做完减法的结果，这也可以理解，毕竟预估是不准的，一直减下去空间很快就减没了。但是最终效果是，这种机制并没有从根本上解决问题，即使没有完美的解决方案，这种机制的效果也不够好。为此，我们为 ES 增加了两种策略：</p>
+<ul>
+<li><p>简单轮询：在系统初始阶段，简单轮询的效果是最均匀的。</p>
+</li>
+<li><p>基于可用空间的动态加权轮询：以可用空间作为权重，在磁盘之间加权轮询。</p>
+</li>
+</ul>
+<h4 id="索引过程调整和优化"><a href="#索引过程调整和优化" class="headerlink" title="索引过程调整和优化"></a>索引过程调整和优化</h4><h5 id="自动生成-doc-ID"><a href="#自动生成-doc-ID" class="headerlink" title="自动生成 doc ID"></a>自动生成 doc ID</h5><p>通过 ES 写入流程可以看出，写入 doc 时如果外部指定了 id ，则 ES 会先尝试读取原来 doc的版本号，以判断是否需要更新。这会涉及一次读取磁盘的操作，通过自动生成 doc ID 可以避免这个环节。</p>
+<h5 id="调整字段-Mappings"><a href="#调整字段-Mappings" class="headerlink" title="调整字段 Mappings"></a>调整字段 Mappings</h5><ol>
+<li><p>减少字段数量，对于不需要建立索引的宇段，不写入 ES。</p>
+</li>
+<li><p>将不需要建立索引的字段 index 属性设置为 not_analyzed 或 no。对字段不分词，或者不索引，可以减少很多运算操作，降低 CPU 占用。尤其是 binary 类型，默认情况下占用 CPU 非常高，而这种类型进行分词通常没有什么意义。</p>
+</li>
+<li><p>减少字段内容长度，如果原始数据的大段内容无须全部建立索引，则可以尽量减少不必要的内容。</p>
+</li>
+<li><p>使用不同的分析器（analyzer），不同的分析器在索引过程中运算复杂度也有较大的差异。</p>
+</li>
+</ol>
+<h4 id="调整-source字段"><a href="#调整-source字段" class="headerlink" title="调整_source字段"></a>调整_source字段</h4><p>_source 字段用于存储 doc 原始数据，对于部分不需要存储的字段，可以通过 includes excludes 过滤，或者将_source禁用，一般用于索引和数据分离。</p>
+<p>这样可以降低 I/O 的压力，不过实际场景中大多不会禁用 _source字段，而即使过滤掉某些字段，对于写入速度的提升作用也不大，满负荷写入情况下，基本是 CPU 先跑满了，瓶颈在于CPU。</p>
+<h4 id="禁用-all-字段"><a href="#禁用-all-字段" class="headerlink" title="禁用 _all 字段"></a>禁用 _all 字段</h4><p>ES 6.0 _all 字段默认为不启用 ，而此前的版本中 _all 字段默认是开启的。_all字段中包含所有字段分词后的关键词，作用是可以在搜索的时候不指定特定字段，从所有字段中检索。ES 6.0 默认禁用 all 字段主要有以下几点原因：</p>
+<ol>
+<li><p>由于需要从其他的全部字段复制所有宇段值，导致 all 字段占用非常大的空间。</p>
+</li>
+<li><p>all 字段有自己的分析器，在进行某些查询时（例如 ，同义词 〉，结果不符合预期.</p>
+</li>
+<li><p>因为没有匹配同一个分析器。</p>
+</li>
+<li><p>由于数据重复引起的额外建立索引的开销。</p>
+</li>
+<li><p>想要调试时，其内容不容易检查。</p>
+</li>
+<li><p>有些用户甚至不知道存在这个字段，导致了查询混乱。</p>
+</li>
+<li><p>有更好的替代方法。</p>
+</li>
+</ol>
+<h4 id="对-Analyzed-的字段禁用-Norms"><a href="#对-Analyzed-的字段禁用-Norms" class="headerlink" title="对 Analyzed 的字段禁用 Norms"></a>对 Analyzed 的字段禁用 Norms</h4><p>Norms 用于在搜索时 doc 的评分，如果不需要评分 ，则可以将其禁用：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"title": &#123; "type ": "string", "norms": &#123;"enabled": false&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="index-options-设置"><a href="#index-options-设置" class="headerlink" title="index_options 设置"></a>index_options 设置</h4><p>index_options 于控制在建立倒排索引过程中，哪些内容会被添加到倒排索引，例如，doc数量、词频、positions offsets等信息，优化这些设置可以一定程度降低索引过程中的运算任务，节省 CPU 占用率。</p>
+<h1 id="搜索速度优化"><a href="#搜索速度优化" class="headerlink" title="搜索速度优化"></a>搜索速度优化</h1><h4 id="为文件系统-cache-预留足够的内存"><a href="#为文件系统-cache-预留足够的内存" class="headerlink" title="为文件系统 cache 预留足够的内存"></a>为文件系统 cache 预留足够的内存</h4><p>在一般情况下，应用程序的读写都会被操作系统 cache（除了 direc 方式），cache 保存在系统物理内存中（线上应该禁用 swap），命中 cache 可以降低对磁盘的直接访问频率。搜索很依赖对系统 cache 的命中，如果某个请求需要从磁盘读取数据，则一定会产生相对较高的延迟。应该至少为系统 cache 预留一半的可用物理内存，更大的内存有更高的 cache 命中率。</p>
+<p>系统cache主要是给 doc values 来用的。</p>
+<h4 id="使用更快的硬件"><a href="#使用更快的硬件" class="headerlink" title="使用更快的硬件"></a>使用更快的硬件</h4><p>写入性能对 CPU 的性能更敏感，而搜索性能在一般情况下更多的是在于I/O能力，使用SSD会比旋转类存储介质好得多。尽量避免使用 NFS 等远程文件系统，如果 NFS 比本地存储慢 3 倍，则在搜索场景下响应速度可能会慢 10 倍左右。这可能是因为搜索请求有更多的随机访问。</p>
+<h4 id="文档模型"><a href="#文档模型" class="headerlink" title="文档模型"></a>文档模型</h4><p>为了让搜索时的成本更低，文档应该合理建模。特别是应该避免 join 操作，嵌套（nested）会使查询慢几倍，父子（parent-child）关系可能使查询慢数百倍，因此，如果可以通过非规范化（denormlizing） 文档来回答相同的问题，则可以显著地提高搜索速度。</p>
+<h4 id="预索引数据"><a href="#预索引数据" class="headerlink" title="预索引数据"></a>预索引数据</h4><p>还可以针对某些查询的模式来优化数据的索引方式。例如：如果所有文档都有一个 price 字段，并且大多数查询在一个固定的范围上运行 range 聚合，那么可以通过将范围 pre-indexing 到索引中并使用 terms 聚合来加快聚合速度。</p>
+<h4 id="字段映射"><a href="#字段映射" class="headerlink" title="字段映射"></a>字段映射</h4><p>有些字段的内容是数值，但并不意味着其总是应该被映射为数值类型，例如，一些标识符，将它们映射为 keyword 可能会比 integer 或 long 更好。</p>
+<h4 id="避免使用脚本"><a href="#避免使用脚本" class="headerlink" title="避免使用脚本"></a>避免使用脚本</h4><p>一般来说，应该避免使用脚本。如果一定要用，应该优先考虑 painless 和 expressions。</p>
+<h4 id="优化日期搜索"><a href="#优化日期搜索" class="headerlink" title="优化日期搜索"></a>优化日期搜索</h4><p>在使用日期范围检索时 使用 now 的查询通常不能缓存，因为匹配到的范围一直在变化。但是，从用户体验的角度来看，切换到一个完整的日期通常是可以接受的，这样可以更好地利用查询缓存。例如，我们当前时间的查询替换成精确到分钟的查询，这样在一分钟之内的用户查询就都会查询缓存可以加快查询速度，替换的时间间隔越长，查询缓存越有帮助。</p>
+<h4 id="为只读索引执行-force-merge"><a href="#为只读索引执行-force-merge" class="headerlink" title="为只读索引执行 force-merge"></a>为只读索引执行 force-merge</h4><p>为不再更新的只读索引执行 force-merge，将 Lucene 索引合并为单个分段，可以提升查询速度。当一个 Lucene 索引存在多个分段时，每个分段会单独执行搜索再将结果合井，将只读索引强制合并为一个 Lucene 分段不仅可以优化搜索过程，对索引恢复速度也有好处。</p>
+<h4 id="预热文件系统cache"><a href="#预热文件系统cache" class="headerlink" title="预热文件系统cache"></a>预热文件系统cache</h4><p>如果ES主机重启，则文件系统缓存将为空，此时搜索会比较慢。可以使用 index.store.preload 设置，通过指定文件扩展名，显式地告诉操作系统应该将哪些文件加载到内存中，例如，配置到 elasticsearch.yml 文件中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.store.preload: [&quot;nvd&quot;, &quot;dvd&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>或者在索引创建时设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">    &quot;settings&quot;: &#123;</span><br><span class="line">        index.store.preload: [&quot;nvd&quot;, &quot;dvd&quot;] </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果文件系统缓存不够大，则无法保存所有数据，那么为太多文件预加载数据到文件系统缓存，会使搜索速度变慢，应谨慎使用。</p>
+<h4 id="调节搜索请求中的-batched-reduce-size"><a href="#调节搜索请求中的-batched-reduce-size" class="headerlink" title="调节搜索请求中的 batched_reduce_size"></a>调节搜索请求中的 batched_reduce_size</h4><p>聚合操作在协调节点需要等所有的分片都取回结果后才执行，使用 batched_reduce_size 参数可以不等待全部分片返回结果，而是在指定数量的分片返回结果之后就可以先处理一部分（reduce）。这样可以避免协调节点在等待全部结果的过程中占用大量内存，避免极端情况下可能导致的 OOM 。该字段的默认值为 512M，从ES 5.4 开始支持。</p>
+<h4 id="限制搜索请求的分片数"><a href="#限制搜索请求的分片数" class="headerlink" title="限制搜索请求的分片数"></a>限制搜索请求的分片数</h4><p>一个搜索请求涉及的分片数量越多，协调节点的 CPU 和内存压力就越大。默认情况下，ES会拒绝超过 1000 个分片的搜索请求。我们应该更好地组织数据，让搜索请求的分片数更少。如果想调节这个值，则可以通过 action.search.shard_count 配置项进行修改。</p>
+<h4 id="利用自适应副本选择（ARS）提升-ES-响应速度"><a href="#利用自适应副本选择（ARS）提升-ES-响应速度" class="headerlink" title="利用自适应副本选择（ARS）提升 ES 响应速度"></a>利用自适应副本选择（ARS）提升 ES 响应速度</h4><p>为了充分利用计算资源和负载均衡，协调节点将搜索请求轮询转发到分片的每个副本，轮询策略是负载均衡过程中最简单的策略，任何一个负载均衡器都具备这种基础的策略，缺点是不考虑后端实际系统压力和健康水平。</p>
+<p>例如，一个分片的三个副本分布在三个节点上，其中 Node2 可能因为长时间 GC、磁盘I/O过高、网络带宽跑满等原因处于忙碌状态，如果搜索请求被转发到副本，则会看到相对于其他分片来说，副本2有更高的延迟：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">分片副本1: lOOm</span><br><span class="line">分片副本2：1350ms</span><br><span class="line">分片副本3: 150m</span><br></pre></td></tr></table></figure>
+
+<p>由于副本2的高延迟，使得整个搜索请求产生<strong>长尾效应</strong>。ES 希望这个过程足够智能，能够将请求路由到其他数据副本，直到该节点恢复到足以处理更多搜索请求的程度 ES 中，此过程称为<strong>自适应副本选择</strong>。</p>
+<p>ES 的 ARS 实现基于这样一个公式：对每个搜索请求，将分片的每个副本进行排序，以确定哪个最可能是转发请求的“最佳”副本。与轮询方式向分片的每个副本发送请求不同， ES择“最佳”副本并将请求路由到那里。</p>
+<p>ARS 公式计算参考因素有如下：</p>
+<ol>
+<li>节点未完成搜索的请求数。</li>
+<li>系统中数据节点的数量。</li>
+<li>响应时间的 EWMA （从协调节点上可以看到），单位为毫秒。</li>
+<li>搜索线程池队列中等待任务数量的 EWMA;</li>
+<li>数据节点上的搜索服务时间的 EWMA 单位为毫秒。</li>
+</ol>
+<p>通过这些信息我们大致可以评估出分片副本所在节点的压力和健康程度，这就可以让我们选出一个能够更快返回搜索请求的节点。</p>
+<h1 id="磁盘使用量优化"><a href="#磁盘使用量优化" class="headerlink" title="磁盘使用量优化"></a>磁盘使用量优化</h1><h2 id="存储内容"><a href="#存储内容" class="headerlink" title="存储内容"></a>存储内容</h2><h3 id="元数据字段"><a href="#元数据字段" class="headerlink" title="元数据字段"></a>元数据字段</h3><p>每个文档都有与其相关的元数据，比如 index, _type，_id。当创建映射类型时，可以定制其中一些元数据字段，下面列举一些优化可以用到的:</p>
+<p>_source:原始的 JSON 文档数据。</p>
+<p>_all:索引所有其他字段值的一种通用字段，这个字段中包含了所有其它字段的值。允许在搜索的时候不指定特定的字段名，意味着“从全部字段中搜索”。_all字段是一个全文字段，有自己的分析器。从 ES 6. 开始该字段被禁用。之前的版本默认启用，但字段的 store 属性为 false ，因此它不能被查询后取回显示。</p>
+<h3 id="索引映射参数"><a href="#索引映射参数" class="headerlink" title="索引映射参数"></a>索引映射参数</h3><p>索引创建时可以设置很多映射参数，部分映射参数的详细说明如下：</p>
+<p>index: 控制字段值是否被索引。它可以设置为 true false 默认为 true 未被索引的字段不会被查询到，但是可以聚合。除非禁用 doc values。</p>
+<p>doc values:默认情况下，大多数字段都被索引，这使得它们可以搜索。倒排索引根据term 找到文档列表，然后获取文档原始内容。但是排序和聚合，以及从脚本中访问某个字段值，需要不同的数据访问模式，它们不仅需要根据 term 找到文档，还要获取文档中字段的值，这些值需要单独存储。 doc values 就是用来存储这些字段值的。它种存储在磁盘上的列式存储，在文档索引时构建，这使得上述数据访问模式成为可能。它们以面向列的方式存储与 _source 相同的值，这使得排序和聚合效率更高。几乎所有字段类型都支 doc values，但被分析（analyzed）的字符串字段除外（即 text类型宇符串）。 doc values 默认启用。</p>
+<p>store:默认情况下，字段值会被索引使它们能搜索，但它们不会被存储（stored）。意味着可以通过这个字段查询，但不能取回它的原始值。</p>
+<p>doc values 和存储字段（”stored” :ture）都属于正排内容，两者的设计初衷不同。stored fields 被设计为优化存储，doc values 被设计为快速访问字段值。搜索可能会访问很多doc value 中的字段，所以必须能够快速访问，我们将 doc values 用于聚合、排序，以及脚本中。现在，ES 中的许多特性都会自动使用 doc values。</p>
+<h2 id="优化措施"><a href="#优化措施" class="headerlink" title="优化措施"></a>优化措施</h2><h4 id="禁用对你来说不需要的特性"><a href="#禁用对你来说不需要的特性" class="headerlink" title="禁用对你来说不需要的特性"></a>禁用对你来说不需要的特性</h4><ol>
+<li><p>默认情况下，ES 为大多数的字段建立索引，并添加到 doc_values ，以便使之可以被搜索和聚合。但是有时候不需要通过某些字段过滤，例如，有一个名为 foo 的数值类型字段，需要运行直方图，但不需要在这个字段上过滤，那么可以不索引这个字段。在mappings 结构的创建中，对foo字段设置 “index”: false。</p>
+</li>
+<li><p>text 类型的字段会在索引中存储归一因子，以便对文档进行评分，如果只需要在文本宇段上进行匹配，而不关心生成的得分，则可以配置 ES 不将 norms 写入索引。在mappings 结构的创建中，对foo字段设置 “norms”: false。</p>
+</li>
+<li><p>text 类型的字段默认情况下也在索引中存储频率和位置。频率用于计算得分，位置用于执行短语（phrase）查询。如果不需要运行短语查询，则可以告诉 ES 不索引位置。在mappings 结构的创建中，对foo字段设置 “index_options”: “freqs”。text 类型的字段上 index_options 的默认值为 positions。index_options 参数用于控制添加到倒排索引中的信息。</p>
+</li>
+</ol>
+<h4 id="禁用-doc-values"><a href="#禁用-doc-values" class="headerlink" title="禁用 doc values"></a>禁用 doc values</h4><p>所有支持 doc value 字段都默认启用了 doc value，如果确定不需要对字段进行排序或聚合，或者从脚本访问字段值，则可以禁用 doc value 节省磁盘空间。在mappings 结构的创建中，对foo字段设置 “doc_values”: false。</p>
+<h4 id="不要使用默认的动态字符串映射"><a href="#不要使用默认的动态字符串映射" class="headerlink" title="不要使用默认的动态字符串映射"></a>不要使用默认的动态字符串映射</h4><p>默认的动态宇符串映射会把字符串类型的字段同时索引为 text 和 keyword。如果只需要中之一，则显然是一种浪费。通常，id 字段只需作为 keyword 类型进行索引，而 body 宇段只需作为 text 类型进行索引。要禁用默认的动态字符串映射，则可以显式地指定字段类型，或者在动态模板中指定将字符串映射为 text 和 keyword。</p>
+<h4 id="观察分片大小"><a href="#观察分片大小" class="headerlink" title="观察分片大小"></a>观察分片大小</h4><p>较大的分片可以更有效地存储数据。为了增加分片大小，可以在创建索引的时候设置较少的主分片数，或者使用 shrink API 来修改现有索引的主分片数量。但是较大的分片也有缺点，例如，较长的索引恢复时间。</p>
+<h4 id="禁用-source"><a href="#禁用-source" class="headerlink" title="禁用 _source"></a>禁用 _source</h4><p>_source 字段存储文档的原始内容,如果不需要访问它，则可以将其禁用。但是需要访_source 的 API 将无法使用，至少包括下列情况：</p>
+<ol>
+<li><p>update、update_by_query、reindex;</p>
+</li>
+<li><p>高亮搜索。</p>
+</li>
+<li><p>重建索引（包括更新 mapping 分词器，或者集群跨大版本升级可能会用到）。</p>
+</li>
+<li><p>调试聚合查询功能，需要对比原始数据。</p>
+</li>
+</ol>
+<h4 id="数值类型长度够用就好"><a href="#数值类型长度够用就好" class="headerlink" title="数值类型长度够用就好"></a>数值类型长度够用就好</h4><p>为数值类型选择的字段类型也可能会对磁盘使用空间产生较大影响，整型可以选择 byte、short、integer 或 long，浮点型可以选择 scaled_float、float、double、half_float, 每个数据类型的字节长度是不同的，为业务选择够用的最小数据类型，可以节省磁盘空间。</p>
+<h1 id="综合应用"><a href="#综合应用" class="headerlink" title="综合应用"></a>综合应用</h1><h2 id="集群层"><a href="#集群层" class="headerlink" title="集群层"></a>集群层</h2><h5 id="规划集群规模"><a href="#规划集群规模" class="headerlink" title="规划集群规模"></a>规划集群规模</h5><p>在部署一个新集群时，应该根据多方面的情况评估需要多大的集群规模来支撑业务。这些信息包括：</p>
+<ol>
+<li>数据总量，每天的增量。</li>
+<li>查询类型和搜索并发，QPS。</li>
+<li>SLA 级别。</li>
+</ol>
+<p>另一方面，需要控制最大集群规模和数据总，参考下列两个限制条件：</p>
+<ul>
+<li><p>节点总数不应该太多，一般来说，最大集群规模最好控制在 100 节点左右。我们经测试过上千个节点集群，在这种规模下，节点间的连接数和通信量倍增，主节点理压力比较大。</p>
+</li>
+<li><p>单个分片不要超过 50G，最大集群分片总数控制在几十万的级别。太多分片同样增加了主节点的管理负担，而且集群重启恢复时间会很长。</p>
+</li>
+</ul>
+<p>建议为集群配置较好的硬件，而不是普通的 PC，搜索对 CPU、内存、磁盘的性能要求都很高，要达到比较低的延迟就需要较好的硬件资源。另外，如果使用不同配置的服务器混合部署，则搜索速度可能会取决于最慢的那个节点，产生长尾效应。</p>
+<h5 id="单节点还是多节点部署"><a href="#单节点还是多节点部署" class="headerlink" title="单节点还是多节点部署"></a>单节点还是多节点部署</h5><p><strong>ES不建议为JVM配置超过 32GB 的内存，超过 32GB 时， Java内存指针压缩失效，浪费一些内存，降低了CPU性能，GC压力也较大。因此推荐设置为 31GB。-Xmx3lg -Xms3lg。</strong></p>
+<p>确保堆内存最 Xms 与最大值 Xmx 大小相同，防止程序在运行时动态改变堆内存大小，这是很耗系统资源的过程。</p>
+<p>当物理主机内存在 64GB 以上，并且拥有多个数据盘，不做 raid 的情况下，部署ES节点时有多种选择：</p>
+<ol>
+<li><p>部署单个节点，JVM内存配置不超 32GB，配置全部数据盘。这种部署模式的缺点是多余的物理内存只能被 cache 使用，而且只要存在一个坏盘，节点重启会无法启动。</p>
+</li>
+<li><p>部署单个节点，JVM内存配置超过 32GB ，配置全部数据盘。接受指针压缩失效和更长时间的 GC 等负面影响</p>
+</li>
+<li><p>有多少个数据盘就部署多少个节点，每个节点配置单个数据路径。优点是可以统一配置，缺点是节点数较多，集群管理负担大，只适用于集群规模较小的场景。</p>
+</li>
+<li><p>使用内存大小除以64GB来确定要部署的节点数，每个节点配置一部分数据盘，优点是利用率最高，缺点是部署复杂。</p>
+</li>
+</ol>
+<h5 id="移除节点"><a href="#移除节点" class="headerlink" title="移除节点"></a>移除节点</h5><p>当由于坏盘、维护等故障需要下线一个节点时，我们需要先将该节点数据迁移，这可通过分配过滤器实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;transient&quot;：&quot;cluster.routing.allocation.exclude.name&quot;: &quot;node-1&quot;</span><br></pre></td></tr></table></figure>
+
+<p>执行命令后，分片开始迁移，我们可以通过 cat/shard API 来查看该节点的分片是否迁移完生扎当节点维护完毕，重新上线之后，需要取消排除设置，以便后续的分片可以分配到 node-1 节点上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;transient&quot;：&quot;cluster.routing.allocation.exclude.name&quot;: &quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<h5 id="独立部署主节点"><a href="#独立部署主节点" class="headerlink" title="独立部署主节点"></a>独立部署主节点</h5><p>将主节点和数据节点分离部署最大的好处是 Master 切换过程可以迅速完成，有机会跳过gateway 和分片重新分配的过程。例如：具备 Master 资格的节点独立部署，然后关闭当前活跃的主节点，新主当选后由于内存中持有最新的集群状态，因此可以跳过 gateway 的恢过程，井且由于主节点没有存储数据，所以旧的 Master 离线不会产生未分配状态的分片。新主当边后集群状态可以迅速变为 Green。</p>
+<h2 id="节点层"><a href="#节点层" class="headerlink" title="节点层"></a>节点层</h2><h5 id="控制线程池的队列大小"><a href="#控制线程池的队列大小" class="headerlink" title="控制线程池的队列大小"></a>控制线程池的队列大小</h5><p>不要为 bulk search 分配过大的队列，队列并非越大越好，队列缓存的数据越多，GC力越大。默认的队列大小基本够用了，即使在压力测试的场景中，默认队列大小也足以支持。</p>
+<h5 id="为系统-cache-保留一半物理内存"><a href="#为系统-cache-保留一半物理内存" class="headerlink" title="为系统 cache 保留一半物理内存"></a>为系统 cache 保留一半物理内存</h5><p><strong>搜索操作很依赖对系统 cache 命中，标准建议是把 50% 的可用内存作为 ES 的堆内存， 为 Lucene 保留剩下的 50%，用作系统 cache。</strong></p>
+<h2 id="系统层"><a href="#系统层" class="headerlink" title="系统层"></a>系统层</h2><h5 id="关闭-swap"><a href="#关闭-swap" class="headerlink" title="关闭 swap"></a>关闭 swap</h5><p>在服务器系统上，无论物理内存多么小，哪怕只有 1GB，都应该关闭交换分区。当服务程序在交换分区缓慢运行时，往往会产生更多不可预期的错误，因此当申请内存的操作如果真到物理内存不足时，宁可让它直接失败。</p>
+<h5 id="配置-Linux-OOM-Killer"><a href="#配置-Linux-OOM-Killer" class="headerlink" title="配置 Linux OOM Killer"></a>配置 Linux OOM Killer</h5><p>现在讨论 OOM 并非 JVM OOM，而是 Linux 操作系统的 OOM，Linnx 进程申请的内存并不会立刻为进程分配真实大小的内存，因为进程申请的内存不一定全部使用，内核在利用这些空内存时采取过度分配的策略，接入物理内存为 1GB 两个进程都可以申请1GB的内存，超过了系统实际内存大小。当应用程序实际消耗完内存的时候，怎么办？系统需要杀掉进程来保障系统正常运，这就触发了OOM Killer，通过一些策略给每个进程打分，根据分值高低决定“杀掉”哪些进程。默认情况下，占用内存最多的进程被杀掉。</p>
+<p>如果ES 与其它服务混合部署，当系统产生 OOM，ES有可能会无辜被杀掉，为了避免这种情况，我们在用户态调节一些进程参数来让某些进程不容易被 OOM Kill掉，例如，我不希望 ES 进程被杀，可以设置进程的 oom_score_adj 参数为 -17（越小越不容易被杀）。</p>
+<h5 id="禁用透明大页"><a href="#禁用透明大页" class="headerlink" title="禁用透明大页"></a>禁用透明大页</h5><p>透明大页是 Linux 的一个内核特性，它通过更有效地使用处理器的内存映射硬件来提高性能，默认情况下是启用的。禁用透明大页能略微提升程序性能，但是也可能对程序产生负面影响，甚至是严重的内存泄漏。为了避免这些问题，我们应该禁用它（许多项目都建议禁用透明大页，例如， MongoDB Oracle）。</p>
+<h2 id="索引层"><a href="#索引层" class="headerlink" title="索引层"></a>索引层</h2><h5 id="使用全局模板"><a href="#使用全局模板" class="headerlink" title="使用全局模板"></a>使用全局模板</h5><p>ES 5.x 开始，索引级别的配置需要写到模板中，而不是 elasticsearch.yml 配置文件，但是我们需要一些索引级别的全局设置信息，例如，translog 的刷盘方式等，因此我们可以将这些设置编写到一个模板中，并让这个模板匹配全部索引，这个模板我们称为全局模板。</p>
+<h5 id="索引轮转"><a href="#索引轮转" class="headerlink" title="索引轮转"></a>索引轮转</h5><p>如果有一个索引每天都有新增内容，那么不要让这个索引持续增大，建议使用日期等规则按一定频率生成索引。同时将索引设置写入模板，让模板匹配这一系列的索引，还可以为索引生成一个别名关联部分索引。我们一般按天生成索引。</p>
+<h5 id="避免热索引分片不均"><a href="#避免热索引分片不均" class="headerlink" title="避免热索引分片不均"></a>避免热索引分片不均</h5><p>默认情况 ES 的分片均衡策略是尽量保持各个节点分片数量大致相同 但是当集群扩容新加入集群的节点没有分片，此时新创建的索引分片会集中在新节点上，这导致新节点拥有太多热点数据，该节点可能面临巨大的写入压力。因此，对于每个索引，我需要控制个节点上存储的该索引的分片总数，使索引分片在节点上分布得更均匀些。</p>
+<h5 id="副本数选择"><a href="#副本数选择" class="headerlink" title="副本数选择"></a>副本数选择</h5><p>由于搜索使用较好的硬件配置，硬件故障的概率相对较低 在大部分场景下，将副本数number_of_replicas 设置为1即可。这样每个分片存在两个副本。如果对搜索请求的吞吐量要求较高，则可以适当增加副本数量，让搜索操作可以利用更多的节点。如果在项目初始阶段不知道多少副本数够用，则可以先设置为1，后期再动态调整，对副本数的调整只会涉及数据复制和网络传输，不会重建索引，因此代价较小。</p>
+<h5 id="Force-Merge"><a href="#Force-Merge" class="headerlink" title="Force Merge"></a>Force Merge</h5><p>对冷索引执行 Force Merge 会有许多好处，我们在之前的章节中曾多次提到：</p>
+<ol>
+<li>单一的分段比众多分段占用的磁盘空间更小一些。</li>
+<li>可以大幅减少进程需要打开的文件 fd。</li>
+<li>可以加快搜索过程，因为搜索需要检索全部分段。</li>
+<li>单个分段加载到内存时也比多个分段更节省内存占用。</li>
+<li>可以加快索引恢复速度。<br>可以选择在系统的 闲时间段对不再更新的只读索引执行 Force Merge。</li>
+</ol>
+<h5 id="Shrink-Index"><a href="#Shrink-Index" class="headerlink" title="Shrink Index"></a>Shrink Index</h5><p>需要密切注意集群分片总数，分片数越多集群压力越大。在创建索引时，为索引分配了较的分片，但可能实际数据并没有多大，例如，按日期轮询生成索引，可能有些日子里数据量并不大，对这种索引可以执行 Shrink 操作来降低分片数量。 Shrink 的例子可以参考Shrink 一章。</p>
+<h5 id="close-索引"><a href="#close-索引" class="headerlink" title="close 索引"></a>close 索引</h5><p>如果有些索引暂时不使用，则不会再有新增数据，也不会有对它的查询操作，但是可能以后会用而不能删除，那么可以把这些索引关闭，在需要时再打开。关闭的索引除存储空间外不占用其他资源。</p>
+<h5 id="延迟分配分片"><a href="#延迟分配分片" class="headerlink" title="延迟分配分片"></a>延迟分配分片</h5><p>当一个节点由于某些原因离开集群时，默认情况下 ES 会重新确定主分片，并立即重新分配缺失的副分片，但是，一般来说节点离线是常态，可能因为网络问题、主机断电、进程退出等因素是我们经常面对节点离线的情况，而重新分配副分片的操作代价是很大的，该节点上存储的数据需要在集群上重新分配，复制这些数据需要大量的带宽和时间，因此我们调整节点离线后分片重新分配的延迟时间：”index.unassigned.node_left.delayed_timeout”: “5d”。</p>
+<h5 id="小心地使用-fielddata"><a href="#小心地使用-fielddata" class="headerlink" title="小心地使用 fielddata"></a>小心地使用 fielddata</h5><p>聚合时，ES 通过 doc values 获取宇段值，但 text 类型不支持 doc vales。当在 text 类型字段上聚合时，就会依赖 fielddata 数据结构，但 fielddata 默认关闭，因为它消耗很多堆空间，并且在 text 类型字段上聚合通常没有什么意义。</p>
+<p>doc values 在索引文档时就会创建，而 field data 是在聚合、排序，或者脚本中根据需要动态创建的。其读取每个分段中的整个倒排索引，反转 term 和 doc 的关系，将结果存储到 JVM堆空间，这是非常昂贵的过程，会让用户感到明显的延迟。</p>
+<h2 id="读写"><a href="#读写" class="headerlink" title="读写"></a>读写</h2><h5 id="避免搜索操作返回巨大的结果集"><a href="#避免搜索操作返回巨大的结果集" class="headerlink" title="避免搜索操作返回巨大的结果集"></a>避免搜索操作返回巨大的结果集</h5><p>我们在搜索流程中讨论过，由于协调节点的合并压力，所有的搜索系统都会限制返回的结果集大小，如果确实需要很大的结果集，则应该使用 Scroll API。</p>
+<h5 id="避免索引巨大的文档"><a href="#避免索引巨大的文档" class="headerlink" title="避免索引巨大的文档"></a>避免索引巨大的文档</h5><p>http.max_context_length 的默认值为 1OOMB, ES 会拒绝索引超过此大小的文档，可以增加这个值，但 Lucene 然有大约 2G 的限制。</p>
+<p>即使不考虑这些限制，大型文档通常也不实用。大型文档给网络、内存和磁盘造成了更大压力。即使搜索操作设置为不返回_source, ES 总要获取 id ，对于大型文档来说，获取这个字段的代价是很大的，这是由于操作系统的 ache 机制决定的。索引一个文档需要一些内存，所需内存大小是原始文档大小的几倍 。邻近（ Proximity ）搜索（例如，短语查询）和高亮也会变得更加昂贵，因为它们的成本直接取决于原始文档大小。</p>
+<p>因此可能要重新考虑信息的单位。例如，想要为一本书建立索引使之可以被搜索，这并不意味着把整本书的内容作为单个文档进行索引。最好使用章节或段落作为文档，然后在文档中加一个属性标识它们属于哪本书。这样不仅避免了大文档的问题，还使搜索的体验更好。</p>
+<h5 id="避免将请求发送到同一个协调节点"><a href="#避免将请求发送到同一个协调节点" class="headerlink" title="避免将请求发送到同一个协调节点"></a>避免将请求发送到同一个协调节点</h5><p>无论索引文档还是执行搜索请求，客户端都应该避免将请求发送到固定的某个或少数几个节点，因为少数几个协调节点作为整个集群对外的读写节点的情况下，它们很有可能承受不了那么多的客户端请求，尤其是搜索请求，协调节点的合并及排序会占用比较高的内存和 CPU，聚合会占用更多内存。因此会导致给客户端的返回慢，甚至导致节点 OOM。</p>
+<p>正确的做法是将请求轮询发送到集群所有节点，如果使用 REST API，则可以在构建客户端的客户端对象时传入全部节点列表。如果在前端或脚本中访问 ES 集群，则可以部 LVS户端使用虚 IP 或者部署 Ngin 使用反向代理。</p>
+<h2 id="客户踹"><a href="#客户踹" class="headerlink" title="客户踹"></a>客户踹</h2><h5 id="使用-REST-API-而非-Java-API"><a href="#使用-REST-API-而非-Java-API" class="headerlink" title="使用 REST API 而非 Java API"></a>使用 REST API 而非 Java API</h5><p>由于 Java API 引起版本兼容性问题，以及微弱到可以忽略的性能提升，JavaAPI 将在未来的版本中废弃，客户端最好选择阻 REST API 作为客户端，而不是 Java API。</p>
+<h5 id="为读写请求设置比较长的超时时间"><a href="#为读写请求设置比较长的超时时间" class="headerlink" title="为读写请求设置比较长的超时时间"></a>为读写请求设置比较长的超时时间</h5><p>读写操作都有可能是比较长的操作，例如，写一个比较大的 bulk 数据，或者执行较大范围的聚合。此时客户端为请求设置的超时时间应该尽量长，因为即使客户端断开连接，ES 仍然会在后台将请求处理完，如果超时设置比较短，则在密集的请求时会对ES造成非常大的压力。</p>
+<h2 id="控制相关度"><a href="#控制相关度" class="headerlink" title="控制相关度"></a>控制相关度</h2><p>通过 Painless 脚本控制搜索评分。</p>
+<p>ES 有多种方式控制对搜索结果的评分，如果常规方式无法得到想要的评分结果，则可以通过脚本的方式完全自己实现评分算法，以得到预期的评分结果。ES 支持多种脚本语言，经历各版本演变后，从5.0 版本开始实现了自己专用的语Painless。Groovy脚本己弃用。 Painless是内置支持的，脚本内容通过阻REST接口传递给 ES, ES将其保存在集群状态中。在 5.x 版本中可以放到 config/scripts 下，6.x 版本中只能通 REST 接口。</p>
+<p>通过脚本控制评分的原理是编写一个自定义脚本，该脚本返回评分值，该分值与原分值进行加法等运算，从而完全控制了评分算法。</p>
+<p>使用脚本我们需要注意：<strong>如果一个match查询查出来了成千上万个文档，在此阶段使用脚本将会对所有的文档进行计算，这会导致极其糟糕的性能问题</strong>。所以我们可以使用<strong>二次评分机制</strong>，在二次评分中使用脚本进行打分，二次评分使用了一个简单的技巧，对返回文档中的topN进行二次评分，既只改变部分返回文档的排序结果。</p>
+<h1 id="Lucene-原理"><a href="#Lucene-原理" class="headerlink" title="Lucene 原理"></a>Lucene 原理</h1><h2 id="Lucene-倒排索引结构"><a href="#Lucene-倒排索引结构" class="headerlink" title="Lucene 倒排索引结构"></a>Lucene 倒排索引结构</h2><ul>
+<li><p><strong>Term：</strong>单词。</p>
+</li>
+<li><p><strong>Posting List：</strong>倒排列表。倒排列表记录了出现过某个单词的所有文档的文档列表及单词在该文档中出现的位置信息，每条记录称为一个倒排项(Posting)。根据倒排列表，即可获知哪些文档包含某个单词。Posting list就是一个int的数组，存储了所有符合某个term的文档id。实际上，除此之外还包含：文档的数量、词条在每个文档中出现的次数、出现的位置、每个文档的长度、所有文档的平均长度等，在计算相关度时使用。</p>
+</li>
+<li><p><strong>Term Dictionary：</strong>数据（单词）字典，数据字典记录单词term。假设我们有很多个 term，比如：Carla,Sara,Elin,Ada,Patty,Kate,Selena。如果按照这样的顺序排列，找出某个特定的 term 一定很慢，因为 term 没有排序，需要全部过滤一遍才能找出特定的 term。排序之后就变成了：Ada,Carla,Elin,Kate,Patty,Sara,Selena。这样我们可以用二分查找的方式，比全遍历更快地找出目标的 term。这个就是 term dictionary。有了 term dictionary 之后，可以用 logN 次磁盘查找得到目标。</p>
+</li>
+<li><p><strong>Term Index：</strong>数据（单词）索引。磁盘的随机读操作仍然是非常昂贵的（一次 random access 大概需要 10ms 的时间）。所以尽量少的读磁盘，有必要把一些数据缓存到内存里。但是整个 term dictionary 本身又太大了，无法完整地放到内存里。于是就有了 term index。term index 有点像一本字典的大的章节表。比如：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A 开头的 term ……………. Xxx 页</span><br><span class="line">C 开头的 term ……………. Yyy 页</span><br></pre></td></tr></table></figure>
+
+<p>如果所有的 term 都是英文字符的话，可能这个 term index 就真的是 26 个英文字符表构成的了。但是实际的情况是，term 未必都是英文字符，term 可以是任意的 byte 数组。而且 26 个英文字符也未必是每一个字符都有均等的 term，比如 x 字符开头的 term 可能一个都没有，而 s 开头的 term 又特别多。实际的 term index 是一棵 trie 树（Trie Trees数据结构，简称字典树/单词查找树/键树）：</p>
+<p><img src="/images/blogs/elasticsearch/trie-tree.png" alt="avatar"></p>
+<p>这棵树不会包含所有的 term，它包含的是 term 的一些前缀。<strong>通过 term index 可以快速地定位到 term dictionary 的某个 offset，然后从这个位置再往后顺序查找。</strong>现在我们可以回答“为什么 Elasticsearch/Lucene 检索可以比 mysql 快了。Mysql 只有 term dictionary 这一层，是以 b-tree 排序的方式存储在磁盘上的。检索一个 term 需要若干次的 random access 的磁盘操作。而 Lucene 在 term dictionary 的基础上添加了 term index 来加速检索，term index 以树的形式缓存在内存中。从 term index 查到对应的 term dictionary 的 block 位置之后，再去磁盘上找 term，大大减少了磁盘的 random access 次数。</p>
+<p><strong>可以形象地理解为，Term Dictionary 就是新华字典的正文部分包含了所有的词汇，Term Index 就是新华字典前面的索引页，用于表明词汇在哪一页。</strong></p>
+<p>但是 term index 即不能知道某个Term在Dictionary(.tim)文件上具体的位置，也不能仅通过FST就能确切的知道Term是否真实存在。它只能告诉你，查询的Term可能在这些Blocks上，到底存不存在FST并不能给出确切的答案，因为FST是通过Dictionary的每个Block的前缀构成，所以通过FST只可以直接找到这个Block在.tim文件上具体的File Pointer，并无法直接找到Terms。</p>
+<h2 id="Lucene-索引实现"><a href="#Lucene-索引实现" class="headerlink" title="Lucene 索引实现"></a>Lucene 索引实现</h2><p>Lucene经多年演进优化，现在的一个索引文件结构如图所示，基本可以分为三个部分：词典、倒排表、正向文件、列式存储DocValues。</p>
+<p><img src="/images/blogs/elasticsearch/index-structure.png" alt="avatar"></p>
+<h2 id="FST"><a href="#FST" class="headerlink" title="FST"></a>FST</h2><p>Lucene 的tip文件即为 Term Index 结构，tim文件即为 Term Dictionary 结构。tip中存储的就是多个FST，FST中存储的是&lt;单词前缀，以该前缀开头的所有Term的压缩块在磁盘中的位置&gt;。即为前文提到的从 term index 查到对应的 term dictionary 的 block 位置之后，再去磁盘上找 term，大大减少了磁盘的 random access 次数。它的特点就是：</p>
+<ol>
+<li><p>词查找复杂度为O(len(str))。</p>
+</li>
+<li><p>共享前缀、节省空间。</p>
+</li>
+<li><p>内存存放前缀索引、磁盘存放后缀词块。</p>
+</li>
+</ol>
+<p>我们往索引库里插入四个单词abd、abe、acf、acg,看看它的索引文件内容。</p>
+<p><img src="/images/blogs/elasticsearch/fst-structure.png" alt="avatar"></p>
+<p>tip部分，每列一个FST索引，所以会有多个FST，每个FST存放前缀和后缀块指针，这里前缀就为a、ab、ac。tim里面存放后缀块和词的其他信息如倒排表指针、TFDF等，doc文件里就为每个单词的倒排表。所以它的检索过程分为三个步骤：</p>
+<ol>
+<li><p>内存加载tip文件，通过FST匹配前缀找到后缀词块位置。</p>
+</li>
+<li><p>根据词块位置，读取磁盘中tim文件中后缀块并找到后缀和相应的倒排表位置信息。</p>
+</li>
+<li><p>根据倒排表位置去doc文件中加载倒排表。</p>
+</li>
+</ol>
+<p>这里就会有两个问题，第一就是前缀如何计算，第二就是后缀如何写磁盘并通过FST定位，下面将描述下Lucene构建FST过程:<br>　　<br>已知FST要求输入有序，所以Lucene会将解析出来的文档单词预先排序，然后构建FST，我们假设输入为abd,abd,acf,acg，那么整个构建过程如下：</p>
+<p><img src="/images/blogs/elasticsearch/fst-structure-detail.png" alt="avatar"></p>
+<ol>
+<li><p>插入abd时，没有输出。</p>
+</li>
+<li><p>插入abe时，计算出前缀ab，但此时不知道后续还不会有其他以ab为前缀的词，所以此时无输出。</p>
+</li>
+<li><p>插入acf时，因为是有序的，知道不会再有ab前缀的词了，这时就可以写tip和tim了，tim中写入后缀词块d、e和它们的倒排表位置ip_d,ip_e，tip中写入a，b和以ab为前缀的后缀词块位置(真实情况下会写入更多信息如词频等)。</p>
+</li>
+<li><p>插入acg时，计算出和acf共享前缀ac，这时输入已经结束，所有数据写入磁盘。tim中写入后缀词块f、g和相对应的倒排表位置，tip中写入c和以ac为前缀的后缀词块位置。</p>
+</li>
+</ol>
+<p>以上是一个简化过程，Lucene的FST实现的主要优化策略有：</p>
+<ol>
+<li><p>最小后缀数。Lucene对写入tip的前缀有个最小后缀数要求，默认25，这时为了进一步减少内存使用。如果按照25的后缀数，那么就不存在ab、ac前缀，将只有一个跟节点，abd、abe、acf、acg将都作为后缀存在tim文件中。我们的10g的一个索引库，索引内存消耗只占20M左右。</p>
+</li>
+<li><p>前缀计算基于byte，而不是char，这样可以减少后缀数，防止后缀数太多，影响性能。如对宇(e9 b8 a2)、守(e9 b8 a3)、安(e9 b8 a4)这三个汉字，FST构建出来，不是只有根节点，三个汉字为后缀，而是从unicode码出发，以e9、b8为前缀，a2、a3、a4为后缀，如下图：</p>
+</li>
+</ol>
+<p><img src="/images/blogs/elasticsearch/fst-majorization.png" alt="avatar"></p>
+<h2 id="倒排表（PostingList）结构"><a href="#倒排表（PostingList）结构" class="headerlink" title="倒排表（PostingList）结构"></a>倒排表（PostingList）结构</h2><p>倒排表就是文档号集合，但怎么存，怎么取也有很多讲究，Lucene现使用的倒排表结构叫Frame of reference,它主要有两个特点：</p>
+<ol>
+<li>数据压缩。</li>
+<li>跳跃表加速合并，因为布尔查询时，and 和or 操作都需要合并倒排表，这时就需要快速定位相同文档号，所以利用跳跃表来进行相同文档号查找。</li>
+</ol>
+<p>PostingList 在内存中是以 Skiplist 「跳跃列表」的形式存在的。Lucene 中的 Skiplist 和 Redis 中的 Skiplist 是一样的。只不过 Redis 的 Skiplist 全部在内存中，而 Lucene 的 PostingList 可能只是部分在内存中。Lucene 的策略是只将 Skiplist 中的高层节点放在内存中，当需要访问底层节点时需要额外的一次 IO 读取操作。这样可以显著降低内存压力，因为有些词汇关联的 PostingList 可能特别长，消耗内存会特别多，这属于时间换空间的折中优化。</p>
+<p>Lucene 为什么要将 PostingList 设计成跳跃列表呢，这是为了做加速文档的交集运算。当查询的条件是两个 MUST 时，需要对两个词汇的 PostingList 进行交集计算。计算交集时会选择短的列表作为「驱动列表」，驱动列表的指针在往前走时，另外一个列表也要跟着往前跳。就好比一个大人和一个小孩走路，大人走得快，小孩就得跟着跑才能追赶上。同时因为跳跃列表的高层都在内存中，所以跳起来会非常的快，这样的交集运算就会有比较好的性能。</p>
+<p>综上所述，倒排索引的 Key 和 Value 都是部分放在内存中，从这点来说 FST 和 Skiplist 的结构具有一定的相似性，它们都是有高度的数据结构，高层的数据留在内存中，底层的数据淘汰到磁盘上，查找方向是先定位高层再定位底层。</p>
+<h2 id="正向文件"><a href="#正向文件" class="headerlink" title="正向文件"></a>正向文件</h2><p>正向文件指的就是原始文档，Lucene对原始文档也提供了存储功能，它存储特点就是分块+压缩，fdt文件就是存放原始文档的文件，它占了索引库90%的磁盘空间，fdx文件为索引文件，通过文档号（自增数字）快速得到文档位置，它们的文件结构如下： </p>
+<p><img src="/images/blogs/elasticsearch/origin-file.png" alt="avatar"></p>
+<ul>
+<li><p>fnm中为元信息存放了各列类型、列名、存储方式等信息。</p>
+</li>
+<li><p>fdt为文档值，里面一个chunk就是一个块，Lucene索引文档时，先缓存文档，缓存大于16KB时，就会把文档压缩存储。一个chunk包含了该chunk起始文档、多少个文档、压缩后的文档内容。</p>
+</li>
+<li><p>fdx为文档号索引，倒排表存放的时文档号，通过fdx才能快速定位到文档位置即chunk位置，它的索引结构比较简单，就是跳跃表结构，首先它会把1024个chunk归为一个block,每个block记载了起始文档值，block就相当于一级跳表。</p>
+</li>
+</ul>
+<p>所以查找文档，就分为三步：
+　　</p>
+<ol>
+<li><p>第一步二分查找block，定位属于哪个block。</p>
+</li>
+<li><p>第二步就是根据从block里根据每个chunk的起始文档号，找到属于哪个chunk和chunk位置。</p>
+</li>
+<li><p>第三步就是去加载fdt的chunk，找到文档。这里还有一个细节就是存放chunk起始文档值和chunk位置不是简单的数组，而是采用了平均值压缩法。所以第N个chunk的起始文档值由 DocBase + AvgChunkDocs * n + DocBaseDeltas[n]恢复而来，而第N个chunk再fdt中的位置由 StartPointerBase + AvgChunkSize * n + StartPointerDeltas[n]恢复而来。</p>
+</li>
+</ol>
+<p>从上面分析可以看出，lucene对原始文件的存放是行是存储，并且为了提高空间利用率，是多文档一起压缩，因此取文档时需要读入和解压额外文档，因此取文档过程非常依赖随机IO，以及lucene虽然提供了取特定列，但从存储结构可以看出，并不会减少取文档时间。</p>
+<h2 id="列式存储DocValues"><a href="#列式存储DocValues" class="headerlink" title="列式存储DocValues"></a>列式存储DocValues</h2><p>我们知道倒排索引能够解决从词到文档的快速映射，但当我们需要对检索结果进行分类、排序、数学计算等聚合操作时需要文档号到值的快速映射，而原先不管是倒排索引还是行式存储的文档都无法满足要求。原先4.0版本之前，Lucene实现这种需求是通过FieldCache，它的原理是通过按列逆转倒排表将（field value -&gt;doc）映射变成（doc -&gt; field value）映射，但这种实现方法有着两大显著问题：</p>
+<ol>
+<li>构建时间长。</li>
+<li>内存占用大，易OutOfMemory，且影响垃圾回收。</li>
+</ol>
+<p>因此4.0版本后Lucene推出了DocValues来解决这一问题，它和FieldCache一样，都为列式存储，但它有如下优点：</p>
+<ol>
+<li>预先构建，写入文件。</li>
+<li>基于映射文件来做，脱离JVM堆内存，系统调度缺页。</li>
+</ol>
+<p>DocValues这种实现方法只比内存FieldCache慢大概10~25%，但稳定性却得到了极大提升。Lucene目前有五种类型的DocValues：NUMERIC、BINARY、SORTED、SORTED_SET、SORTED_NUMERIC，针对每种类型Lucene都有特定的压缩方法。</p>
+<p>示例：我们看下ElasticSearch如何基于倒排索引和DocValues实现下面一条SQL的：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> gender,<span class="keyword">count</span>(*),<span class="keyword">avg</span>(age) <span class="keyword">from</span> employee <span class="keyword">where</span> dept=<span class="string">'sales'</span> <span class="keyword">group</span> <span class="keyword">by</span> gender</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>从倒排索引中找出销售部门的倒排表。</p>
+</li>
+<li><p>根据倒排表去性别的DocValues里取出每个人对应的性别，并分组到Female和Male里。</p>
+</li>
+<li><p>根据分组情况和年龄DocValues，计算各分组人数和平均年龄<br>　　<br>上面就是ElasticSearch进行聚合的整体流程，也可以看出ElasticSearch做聚合的一个瓶颈就是最后一步的聚合只能单机聚合，也因此一些统计会有误差，比如count(*) group by producet limit 5,最终总数不是精确的。因为单点内存聚合，所以每个分区不可能返回所有分组统计信息，只能返回部分，汇总时就会导致最终结果不正确。</p>
+</li>
+</ol>
+<h2 id="ES如何联合索引查询"><a href="#ES如何联合索引查询" class="headerlink" title="ES如何联合索引查询"></a>ES如何联合索引查询</h2><p>给定查询过滤条件 age=24 的过程就是先从 term index 找到 18 在 term dictionary 的大概位置，然后再从 term dictionary 里精确地找到 18 这个 term，然后得到一个 posting list 或者一个指向 posting list 位置的指针。然后再查询 sex=Female 的过程也是类似的。最后得出 age= 24 AND sex=Female 就是把两个 posting list 做一个“与”的合并。</p>
+<p>这个理论上的“与”合并的操作可不容易。对于 mysql 来说，如果你给 age 和 gender 两个字段都建立了索引，查询的时候只会选择其中最 selective 的来用，然后另外一个条件是在遍历行的过程中在内存中计算之后过滤掉。那么要如何才能联合使用两个索引呢？有两种办法：</p>
+<ul>
+<li><p>使用 skip list 数据结构。同时遍历 gender 和 age 的 posting list，互相 skip；</p>
+</li>
+<li><p>使用 bitset 数据结构，对 gender 和 age 两个 filter 分别求出 bitset，对两个 bitset 做 AN 操作。</p>
+</li>
+</ul>
+<p>Elasticsearch 支持以上两种的联合索引方式，如果查询的 filter 缓存到了内存中（以 bitset 的形式），那么合并就是两个 bitset 的 AND。如果查询的 filter 没有缓存，那么就用 skip list 的方式去遍历两个 on disk 的 posting list。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2021年04月20日 15:44</p>
+        <p>原始链接： <a class="post-url" href="/2020/01/20/Elasticsearch-核心技术四/" title="Elasticsearch-核心技术四">https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/&title=《Elasticsearch-核心技术四》 — JJW-STORY&pic=/images/blogs/elasticsearch.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/&title=《Elasticsearch-核心技术四》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Elasticsearch-核心技术四》 — JJW-STORY&url=https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/01/20/Elasticsearch-核心技术四/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Elasticsearch/" class="color4">Elasticsearch</a>
+      
+    <a href="/tags/核心技术四/" class="color1">核心技术四</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#写入速度优化"><span class="post-toc-text">写入速度优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#translog-flush-间隔调整"><span class="post-toc-text">translog flush 间隔调整</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#索引刷新间隔-refresh-interval"><span class="post-toc-text">索引刷新间隔 refresh_interval</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#段合并优化"><span class="post-toc-text">段合并优化</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#indexing-buffer"><span class="post-toc-text">indexing buffer</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用-bulk-请求"><span class="post-toc-text">使用 bulk 请求</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#磁盘间的任务均衡"><span class="post-toc-text">磁盘间的任务均衡</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#索引过程调整和优化"><span class="post-toc-text">索引过程调整和优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#自动生成-doc-ID"><span class="post-toc-text">自动生成 doc ID</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#调整字段-Mappings"><span class="post-toc-text">调整字段 Mappings</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#调整-source字段"><span class="post-toc-text">调整_source字段</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#禁用-all-字段"><span class="post-toc-text">禁用 _all 字段</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#对-Analyzed-的字段禁用-Norms"><span class="post-toc-text">对 Analyzed 的字段禁用 Norms</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#index-options-设置"><span class="post-toc-text">index_options 设置</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#搜索速度优化"><span class="post-toc-text">搜索速度优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#为文件系统-cache-预留足够的内存"><span class="post-toc-text">为文件系统 cache 预留足够的内存</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#使用更快的硬件"><span class="post-toc-text">使用更快的硬件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#文档模型"><span class="post-toc-text">文档模型</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#预索引数据"><span class="post-toc-text">预索引数据</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#字段映射"><span class="post-toc-text">字段映射</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#避免使用脚本"><span class="post-toc-text">避免使用脚本</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#优化日期搜索"><span class="post-toc-text">优化日期搜索</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#为只读索引执行-force-merge"><span class="post-toc-text">为只读索引执行 force-merge</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#预热文件系统cache"><span class="post-toc-text">预热文件系统cache</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#调节搜索请求中的-batched-reduce-size"><span class="post-toc-text">调节搜索请求中的 batched_reduce_size</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#限制搜索请求的分片数"><span class="post-toc-text">限制搜索请求的分片数</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#利用自适应副本选择（ARS）提升-ES-响应速度"><span class="post-toc-text">利用自适应副本选择（ARS）提升 ES 响应速度</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#磁盘使用量优化"><span class="post-toc-text">磁盘使用量优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#存储内容"><span class="post-toc-text">存储内容</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#元数据字段"><span class="post-toc-text">元数据字段</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#索引映射参数"><span class="post-toc-text">索引映射参数</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#优化措施"><span class="post-toc-text">优化措施</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#禁用对你来说不需要的特性"><span class="post-toc-text">禁用对你来说不需要的特性</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#禁用-doc-values"><span class="post-toc-text">禁用 doc values</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#不要使用默认的动态字符串映射"><span class="post-toc-text">不要使用默认的动态字符串映射</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#观察分片大小"><span class="post-toc-text">观察分片大小</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#禁用-source"><span class="post-toc-text">禁用 _source</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#数值类型长度够用就好"><span class="post-toc-text">数值类型长度够用就好</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#综合应用"><span class="post-toc-text">综合应用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#集群层"><span class="post-toc-text">集群层</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#规划集群规模"><span class="post-toc-text">规划集群规模</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#单节点还是多节点部署"><span class="post-toc-text">单节点还是多节点部署</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#移除节点"><span class="post-toc-text">移除节点</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#独立部署主节点"><span class="post-toc-text">独立部署主节点</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#节点层"><span class="post-toc-text">节点层</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#控制线程池的队列大小"><span class="post-toc-text">控制线程池的队列大小</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#为系统-cache-保留一半物理内存"><span class="post-toc-text">为系统 cache 保留一半物理内存</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#系统层"><span class="post-toc-text">系统层</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#关闭-swap"><span class="post-toc-text">关闭 swap</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#配置-Linux-OOM-Killer"><span class="post-toc-text">配置 Linux OOM Killer</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#禁用透明大页"><span class="post-toc-text">禁用透明大页</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#索引层"><span class="post-toc-text">索引层</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#使用全局模板"><span class="post-toc-text">使用全局模板</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#索引轮转"><span class="post-toc-text">索引轮转</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#避免热索引分片不均"><span class="post-toc-text">避免热索引分片不均</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#副本数选择"><span class="post-toc-text">副本数选择</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Force-Merge"><span class="post-toc-text">Force Merge</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Shrink-Index"><span class="post-toc-text">Shrink Index</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#close-索引"><span class="post-toc-text">close 索引</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#延迟分配分片"><span class="post-toc-text">延迟分配分片</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#小心地使用-fielddata"><span class="post-toc-text">小心地使用 fielddata</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#读写"><span class="post-toc-text">读写</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#避免搜索操作返回巨大的结果集"><span class="post-toc-text">避免搜索操作返回巨大的结果集</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#避免索引巨大的文档"><span class="post-toc-text">避免索引巨大的文档</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#避免将请求发送到同一个协调节点"><span class="post-toc-text">避免将请求发送到同一个协调节点</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#客户踹"><span class="post-toc-text">客户踹</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#使用-REST-API-而非-Java-API"><span class="post-toc-text">使用 REST API 而非 Java API</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#为读写请求设置比较长的超时时间"><span class="post-toc-text">为读写请求设置比较长的超时时间</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#控制相关度"><span class="post-toc-text">控制相关度</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Lucene-原理"><span class="post-toc-text">Lucene 原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Lucene-倒排索引结构"><span class="post-toc-text">Lucene 倒排索引结构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Lucene-索引实现"><span class="post-toc-text">Lucene 索引实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#FST"><span class="post-toc-text">FST</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#倒排表（PostingList）结构"><span class="post-toc-text">倒排表（PostingList）结构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#正向文件"><span class="post-toc-text">正向文件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#列式存储DocValues"><span class="post-toc-text">列式存储DocValues</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ES如何联合索引查询"><span class="post-toc-text">ES如何联合索引查询</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/02/16/高效员工起航训练营/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          高效员工起航训练营
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/01/08/Elasticsearch-核心技术三/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Elasticsearch-核心技术三</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

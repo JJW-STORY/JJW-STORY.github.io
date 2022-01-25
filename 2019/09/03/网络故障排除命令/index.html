@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>网络故障排除命令 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="网络故障排查命令ping命令Linux系统的ping命令是常用的网络命令，它通常用来测试与目标主机的连通性 使用方法：ping [参数] 主机IP或域名 参数详解： -q  不显示任何传送封包的信息，只显示最后的结果 -n  只输出数值 -R  记录路由过程 -c count  总次数 -i  时间间隔 -t  存活数值：设置存活数值TTL的大小 使用示例： 123456789wangjia3@C">
+<meta name="keywords" content="command,网络管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络故障排除命令">
+<meta property="og:url" content="https://jjw-story.github.io/2019/09/03/网络故障排除命令/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="网络故障排查命令ping命令Linux系统的ping命令是常用的网络命令，它通常用来测试与目标主机的连通性 使用方法：ping [参数] 主机IP或域名 参数详解： -q  不显示任何传送封包的信息，只显示最后的结果 -n  只输出数值 -R  记录路由过程 -c count  总次数 -i  时间间隔 -t  存活数值：设置存活数值TTL的大小 使用示例： 123456789wangjia3@C">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-09-03T11:45:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络故障排除命令">
+<meta name="twitter:description" content="网络故障排查命令ping命令Linux系统的ping命令是常用的网络命令，它通常用来测试与目标主机的连通性 使用方法：ping [参数] 主机IP或域名 参数详解： -q  不显示任何传送封包的信息，只显示最后的结果 -n  只输出数值 -R  记录路由过程 -c count  总次数 -i  时间间隔 -t  存活数值：设置存活数值TTL的大小 使用示例： 123456789wangjia3@C">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-网络故障排除命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      网络故障排除命令
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-09-03
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="网络故障排查命令"><a href="#网络故障排查命令" class="headerlink" title="网络故障排查命令"></a>网络故障排查命令</h1><h2 id="ping命令"><a href="#ping命令" class="headerlink" title="ping命令"></a>ping命令</h2><p>Linux系统的ping命令是常用的网络命令，它通常用来测试与目标主机的连通性</p>
+<p>使用方法：ping [参数] 主机IP或域名</p>
+<p>参数详解：</p>
+<p><strong>-q</strong>  不显示任何传送封包的信息，只显示最后的结果</p>
+<p><strong>-n</strong>  只输出数值</p>
+<p><strong>-R</strong>  记录路由过程</p>
+<p><strong>-c count</strong>  总次数</p>
+<p><strong>-i</strong>  时间间隔</p>
+<p><strong>-t</strong>  存活数值：设置存活数值TTL的大小</p>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:~$ ping -c 3  192.168.1.1</span><br><span class="line">PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.</span><br><span class="line">64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=3.18 ms</span><br><span class="line">64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=3.14 ms</span><br><span class="line">64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=10.0 ms</span><br><span class="line"></span><br><span class="line">--- 192.168.1.1 ping statistics ---</span><br><span class="line">3 packets transmitted, 3 received, 0% packet loss, time 2002ms</span><br><span class="line">rtt min/avg/max/mdev = 3.147/5.445/10.007/3.226 ms</span><br></pre></td></tr></table></figure>
+
+<h2 id="traceroute命令"><a href="#traceroute命令" class="headerlink" title="traceroute命令"></a>traceroute命令</h2><p>命令用于显示数据包到主机间的路径，traceroute指令让你追踪网络数据包的路由途径，预设数据包大小是40Bytes，用户可另行设置</p>
+<p>使用方法：traceroute [参数] 主机IP或域名</p>
+<p>参数详解：</p>
+<p><strong>-m &lt;存活数值&gt;</strong> 设置检测数据包的最大存活数值TTL的大小</p>
+<p><strong>-n</strong> 直接使用IP地址而非主机名称</p>
+<p><strong>-v</strong> 详细显示指令的执行过程</p>
+<p><strong>-w &lt;超时秒数&gt;</strong> 设置等待远端主机回报的时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">traceroute to www.baidu.com (180.101.49.12), 30 hops max, 60 byte packets</span><br><span class="line"> 1  * * *</span><br><span class="line"> 2  11.219.5.13 (11.219.5.13)  6.841 ms 11.219.5.85 (11.219.5.85)  7.559 ms 11.219.4.85 (11.219.4.85)  6.439 ms</span><br><span class="line"> 3  * * *</span><br><span class="line"> 4  11.219.68.42 (11.219.68.42)  0.427 ms  0.436 ms 11.219.68.26 (11.219.68.26)  0.679 ms</span><br><span class="line"> 5  103.41.143.69 (103.41.143.69)  1.187 ms 103.52.86.106 (103.52.86.106)  1.045 ms 103.52.86.138 (103.52.86.138)  0.956 ms</span><br><span class="line"> 6  116.251.113.33 (116.251.113.33)  1.145 ms 116.251.113.37 (116.251.113.37)  1.447 ms 116.251.113.53 (116.251.113.53)  0.856 ms</span><br><span class="line"> 7  150.138.130.121 (150.138.130.121)  1.377 ms 150.138.132.129 (150.138.132.129)  0.939 ms 150.138.130.133 (150.138.130.133)  1.184 ms</span><br><span class="line"> 8  150.138.128.65 (150.138.128.65)  12.132 ms 150.138.128.173 (150.138.128.173)  17.526 ms  17.970 ms</span><br><span class="line"> 9  202.97.46.49 (202.97.46.49)  22.672 ms</span><br></pre></td></tr></table></figure>
+
+<p>显示的访问此主机中间经过的路由，中间路由对应的IP地址及它的延时是多长时间等等，注意如果不支持traceroute方式追踪，会以 * * * 的方式展示出来</p>
+<h2 id="mtr命令"><a href="#mtr命令" class="headerlink" title="mtr命令"></a>mtr命令</h2><p>在Linux中有一个更好的网络连通性判断工具，它可以结合ping nslookup tracert 来判断网络的相关特性,这个命令就是mtr</p>
+<p>此命令要比上述traceroute命令展示的信息更加详细，所以使用的更多</p>
+<p>使用方法：mtr [参数] [主机IP或域名]</p>
+<p>参数详解：</p>
+<p>-r 已报告模式显示</p>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ ~]# mtr -r www.baidu.com</span><br><span class="line">HOST: iZm5ehzqow4ijp2ya2g2drZ     Loss%   Snt   Last   Avg  Best  Wrst StDev</span><br><span class="line">  1. ???                          100.0    10    0.0   0.0   0.0   0.0   0.0</span><br><span class="line">  2. 11.219.4.13                   0.0%    10    2.3   4.5   1.6  12.9   3.7</span><br><span class="line">  3. ???                          100.0    10    0.0   0.0   0.0   0.0   0.0</span><br><span class="line">  4. 11.219.68.58                  0.0%    10    0.4   1.8   0.4  12.5   3.8</span><br><span class="line">  5. 116.251.117.198               0.0%    10    0.7   0.8   0.7   1.1   0.2</span><br><span class="line">  6. 140.205.26.217                0.0%    10    1.2   1.5   1.2   3.0   0.5</span><br><span class="line">  7. 150.138.132.149               0.0%    10    1.6   1.5   1.4   1.6   0.1</span><br><span class="line">  8. 150.138.128.157               0.0%    10   18.6  20.8  18.6  27.0   3.5</span><br><span class="line">  9. 202.97.46.61                 20.0%    10   24.5  23.1  22.9  24.5   0.6</span><br><span class="line"> 10. 58.213.94.6                   0.0%    10   18.2  18.4  18.0  20.4   0.7</span><br><span class="line"> 11. 58.213.94.122                90.0%    10   24.1  24.1  24.1  24.1   0.0</span><br><span class="line"> 12. 58.213.96.90                  0.0%    10   21.4  21.6  21.2  23.7   0.7</span><br><span class="line"> 13. ???                          100.0    10    0.0   0.0   0.0   0.0   0.0</span><br><span class="line"> 14. ???                          100.0    10    0.0   0.0   0.0   0.0   0.0</span><br><span class="line"> 15. ???                          100.0    10    0.0   0.0   0.0   0.0   0.0</span><br><span class="line"> 16. 180.101.49.12                 0.0%    10   18.0  18.0  17.9  18.0   0.0</span><br></pre></td></tr></table></figure>
+
+<p>注意此命令可以不带任何参数及IP单独使用，My traceroute</p>
+<p>报告解释：</p>
+<p>第一列:显示的是IP地址和本机域名，这点和tracert很像</p>
+<p>第二列:snt:10 设置每秒发送数据包的数量，默认值是10 可以通过参数 -c来指定</p>
+<p>第三列:是显示的每个对应IP的丢包率</p>
+<p>第四列:显示的最近一次的返回时延</p>
+<p>第五列:是平均值 这个应该是发送ping包的平均时延</p>
+<p>第六列:是最好或者说时延最短的</p>
+<p>第七列:是最差或者说时延最常的</p>
+<p>第八列:是标准偏差</p>
+<h2 id="nslookup命令"><a href="#nslookup命令" class="headerlink" title="nslookup命令"></a>nslookup命令</h2><p>查看哪台DNS服务器进行的域名解析，并解析出域名对应的IP地址</p>
+<p>使用方法：nslookup 域名</p>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wangjia3@CHJ-20190520VPS:~$ nslookup www.baidu.com</span><br><span class="line">Server:         192.168.1.1</span><br><span class="line">Address:        192.168.1.1#53</span><br><span class="line"></span><br><span class="line">Non-authoritative answer:</span><br><span class="line">www.baidu.com   canonical name = www.a.shifen.com.</span><br><span class="line">Name:   www.a.shifen.com</span><br><span class="line">Address: 61.135.169.121</span><br><span class="line">Name:   www.a.shifen.com</span><br><span class="line">Address: 61.135.169.125</span><br></pre></td></tr></table></figure>
+
+<p>以上查询第一行显示的是DNS服务器的地址，这里百度是有对应的别名的：<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a>   canonical name = <a href="http://www.a.shifen.com" target="_blank" rel="noopener">www.a.shifen.com</a>. 别名下有对应的两个地址</p>
+<h2 id="telnet命令"><a href="#telnet命令" class="headerlink" title="telnet命令"></a>telnet命令</h2><p>telnet命令通常用来远程登录，它为用户提供了在本地计算机上完成远程主机工作的 能力。在终端使用者的电脑上使用telnet程序，用它连接到服务器。终端使用者可以在telnet程序中输入命令，这些命令会在服务器上运行，就像直接在服务器的控制台上输入一样。可以在本地就能控制服务器。要开始一个 telnet会话，必须输入用户名和密码来登录服务器。Telnet是常用的远程控制Web服务器的方法。</p>
+<p>但是，telnet因为采用明文传送报文，安全性不好，很多Linux服务器都不开放telnet服务，而改用更安全的ssh方式了。但仍然有很多别的系统可能采用了telnet方式来提供远程登录，因此弄清楚telnet客户端的使用方式仍是很有必要的。</p>
+<p>telnet命令还可做别的用途，比如确定远程服务的状态，比如确定远程服务器的某个端口是否能访问，这里我们说明的主要使用就是<strong>确认端口是否能够访问 畅通</strong></p>
+<p>使用方法：telnet [参数] 主机 端口</p>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 端口可达</span><br><span class="line">wangjia3@CHJ-20190520VPS:~$ telnet www.baidu.com 80</span><br><span class="line">Trying 61.135.169.121...</span><br><span class="line">Connected to www.a.shifen.com.</span><br><span class="line">Escape character is &apos;^]&apos;.</span><br><span class="line">^]</span><br><span class="line"></span><br><span class="line">telnet&gt; quit</span><br><span class="line"></span><br><span class="line"># 端口不可达</span><br><span class="line">wangjia3@CHJ-20190520VPS:~$ telnet www.baidu.com 8900</span><br><span class="line">Trying 61.135.169.121...</span><br><span class="line">Trying 61.135.169.125...</span><br><span class="line">telnet: Unable to connect to remote host: Resource temporarily unavailable</span><br></pre></td></tr></table></figure>
+
+<p>注意我们需要通过 CTRl + 右侧方括号 来退出此查看，然后使用 CTRL + C 或者 quit命令，退出 telnet</p>
+<h2 id="tcpdump命令"><a href="#tcpdump命令" class="headerlink" title="tcpdump命令"></a>tcpdump命令</h2><p>很多时候我们的系统部署在Linux系统上面，在一些情况下定位问题就需要查看各个系统之间发送数据报文是否正常，下面我就简单讲解一下如何使用tcpdump抓包。tcpdump是Linux下面的一个开源的抓包工具，和Windows下面的wireshark抓包工具一样， 支持抓取指定网口、指定目的地址、指定源地址、指定端口、指定协议的数据。</p>
+<p>用简单的话来定义tcpdump，就是：dump the traffic on a network，根据使用者的定义对网络上的数据包进行截获的包分析工具。 tcpdump可以将网络中传送的数据包的“头”完全截获下来提供分析。它支 持针对网络层、协议、主机、网络或端口的过滤，并提供and、or、not等逻辑语句来帮助你去掉无用的信息</p>
+<p>使用说明：</p>
+<p>监视所有网卡接口的数据包：</p>
+<p>tcpdump -i any</p>
+<p>监视指定网络接口的数据包：</p>
+<p>tcpdump -i eth1</p>
+<p>如果不指定网卡，默认tcpdump只会监视第一个网络接口，一般是eth0，下面的例子都没有指定网络接口</p>
+<p>捕获所有网卡发往80端口的数据包，并且如果包含域名，将域名解析成IP，主要使用 -n 参数</p>
+<p>tcpdump -i any -n port 80</p>
+<p>监视指定主机收到的和发出的所有的数据包：</p>
+<p>tcpdump -i any -n host 210.27.48.1</p>
+<p>监视指定主机和端口的数据包：</p>
+<p>tcpdump -i any -n port 23 and host 210.27.48.1</p>
+<h2 id="netstat命令"><a href="#netstat命令" class="headerlink" title="netstat命令"></a>netstat命令</h2><p>Linux netstat命令用于显示网络状态，利用netstat指令可让你得知整个Linux系统的网络情况，查看服务的监听地址</p>
+<p>使用方法：netstat [参数]</p>
+<p>常用参数说明：</p>
+<p><strong>-n</strong>  直接使用IP地址，而不通过域名服务器</p>
+<p><strong>-t</strong>  显示TCP传输协议的连线状况</p>
+<p><strong>-u</strong>  显示UDP传输协议的连线状况</p>
+<p><strong>-p</strong>  显示正在使用Socket的程序识别码和程序名称</p>
+<p><strong>-l</strong>  显示监控中的服务器的Socket</p>
+<p><strong>-v</strong>  显示指令执行过程</p>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ ~]# netstat -ntpl</span><br><span class="line">Active Internet connections (only servers)</span><br><span class="line">Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name</span><br><span class="line">tcp        0      0 0.0.0.0:22                  0.0.0.0:*                   LISTEN      1260/sshd</span><br><span class="line">tcp        0      0 127.0.0.1:25                0.0.0.0:*                   LISTEN      1427/master</span><br></pre></td></tr></table></figure>
+
+<h2 id="ss命令"><a href="#ss命令" class="headerlink" title="ss命令"></a>ss命令</h2><p>ss是Socket Statistics的缩写。顾名思义，ss命令可以用来获取socket统计信息，它可以显示和netstat类似的内容。ss的优势在于它能够显示更多更详细的有关TCP和连接状态的信息，而且比netstat更快速更高效</p>
+<p>当服务器的socket连接数量变得非常大时，无论是使用netstat命令还是直接cat /proc/net/tcp，执行速度都会很慢</p>
+<p>ss快的秘诀在于，它利用到了TCP协议栈中tcp_diag。tcp_diag是一个用于分析统计的模块，可以获得Linux 内核中第一手的信息，这就确保了ss的快捷高效</p>
+<p>使用方法：ss [参数]</p>
+<p>常用参数说明：</p>
+<p><strong>-n</strong>  直接使用IP地址，而不通过域名服务器</p>
+<p><strong>-t</strong>  显示TCP传输协议的连线状况</p>
+<p><strong>-u</strong>  显示UDP传输协议的连线状况</p>
+<p><strong>-p</strong>  显示正在使用Socket的程序识别码和程序名称</p>
+<p><strong>-l</strong>  显示监控中的服务器的Socket</p>
+<p><strong>-m</strong>  显示套接字的内存使用信息</p>
+<p><strong>-p</strong>  显示使用套接字的进程</p>
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@iZm5ehzqow4ijp2ya2g2drZ ~]# ss -ntpl</span><br><span class="line">State       Recv-Q Send-Q                                                             Local Address:Port                                                               Peer Address:Port </span><br><span class="line">LISTEN      0      128                                                                            *:22                                                                            *:*      users:((&quot;sshd&quot;,1260,3))</span><br><span class="line">LISTEN      0      100                                                                    127.0.0.1:25                                                                            *:*      users:((&quot;master&quot;,1427,12))</span><br></pre></td></tr></table></figure>
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年09月03日 19:45</p>
+        <p>原始链接： <a class="post-url" href="/2019/09/03/网络故障排除命令/" title="网络故障排除命令">https://jjw-story.github.io/2019/09/03/网络故障排除命令/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2019/09/03/网络故障排除命令/&title=《网络故障排除命令》 — JJW-STORY&pic=/images/blogs/shell.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2019/09/03/网络故障排除命令/&title=《网络故障排除命令》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2019/09/03/网络故障排除命令/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《网络故障排除命令》 — JJW-STORY&url=https://jjw-story.github.io/2019/09/03/网络故障排除命令/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2019/09/03/网络故障排除命令/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2019/09/03/网络故障排除命令/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/command/" class="color3">command</a>
+      
+    <a href="/tags/网络管理/" class="color5">网络管理</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#网络故障排查命令"><span class="post-toc-text">网络故障排查命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ping命令"><span class="post-toc-text">ping命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#traceroute命令"><span class="post-toc-text">traceroute命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#mtr命令"><span class="post-toc-text">mtr命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nslookup命令"><span class="post-toc-text">nslookup命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#telnet命令"><span class="post-toc-text">telnet命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#tcpdump命令"><span class="post-toc-text">tcpdump命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#netstat命令"><span class="post-toc-text">netstat命令</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ss命令"><span class="post-toc-text">ss命令</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2019/10/06/进程管理/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          进程管理
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2019/08/30/网络管理和配置文件/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">网络管理和配置文件</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

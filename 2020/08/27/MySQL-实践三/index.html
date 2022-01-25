@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>MySQL-实践三 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="JOIN语句的执行原理我们通过创建两个表 t1 和 t2 来说明，这两个表的结构一模一样，有三个字段(id, a, b)，字段a建立普通索引，我们往t1表插入100条数据，t2插入1000条数据。 Index Nested-Loop Join（NLJ）我们执行如下SQL语句： 1select * from t1 straight_join t2 on (t1.a=t2.a);  如果直接使用 jo">
+<meta name="keywords" content="MySQL,实践三">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL-实践三">
+<meta property="og:url" content="https://jjw-story.github.io/2020/08/27/MySQL-实践三/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="JOIN语句的执行原理我们通过创建两个表 t1 和 t2 来说明，这两个表的结构一模一样，有三个字段(id, a, b)，字段a建立普通索引，我们往t1表插入100条数据，t2插入1000条数据。 Index Nested-Loop Join（NLJ）我们执行如下SQL语句： 1select * from t1 straight_join t2 on (t1.a=t2.a);  如果直接使用 jo">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-09-13T08:46:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL-实践三">
+<meta name="twitter:description" content="JOIN语句的执行原理我们通过创建两个表 t1 和 t2 来说明，这两个表的结构一模一样，有三个字段(id, a, b)，字段a建立普通索引，我们往t1表插入100条数据，t2插入1000条数据。 Index Nested-Loop Join（NLJ）我们执行如下SQL语句： 1select * from t1 straight_join t2 on (t1.a=t2.a);  如果直接使用 jo">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-MySQL-实践三" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      MySQL-实践三
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/MySQL/">MySQL</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-08-27
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="JOIN语句的执行原理"><a href="#JOIN语句的执行原理" class="headerlink" title="JOIN语句的执行原理"></a>JOIN语句的执行原理</h1><p>我们通过创建两个表 t1 和 t2 来说明，这两个表的结构一模一样，有三个字段(id, a, b)，字段a建立普通索引，我们往t1表插入100条数据，t2插入1000条数据。</p>
+<h2 id="Index-Nested-Loop-Join（NLJ）"><a href="#Index-Nested-Loop-Join（NLJ）" class="headerlink" title="Index Nested-Loop Join（NLJ）"></a>Index Nested-Loop Join（NLJ）</h2><p>我们执行如下SQL语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from t1 straight_join t2 on (t1.a=t2.a);</span><br></pre></td></tr></table></figure>
+
+<p>如果直接使用 join 语句，MySQL 优化器可能会选择表 t1 或 t2 作为驱动表，这样会影响我们分析 SQL 语句的执行过程。所以，为了便于分析执行过程中的性能问题，改用 straight_join 让 MySQL 使用固定的连接方式执行查询，这样优化器只会按照我们指定的方式去 join。</p>
+<p>在这条语句里，被驱动表 t2 的字段 a 上有索引，join 过程用上了这个索引，因此这个语句的执行流程是这样的：</p>
+<ol>
+<li>从表 t1 中读入一行数据 R；</li>
+<li>从数据行 R 中，取出 a 字段到表 t2 里去查找；</li>
+<li>取出表 t2 中满足条件的行，跟 R 组成一行，作为结果集的一部分；</li>
+<li>重复执行步骤 1 到 3，直到表 t1 的末尾循环结束。</li>
+</ol>
+<p>在这个流程里：</p>
+<ol>
+<li>对驱动表 t1 做了全表扫描，这个过程需要扫描 100 行；</li>
+<li>而对于每一行 R，根据 a 字段去表 t2 查找，走的是树搜索过程。由于我们构造的数据都是一一对应的，因此每次的搜索过程都只扫描一行，也是总共扫描 100 行；</li>
+<li>所以，整个执行流程，总扫描行数是 200。</li>
+</ol>
+<p><strong>如何选择驱动表？</strong></p>
+<p>在这个 join 语句执行过程中，驱动表是走全表扫描，而被驱动表是走树搜索。</p>
+<p>假设被驱动表的行数是 M。每次在被驱动表查一行数据，要先搜索索引 a，再搜索主键索引。每次搜索一棵树近似复杂度是以 2 为底的 M 的对数，记为 log2M（二分法），所以在被驱动表上查一行的时间复杂度是 2*log2M。</p>
+<p>假设驱动表的行数是 N，执行过程就要扫描驱动表 N 行，然后对于每一行，到被驱动表上匹配一次。因此整个执行过程，近似复杂度是 N + N<em>2</em>log2M。</p>
+<p>显然，N 对扫描行数的影响更大，因此应该让小表来做驱动表。</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>使用 join 语句，性能比强行拆成多个单表执行 SQL 语句的性能要好；如果使用 join 语句的话，需要让小表做驱动表。</p>
+<h2 id="Simple-Nested-Loop-Join"><a href="#Simple-Nested-Loop-Join" class="headerlink" title="Simple Nested-Loop Join"></a>Simple Nested-Loop Join</h2><p>我们把查询的SQL改成如下这样:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from t1 straight_join t2 on (t1.a=t2.b);</span><br></pre></td></tr></table></figure>
+
+<p>由于表 t2 的字段 b 上没有索引，因此在执行 取出 a 字段到表 t2 里去查找，就要做一次全表扫描。但是，这样算来，这个 SQL 请求就要扫描表 t2 多达 100 次，总共扫描 100*1000=10 万行。这还只是两个小表，如果数据量大，这个算法就太笨重了，因此，MySQL 也没有使用这个 Simple Nested-Loop Join 算法，而是使用了另一个叫作“Block Nested-Loop Join”的算法，简称 BNL。</p>
+<h2 id="Block-Nested-Loop-Join（BNL）"><a href="#Block-Nested-Loop-Join（BNL）" class="headerlink" title="Block Nested-Loop Join（BNL）"></a>Block Nested-Loop Join（BNL）</h2><p>上一节中查询语句，被驱动表上没有可用的索引，算法的流程是这样的：</p>
+<ol>
+<li>把表 t1 的数据读入线程内存 join_buffer 中，由于我们这个语句中写的是 select *，因此是把整个表 t1 放入了内存；</li>
+<li>扫描表 t2，把表 t2 中的每一行取出来，跟 join_buffer 中的数据做对比，满足 join 条件的，作为结果集的一部分返回。</li>
+</ol>
+<p>可以看到，在这个过程中，对表 t1 和 t2 都做了一次全表扫描，因此总的扫描行数是 1100。由于 join_buffer 是以无序数组的方式组织的，因此对表 t2 中的每一行，都要做 100 次判断，总共需要在内存中做的判断次数是：100*1000=10 万次。如果使用 Simple Nested-Loop Join 算法进行查询，扫描行数也是 10 万行。因此，从时间复杂度上来说，这两个算法是一样的。但是，Block Nested-Loop Join 算法的这 10 万次判断是内存操作，速度上会快很多，性能也更好。</p>
+<p>这个例子里表 t1 才 100 行，要是表 t1 是一个大表，join_buffer 放不下怎么办呢？ <strong>join_buffer 的大小是由参数 join_buffer_size 设定的，默认值是 256k。如果放不下表 t1 的所有数据话，策略很简单，就是分段放。</strong> 我把 join_buffer_size 改成 1200，再执行上述查询语句，执行流程就变成：</p>
+<ol>
+<li>扫描表 t1，顺序读取数据行放入 join_buffer 中，放完第 88 行 join_buffer 满了，继续第 2 步；</li>
+<li>扫描表 t2，把 t2 中的每一行取出来，跟 join_buffer 中的数据做对比，满足 join 条件的，作为结果集的一部分返回；</li>
+<li>清空 join_buffer；</li>
+<li>继续扫描表 t1，顺序读取最后的 12 行数据放入 join_buffer 中，继续执行第 2 步。</li>
+</ol>
+<p>这个流程才体现出了这个算法名字中“Block”的由来，表示“分块去 join”。可以看到，这时候由于表 t1 被分成了两次放入 join_buffer 中，导致表 t2 会被扫描两次。虽然分成两次放入 join_buffer，但是判断等值条件的次数还是不变的，依然是 (88+12)*1000=10 万次。</p>
+<p><strong>如何选择驱动表？</strong></p>
+<p>假设，驱动表的数据行数是 N，需要分 K 段才能完成算法流程，被驱动表的数据行数是 M。注意，这里的 K 不是常数，N 越大 K 就会越大，因此把 K 表示为λ*N，显然λ的取值范围是 (0,1)。</p>
+<p>所以，在这个算法的执行过程中：</p>
+<ol>
+<li>扫描行数是 N+λ<em>N</em>M；</li>
+<li>内存判断 N*M 次。</li>
+</ol>
+<p>显然，内存判断次数是不受选择哪个表作为驱动表影响的。而考虑到扫描行数，在 M 和 N 大小确定的情况下，N 小一些，整个算式的结果会更小。<strong>join_buffer_size 越大，一次可以放入的行越多，分成的段数也就越少，对被驱动表的全表扫描次数就越少</strong>。</p>
+<p><strong>所以结论是，应该让小表当驱动表。</strong></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>能不能使用 join 语句？</p>
+<ol>
+<li><p>如果可以使用 Index Nested-Loop Join 算法，也就是说可以用上被驱动表上的索引，其实是没问题的；</p>
+</li>
+<li><p>如果使用 Block Nested-Loop Join 算法，扫描行数就会过多。尤其是在大表上的 join 操作，这样可能要扫描被驱动表很多次，会占用大量的系统资源。所以这种 join 尽量不要用。</p>
+</li>
+</ol>
+<p>在判断要不要使用 join 语句时，就是看 explain 结果里面，Extra 字段里面有没有出现“Block Nested Loop”字样。</p>
+<p>如果要使用 join，应该选择大表做驱动表还是选择小表做驱动表？</p>
+<p>结论：在任何情况下都应该使用小表作为驱动。<strong>更准确地说，在决定哪个表做驱动表的时候，应该是两个表按照各自的条件过滤，过滤完成之后，计算参与 join 的各个字段的总数据量，数据量小的那个表，就是“小表”，应该作为驱动表。</strong></p>
+<h1 id="JOIN语句的优化"><a href="#JOIN语句的优化" class="headerlink" title="JOIN语句的优化"></a>JOIN语句的优化</h1><h2 id="Multi-Range-Read-优化"><a href="#Multi-Range-Read-优化" class="headerlink" title="Multi-Range Read 优化"></a>Multi-Range Read 优化</h2><p>Multi-Range Read 优化 (MRR)。这个优化的主要目的是尽量使用顺序读盘。MRR优化主要是针对于回表的优化。回表是指，InnoDB 在普通索引 a 上查到主键 id 的值后，再根据一个个主键 id 的值到主键索引上去查整行数据的过程。</p>
+<p>例如我们有一个表，表上有ID和a字段以及其他一些字段，ID是主键，a是一个普通索引字段，我们有一个查询语句是根据a字段来查询的范围查询，这时此查询语句会使用到a索引，然后回表去查询每一行的整体数据，但是这期间根据a的值递增顺序查询的话，id 的值就变成随机的，那么就会出现随机访问，性能相对较差。虽然“按行查”这个机制不能改，但是调整查询的顺序，还是能够加速的。因为大多数的数据都是按照主键递增顺序插入得到的，所以我们可以认为，如果按照主键的递增顺序查询的话，对磁盘的读比较接近顺序读，能够提升读性能。</p>
+<p>这就是 MRR 优化的设计思路。此时，语句的执行流程变成了这样：</p>
+<ol>
+<li><p>根据索引 a，定位到满足条件的记录，将 id 值放入 read_rnd_buffer 中；</p>
+</li>
+<li><p>将 read_rnd_buffer 中的 id 进行递增排序；</p>
+</li>
+<li><p>排序后的 id 数组，依次到主键 id 索引中查记录，并作为结果返回。</p>
+</li>
+</ol>
+<p><strong>这里，read_rnd_buffer 的大小是由 read_rnd_buffer_size 参数控制的。如果步骤 1 中，read_rnd_buffer 放满了，就会先执行完步骤 2 和 3，然后清空 read_rnd_buffer。之后继续找索引 a 的下个记录，并继续循环。</strong></p>
+<p>如果你想要稳定地使用 MRR 优化的话，需要设置<strong>set optimizer_switch=”mrr_cost_based=off”</strong>。（官方文档的说法，是现在的优化器策略，判断消耗的时候，会更倾向于不使用 MRR，把 mrr_cost_based 设置为 off，就是固定使用 MRR 了。）</p>
+<p>使用MRR优化，我们会在explain结果中，看到extra字段多了 Using MRR，表示的是用上了 MRR 优化。</p>
+<p><strong>MRR 能够提升性能的核心在于，这条查询语句在索引 a 上做的是一个范围查询（也就是说，这是一个多值查询）</strong>，可以得到足够多的主键 id。这样通过排序以后，再去主键索引查数据，才能体现出“顺序性”的优势。</p>
+<h2 id="Batched-Key-Access"><a href="#Batched-Key-Access" class="headerlink" title="Batched Key Access"></a>Batched Key Access</h2><p>Batched Key Access(BKA) 算法，其实是对 NLJ 算法的优化。</p>
+<p>NLJ 算法执行的逻辑是：从驱动表 t1，一行行地取出 a 的值，再到被驱动表 t2 去做 join。也就是说，对于表 t2 来说，每次都是匹配一个值。这时，MRR 的优势就用不上了。那怎么才能一次性地多传些值给表 t2 呢？方法就是，从表 t1 里一次性地多拿些行出来，一起传给表 t2。既然如此，我们就把表 t1 的数据取出来一部分，先放到一个临时内存。这个临时内存就是 <strong>join_buffer</strong>。</p>
+<p>我们知道 join_buffer 在 BNL 算法里的作用，是暂存驱动表的数据。但是在 NLJ 算法里并没有用。那么，我们刚好就可以复用 join_buffer 到 BKA 算法中。</p>
+<p>如果要使用 BKA 优化算法的话，你需要在执行 SQL 语句之前，先设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set optimizer_switch=&apos;mrr=on,mrr_cost_based=off,batched_key_access=on&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>其中，前两个参数的作用是要启用 MRR。这么做的原因是，BKA 算法的优化要依赖于 MRR。</p>
+<h2 id="BNL-算法的性能问题"><a href="#BNL-算法的性能问题" class="headerlink" title="BNL 算法的性能问题"></a>BNL 算法的性能问题</h2><p>我们说到 InnoDB 的 LRU 算法的时候提到，由于 InnoDB 对 Bufffer Pool 的 LRU 算法做了优化，即：第一次从磁盘读入内存的数据页，会先放在 old 区域。如果 1 秒之后这个数据页不再被访问了，就不会被移动到 LRU 链表头部，这样对 Buffer Pool 的命中率影响就不大。但是，如果一个使用 BNL 算法的 join 语句，多次扫描一个冷表，而且这个语句执行时间超过 1 秒，就会在再次扫描冷表的时候，把冷表的数据页移到 LRU 链表头部。这种情况对应的，是冷表的数据量小于整个 Buffer Pool 的 3/8，能够完全放入 old 区域的情况。<strong>如果这个冷表很大，就会出现另外一种情况：业务正常访问的数据页，没有机会进入 young 区域。</strong></p>
+<p>大表 join 操作虽然对 IO 有影响，但是在语句执行结束后，对 IO 的影响也就结束了。但是，对 Buffer Pool 的影响就是持续性的，需要依靠后续的查询请求慢慢恢复内存命中率。</p>
+<p>为了减少这种影响，你可以考虑增大 join_buffer_size 的值，减少对被驱动表的扫描次数。也就是说，BNL 算法对系统的影响主要包括三个方面：</p>
+<ol>
+<li><p>可能会多次扫描被驱动表，占用磁盘 IO 资源；</p>
+</li>
+<li><p>判断 join 条件需要执行 M*N 次对比（M、N 分别是两张表的行数），如果是大表就会占用非常多的 CPU 资源；</p>
+</li>
+<li><p>可能会导致 Buffer Pool 的热数据被淘汰，影响内存命中率。</p>
+</li>
+</ol>
+<p>我们执行语句之前，需要通过理论分析和查看 explain 结果的方式，确认是否要使用 BNL 算法。如果确认优化器会使用 BNL 算法，就需要做优化。优化的常见做法是，给被驱动表的 join 字段加上索引，把 BNL 算法转成 BKA 算法。</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>本节主要介绍Index Nested-Loop Join（NLJ）和 Block Nested-Loop Join（BNL）的优化方法。在这些优化方法中：</p>
+<ol>
+<li><p>BKA 优化是 MySQL 已经内置支持的，建议你默认使用；</p>
+</li>
+<li><p>BNL 算法效率低，建议你都尽量转成 BKA 算法。优化的方向就是给被驱动表的关联字段加上索引；</p>
+</li>
+<li><p>基于临时表的改进方案，对于能够提前过滤出小数据的 join 语句来说，效果还是很好的；</p>
+</li>
+<li><p>MySQL 目前的版本还不支持 hash join，但你可以配合应用端自己模拟出来，理论上效果要好于临时表的方案。</p>
+</li>
+</ol>
+<h1 id="Join语句中的其他问题"><a href="#Join语句中的其他问题" class="headerlink" title="Join语句中的其他问题"></a>Join语句中的其他问题</h1><h2 id="join-的写法"><a href="#join-的写法" class="headerlink" title="join 的写法"></a>join 的写法</h2><p><strong>注意点：</strong></p>
+<ul>
+<li><p>explain一条 join 语句的 Extra 字段什么都没写的话，就表示使用的是 Index Nested-Loop Join（简称 NLJ）算法。</p>
+</li>
+<li><p>在 MySQL 里，NULL 跟任何值执行等值判断和不等值判断的结果，都是 NULL。这里包括， select NULL = NULL 的结果，也是返回 NULL。</p>
+</li>
+</ul>
+<p>这节我们主要解决两个问题：</p>
+<ol>
+<li><p>如果用 left join 的话，左边的表一定是驱动表吗？</p>
+</li>
+<li><p>如果两个表的 join 包含多个条件的等值匹配，是都要写到 on 里面呢，还是只把一个条件写到 on 里面，其他条件写到 where 部分？</p>
+</li>
+</ol>
+<p>答：</p>
+<ul>
+<li><p><strong>使用 left join 时，左边的表不一定是驱动表。</strong></p>
+</li>
+<li><p><strong>如果需要 left join 的语义，就不能把被驱动表的字段放在 where 条件里面做等值判断或不等值判断，必须都写在 on 里面。</strong></p>
+</li>
+</ul>
+<h2 id="Simple-Nested-Loop-Join-的性能问题"><a href="#Simple-Nested-Loop-Join-的性能问题" class="headerlink" title="Simple Nested Loop Join 的性能问题"></a>Simple Nested Loop Join 的性能问题</h2><p>BNL 算法的执行逻辑是：</p>
+<ol>
+<li>首先，将驱动表的数据全部读入内存 join_buffer 中，这里 join_buffer 是无序数组；</li>
+<li>然后，顺序遍历被驱动表的所有行，每一行数据都跟 join_buffer 中的数据进行匹配，匹配成功则作为结果集的一部分返回。</li>
+</ol>
+<p>Simple Nested Loop Join 算法的执行逻辑是：</p>
+<p>顺序取出驱动表中的每一行数据，到被驱动表去做全表扫描匹配，匹配成功则作为结果集的一部分返回。</p>
+<p>那么问题是，Simple Nested Loop Join 算法，其实也是把数据读到内存里，然后按照匹配条件进行判断，为什么性能差距会这么大呢？</p>
+<p>解释这个问题，需要用到 MySQL 中索引结构和 Buffer Pool 的相关知识点：</p>
+<ol>
+<li><p>在对被驱动表做全表扫描的时候，如果数据没有在 Buffer Pool 中，就需要等待这部分数据从磁盘读入；从磁盘读入数据到内存中，会影响正常业务的 Buffer Pool 命中率，而且这个算法天然会对被驱动表的数据做多次访问，更容易将这些数据页放到 Buffer Pool 的头部；</p>
+</li>
+<li><p>即使被驱动表数据都在内存中，每次查找“下一个记录的操作”，都是类似指针操作。而 join_buffer 中是数组，遍历的成本更低。所以说，BNL 算法的性能会更好。</p>
+</li>
+</ol>
+<p>所以说，BNL 算法的性能会更好。</p>
+<h2 id="distinct-和-group-by-的性能"><a href="#distinct-和-group-by-的性能" class="headerlink" title="distinct 和 group by 的性能"></a>distinct 和 group by 的性能</h2><p>如下两条语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select a from t group by a order by null;</span><br><span class="line">select distinct a from t;</span><br></pre></td></tr></table></figure>
+
+<p>首先需要说明的是，这种 group by 的写法，并不是 SQL 标准的写法。标准的 group by 语句，是需要在 select 部分加一个聚合函数，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select a,count(*) from t group by a order by null;</span><br></pre></td></tr></table></figure>
+
+<p>这条语句的逻辑是：按照字段 a 分组，计算每组的 a 出现的次数。在这个结果里，由于做的是聚合计算，相同的 a 只出现一次。</p>
+<p>没有了 count(*) 以后，也就是不再需要执行“计算总数”的逻辑时，第一条语句的逻辑就变成是：按照字段 a 做分组，相同的 a 的值只返回一行。而这就是 distinct 的语义，所以不需要执行聚合函数时，distinct 和 group by 这两条语句的语义和执行流程是相同的，因此执行性能也相同。</p>
+<p>这两条语句的执行流程是下面这样的：</p>
+<ol>
+<li>创建一个临时表，临时表有一个字段 a，并且在这个字段 a 上创建一个唯一索引；</li>
+<li>遍历表 t，依次取数据插入临时表中：如果发现唯一键冲突，就跳过；否则插入成功；</li>
+<li>遍历完成后，将临时表作为结果集返回给客户端。</li>
+</ol>
+<h1 id="MySQL临时表的内部机制"><a href="#MySQL临时表的内部机制" class="headerlink" title="MySQL临时表的内部机制"></a>MySQL临时表的内部机制</h1><h2 id="临时表的特征"><a href="#临时表的特征" class="headerlink" title="临时表的特征"></a>临时表的特征</h2><p>有的人可能会认为，临时表就是内存表。但是，这两个概念可是完全不同的。</p>
+<ul>
+<li><p>内存表，指的是使用 Memory 引擎的表，建表语法是 create table … engine=memory。这种表的数据都保存在内存里，系统重启的时候会被清空，但是表结构还在。除了这两个特性看上去比较“奇怪”外，从其他的特征上看，它就是一个正常的表。</p>
+</li>
+<li><p>临时表，可以使用各种引擎类型 。如果是使用 InnoDB 引擎或者 MyISAM 引擎的临时表，写数据的时候是写到磁盘上的。当然，临时表也可以使用 Memory 引擎。</p>
+</li>
+</ul>
+<p>临时表主要有一下一些特点：</p>
+<ol>
+<li><p>建表语法是 create temporary table …。</p>
+</li>
+<li><p>一个临时表只能被创建它的 session 访问，对其他线程不可见。所以，图中 session A 创建的临时表 t，对于 session B 就是不可见的。</p>
+</li>
+<li><p>临时表可以与普通表同名。</p>
+</li>
+<li><p>session A 内有同名的临时表和普通表的时候，show create 语句，以及增删改查语句访问的是临时表。</p>
+</li>
+<li><p>show tables 命令不显示临时表。</p>
+</li>
+</ol>
+<p>由于临时表只能被创建它的 session 访问，所以在这个 session 结束的时候，会自动删除临时表。也正是由于这个特性，临时表就特别适合我们文章开头的 join 优化这种场景，原因主要包括以下两个方面：</p>
+<ol>
+<li>不同 session 的临时表是可以重名的，如果有多个 session 同时执行 join 优化，不需要担心表名重复导致建表失败的问题。</li>
+<li>不需要担心数据删除问题。如果使用普通表，在流程执行过程中客户端发生了异常断开，或者数据库发生异常重启，还需要专门来清理中间过程中生成的数据表。而临时表由于会自动回收，所以不需要这个额外的操作。</li>
+</ol>
+<h2 id="为什么临时表可以重名？"><a href="#为什么临时表可以重名？" class="headerlink" title="为什么临时表可以重名？"></a>为什么临时表可以重名？</h2><p>同线程可以创建同名的临时表，这是怎么做到的呢？比如我们通过如下语句创建一个临时表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create temporary table temp_t(id int primary key)engine=innodb;</span><br></pre></td></tr></table></figure>
+
+<p>这个语句的时候，MySQL 要给这个 InnoDB 表创建一个 frm 文件保存表结构定义，还要有地方保存表数据。这个 frm 文件放在临时文件目录下，文件名的后缀是.frm，前缀是“#sql{进程 id}<em>{线程 id}</em> 序列号”。你可以使用 select @@tmpdir 命令，来显示实例的临时文件目录。从文件名的前缀规则，我们可以看到，其实创建一个叫作 t1 的 InnoDB 临时表，MySQL 在存储上认为我们创建的表名跟普通表 t1 是不同的，因此同一个库下面已经有普通表 t1 的情况下，还是可以再创建一个临时表 t1 的。</p>
+<p>MySQL 维护数据表，除了物理上要有文件外，内存里面也有一套机制区别不同的表，每个表都对应一个 table_def_key。</p>
+<ol>
+<li>一个普通表的 table_def_key 的值是由“库名 + 表名”得到的，所以如果你要在同一个库下创建两个同名的普通表，创建第二个表的过程中就会发现 table_def_key 已经存在了。</li>
+<li>而对于临时表，table_def_key 在“库名 + 表名”基础上，又加入了“server_id+thread_id”。</li>
+</ol>
+<p>也就是说，session A 和 sessionB 创建的两个临时表 t1，它们的 table_def_key 不同，磁盘文件名也不同，因此可以并存。</p>
+<p>在实现上，每个线程都维护了自己的临时表链表。这样每次 session 内操作表的时候，先遍历链表，检查是否有这个名字的临时表，如果有就优先操作临时表，如果没有再操作普通表；在 session 结束的时候，对链表里的每个临时表，执行 “DROP TEMPORARY TABLE + 表名”操作。</p>
+<h2 id="小结-2"><a href="#小结-2" class="headerlink" title="小结"></a>小结</h2><p>临时表建表语法create temporary table ，和普通的表不一样，和内存表也不一样。内存表数据保存到内存里，重启会丢失，临时表会写入到磁盘。临时表只对自己的session中可见，session结束后自动删除表结构和表数据。适用场景是分库分表，查询到的数据在临时表中做聚合。临时表可以重名，实际的存储文件名有线程id，在内存中表的命名有table_ref_key，是由库名加表名加serverid+线程id组成。bin log设置为row模式，临时表不会同步到备库中，设置为statement模式，会同步到备库中。</p>
+<h1 id="什么时候会使用内部临时表？"><a href="#什么时候会使用内部临时表？" class="headerlink" title="什么时候会使用内部临时表？"></a>什么时候会使用内部临时表？</h1><h2 id="union-执行流程"><a href="#union-执行流程" class="headerlink" title="union 执行流程"></a>union 执行流程</h2><p>例如我们执行下面这条语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(select 1000 as f) union (select id from t1 order by id desc limit 2);</span><br></pre></td></tr></table></figure>
+
+<p>这个语句的执行流程是这样的：</p>
+<ol>
+<li>创建一个内存临时表，这个临时表只有一个整型字段 f，并且 f 是主键字段。</li>
+<li>执行第一个子查询，得到 1000 这个值，并存入临时表中。</li>
+<li>执行第二个子查询：拿到第一行 id=1000，试图插入临时表中。但由于 1000 这个值已经存在于临时表了，违反了唯一性约束，所以插入失败，然后继续执行；取到第二行 id=999，插入临时表成功。</li>
+<li>从临时表中按行取出数据，返回结果，并删除临时表，结果中包含两行数据分别是 1000 和 999。</li>
+</ol>
+<p>可以看到，这里的内存临时表起到了暂存数据的作用，而且计算过程还用上了临时表主键 id 的唯一性约束，实现了 union 的语义。如果把上面这个语句中的 union 改成 union all 的话，就没有了“去重”的语义。这样执行的时候，就依次执行子查询，得到的结果直接作为结果集的一部分，发给客户端。因此也就不需要临时表了。</p>
+<h2 id="group-by-执行流程"><a href="#group-by-执行流程" class="headerlink" title="group by 执行流程"></a>group by 执行流程</h2><p>例如我们执行下面这条语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id%10 as m, count(*) as c from t1 group by m;</span><br></pre></td></tr></table></figure>
+
+<p>这个语句的执行流程是这样的：</p>
+<ol>
+<li>创建内存临时表，表里有两个字段 m 和 c，主键是 m；</li>
+<li>扫描表 t1 的索引 a，依次取出叶子节点上的 id 值，计算 id%10 的结果，记为 x；如果临时表中没有主键为 x 的行，就插入一个记录 (x,1); 如果表中有主键为 x 的行，就将 x 这一行的 c 值加 1；</li>
+<li>遍历完成后，再根据字段 m 做排序，得到结果集返回给客户端。</li>
+</ol>
+<p>explain 这条语句的结果，在 Extra 字段里面，我们可以看到三个信息：</p>
+<ul>
+<li>Using index，表示这个语句使用了覆盖索引，选择了索引 a，不需要回表；</li>
+<li>Using temporary，表示使用了临时表；</li>
+<li>Using filesort，表示需要排序。</li>
+</ul>
+<p>如果你的需求并不需要对结果进行排序，那你可以在 SQL 语句末尾增加 order by null，也就是改成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id%10 as m, count(*) as c from t1 group by m order by null;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子里由于临时表只有 10 行，内存可以放得下，因此全程只使用了内存临时表。但是，内存临时表的大小是有限制的，参数 tmp_table_size 就是控制这个内存大小的，默认是 16M。</p>
+<p>把内存临时表的大小限制为最大 1024 字节，并把语句改成 id % 100，这样返回结果里有 100 行数据。但是，这时的内存临时表大小不够存下这 100 行数据，也就是说，执行过程中会发现内存临时表大小到达了上限（1024 字节）。那么，这时候就会把内存临时表转成磁盘临时表，磁盘临时表默认使用的引擎是 InnoDB。 如果这个表 t1 的数据量很大，很可能这个查询需要的磁盘临时表就会占用大量的磁盘空间。</p>
+<h3 id="group-by-优化方法-–-索引"><a href="#group-by-优化方法-–-索引" class="headerlink" title="group by 优化方法 – 索引"></a>group by 优化方法 – 索引</h3><p>不论是使用内存临时表还是磁盘临时表，group by 逻辑都需要构造一个带唯一索引的表，执行代价都是比较高的。如果表的数据量比较大，上面这个 group by 语句执行起来就会很慢，group by 的语义逻辑，是统计不同的值出现的个数。但是，由于每一行的 id%100 的结果是无序的，所以我们就需要有一个临时表，来记录并统计结果。那么，如果扫描过程中可以保证出现的数据是有序的，是不是就简单了呢？</p>
+<p>InnoDB 的索引，就可以满足这个输入有序的条件。</p>
+<h2 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h2><p>基于上面的 union、union all 和 group by 语句的执行过程的分析，我们来回答文章开头的问题：MySQL 什么时候会使用内部临时表？</p>
+<ol>
+<li><p>如果语句执行过程可以一边读数据，一边直接得到结果，是不需要额外内存的，否则就需要额外的内存，来保存中间结果；</p>
+</li>
+<li><p>join_buffer 是无序数组，sort_buffer 是有序数组，临时表是二维表结构；</p>
+</li>
+<li><p>如果执行逻辑需要用到二维表特性，就会优先考虑使用临时表。比如我们的例子中，union 需要用到唯一索引约束， group by 还需要用到另外一个字段来存累积计数。</p>
+</li>
+</ol>
+<p>内部临时表一些使用的指导原则：</p>
+<ol>
+<li><p>如果对 group by 语句的结果没有排序要求，要在语句后面加 order by null；</p>
+</li>
+<li><p>尽量让 group by 过程用上表的索引，确认方法是 explain 结果里没有 Using temporary 和 Using filesort；</p>
+</li>
+<li><p>如果 group by 需要统计的数据量不大，尽量只使用内存临时表；也可以通过适当调大 tmp_table_size 参数，来避免用到磁盘临时表；</p>
+</li>
+<li><p>如果数据量实在太大，使用 SQL_BIG_RESULT 这个提示，来告诉优化器直接使用排序算法得到 group by 的结果。</p>
+</li>
+</ol>
+<h1 id="Memory引擎"><a href="#Memory引擎" class="headerlink" title="Memory引擎"></a>Memory引擎</h1><h2 id="内存表的数据组织结构"><a href="#内存表的数据组织结构" class="headerlink" title="内存表的数据组织结构"></a>内存表的数据组织结构</h2><p>InnoDB 表的数据就放在主键索引树上，主键索引是 B+ 树。与 InnoDB 引擎不同，Memory 引擎的数据和索引是分开的。内存表的数据部分以数组的方式单独存放，而主键 id 索引里，存的是每个数据的位置。主键 id 是 hash 索引，可以看到索引上的 key 并不是有序的。InnoDB 和 Memory 引擎的数据组织方式是不同的：</p>
+<ul>
+<li><p>InnoDB 引擎把数据放在主键索引上，其他索引上保存的是主键 id。这种方式，我们称之为索引组织表（Index Organizied Table）。</p>
+</li>
+<li><p>而 Memory 引擎采用的是把数据单独存放，索引上保存数据位置的数据组织形式，我们称之为堆组织表（Heap Organizied Table）。</p>
+</li>
+</ul>
+<p>从中我们可以看出，这两个引擎的一些典型不同：</p>
+<ol>
+<li><p>InnoDB 表的数据总是有序存放的，而内存表的数据就是按照写入顺序存放的；</p>
+</li>
+<li><p>当数据文件有空洞的时候，InnoDB 表在插入新数据的时候，为了保证数据有序性，只能在固定的位置写入新值，而内存表找到空位就可以插入新值；</p>
+</li>
+<li><p>数据位置发生变化的时候，InnoDB 表只需要修改主键索引，而内存表需要修改所有索引；</p>
+</li>
+<li><p>InnoDB 表用主键索引查询时需要走一次索引查找，用普通索引查询的时候，需要走两次索引查找。而内存表没有这个区别，所有索引的“地位”都是相同的。</p>
+</li>
+<li><p>InnoDB 支持变长数据类型，不同记录的长度可能不同；内存表不支持 Blob 和 Text 字段，并且即使定义了 varchar(N)，实际也当作 char(N)，也就是固定长度字符串来存储，因此内存表的每行数据长度相同。</p>
+</li>
+</ol>
+<p>由于内存表的这些特性，每个数据行被删除以后，空出的这个位置都可以被接下来要插入的数据复用。</p>
+<h2 id="hash-索引和-B-Tree-索引"><a href="#hash-索引和-B-Tree-索引" class="headerlink" title="hash 索引和 B-Tree 索引"></a>hash 索引和 B-Tree 索引</h2><p>实际上，内存表也是支 B-Tree 索引的。在 id 列上创建一个 B-Tree 索引，SQL 语句可以这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table t1 add index a_btree_index using btree (id);</span><br></pre></td></tr></table></figure>
+
+<p>这样新增的这个 B-Tree 索引你看着就眼熟了，这跟 InnoDB 的 b+ 树索引组织形式类似。</p>
+<p>其实，一般在我们的印象中，内存表的优势是速度快，其中的一个原因就是 Memory 引擎支持 hash 索引。当然，更重要的原因是，内存表的所有数据都保存在内存，而内存的读写速度总是比磁盘快。</p>
+<h2 id="内存表的锁"><a href="#内存表的锁" class="headerlink" title="内存表的锁"></a>内存表的锁</h2><p>内存表不支持行锁，只支持表锁。因此，一张表只要有更新，就会堵住其他所有在这个表上的读写操作。需要注意的是，这里的表锁跟 MDL 锁不同，但都是表级的锁。</p>
+<p>跟行锁比起来，表锁对并发访问的支持不够好。所以，内存表的锁粒度问题，决定了它在处理并发事务的时候，性能也不会太好。</p>
+<h2 id="小结-4"><a href="#小结-4" class="headerlink" title="小结"></a>小结</h2><p>建议把普通内存表都用 InnoDB 表来代替，分析如下：</p>
+<ol>
+<li><p>如果你的表更新量大，那么并发度是一个很重要的参考指标，InnoDB 支持行锁，并发度比内存表好；</p>
+</li>
+<li><p>能放到内存表的数据量都不大。如果你考虑的是读的性能，一个读 QPS 很高并且数据量不大的表，即使是使用 InnoDB，数据也是都会缓存在 InnoDB Buffer Pool 里的。因此，使用 InnoDB 表的读性能也不会差。</p>
+</li>
+</ol>
+<p>但是，有一个场景却是例外的，就是之前我们说的JOIN和GROUP等查询条件下，在数据量可控，不会耗费过多内存的情况下，你可以考虑使用内存表。内存临时表刚好可以无视内存表的两个不足，主要是下面的三个原因：</p>
+<ol>
+<li>临时表不会被其他线程访问，没有并发性的问题；</li>
+<li>临时表重启后也是需要删除的，清空数据这个问题不存在；</li>
+<li>备库的临时表也不会影响主库的用户线程。</li>
+</ol>
+<p>本节我们介绍了 Memory 引擎的几个特性。可以看到，<strong>由于重启会丢数据，如果一个备库重启，会导致主备同步线程停止；如果主库跟这个备库是双 M 架构，还可能导致主库的内存表数据被删掉。</strong>因此，在生产上，我不建议你使用普通内存表。</p>
+<h1 id="自增主键为什么不是连续的？"><a href="#自增主键为什么不是连续的？" class="headerlink" title="自增主键为什么不是连续的？"></a>自增主键为什么不是连续的？</h1><p>自增主键可以让主键索引尽量地保持递增顺序插入，避免了页分裂，因此索引更紧凑。但是我们不能将业务设计依赖于自增主键的连续性，也就是说，这个设计假设自增主键是连续的。但实际上，这样的假设是错的，因为自增主键不能保证连续递增。</p>
+<h2 id="自增值保存在哪儿？"><a href="#自增值保存在哪儿？" class="headerlink" title="自增值保存在哪儿？"></a>自增值保存在哪儿？</h2><p>不同的引擎对于自增值的保存策略不同：</p>
+<ul>
+<li><p>MyISAM 引擎的自增值保存在数据文件中。</p>
+</li>
+<li><p>InnoDB 引擎的自增值，其实是保存在了内存里，并且到了 MySQL 8.0 版本后，才有了“自增值持久化”的能力，也就是才实现了“如果发生重启，表的自增值可以恢复为 MySQL 重启前的值”，具体情况是：</p>
+</li>
+</ul>
+<ol>
+<li><p>在 MySQL 5.7 及之前的版本，自增值保存在内存里，并没有持久化。每次重启后，第一次打开表的时候，都会去找自增值的最大值 max(id)，然后将 max(id)+1 作为这个表当前的自增值。举例来说，如果一个表当前数据行里最大的 id 是 10，AUTO_INCREMENT=11。这时候，我们删除 id=10 的行，AUTO_INCREMENT 还是 11。但如果马上重启实例，重启后这个表的 AUTO_INCREMENT 就会变成 10。也就是说，MySQL 重启可能会修改一个表的 AUTO_INCREMENT 的值。</p>
+</li>
+<li><p>在 MySQL 8.0 版本，将自增值的变更记录在了 redo log 中，重启的时候依靠 redo log 恢复重启之前的值。</p>
+</li>
+</ol>
+<h2 id="自增值修改机制"><a href="#自增值修改机制" class="headerlink" title="自增值修改机制"></a>自增值修改机制</h2><p>在 MySQL 里面，如果字段 id 被定义为 AUTO_INCREMENT，在插入一行数据的时候，自增值的行为如下：</p>
+<ol>
+<li><p>如果插入数据时 id 字段指定为 0、null 或未指定值，那么就把这个表当前的 AUTO_INCREMENT 值填到自增字段；</p>
+</li>
+<li><p>如果插入数据时 id 字段指定了具体的值，就直接使用语句里指定的值。</p>
+</li>
+<li><p>根据要插入的值和当前自增值的大小关系，自增值的变更结果也会有所不同。假设，某次要插入的值是 X，当前的自增值是 Y。</p>
+</li>
+</ol>
+<p>(如果X &lt; Y，那么这个表的自增值不变；如果 X ≥ Y，就需要把当前自增值修改为新的自增值。)</p>
+<p>新的自增值生成算法是：从 auto_increment_offset 开始，以 auto_increment_increment 为步长，持续叠加，直到找到第一个大于 X 的值，作为新的自增值。其中，auto_increment_offset 和 auto_increment_increment 是两个系统参数，分别用来表示自增的初始值和步长，默认值都是 1。(备注：在一些场景下，使用的就不全是默认值。比如，双 M 的主备结构里要求双写的时候，我们就可能会设置成 auto_increment_increment=2，让一个库的自增 id 都是奇数，另一个库的自增 id 都是偶数，避免两个库生成的主键发生冲突。)</p>
+<h2 id="自增值的修改时机"><a href="#自增值的修改时机" class="headerlink" title="自增值的修改时机"></a>自增值的修改时机</h2><p>自增值在插入语句获取到自增值后就进行了修改，它并不会等语句或者事务执行完成，也不会回滚。</p>
+<p>所以：<strong>唯一键冲突是导致自增主键 id 不连续的第一种原因。同样地，事务回滚也会产生类似的现象，这就是第二种原因。</strong></p>
+<h3 id="自增值为什么不能回退"><a href="#自增值为什么不能回退" class="headerlink" title="自增值为什么不能回退"></a>自增值为什么不能回退</h3><p>假设有两个并行执行的事务，在申请自增值的时候，为了避免两个事务申请到相同的自增 id，肯定要加锁，然后顺序申请。</p>
+<ol>
+<li>假设事务 A 申请到了 id=2， 事务 B 申请到 id=3，那么这时候表 t 的自增值是 4，之后继续执行。</li>
+<li>事务 B 正确提交了，但事务 A 出现了唯一键冲突。</li>
+<li>如果允许事务 A 把自增 id 回退，也就是把表 t 的当前自增值改回 2，那么就会出现这样的情况：表里面已经有 id=3 的行，而当前的自增 id 值是 2。</li>
+<li>接下来，继续执行的其他事务就会申请到 id=2，然后再申请到 id=3。这时，就会出现插入语句报错“主键冲突”。</li>
+</ol>
+<p>以上便是自增值不能回退的具体原因。</p>
+<h1 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h1><p>分区表的创建方式如下示例：、</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 创建表</span><br><span class="line">CREATE TABLE `t` (</span><br><span class="line">  `ftime` datetime NOT NULL,</span><br><span class="line">  `c` int(11) DEFAULT NULL,</span><br><span class="line">  KEY (`ftime`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=latin1</span><br><span class="line">PARTITION BY RANGE (YEAR(ftime))</span><br><span class="line">(PARTITION p_2017 VALUES LESS THAN (2017) ENGINE = InnoDB,</span><br><span class="line"> PARTITION p_2018 VALUES LESS THAN (2018) ENGINE = InnoDB,</span><br><span class="line"> PARTITION p_2019 VALUES LESS THAN (2019) ENGINE = InnoDB,</span><br><span class="line">PARTITION p_others VALUES LESS THAN MAXVALUE ENGINE = InnoDB);</span><br><span class="line"></span><br><span class="line"># 插入两条数据</span><br><span class="line">insert into t values(&apos;2017-4-1&apos;,1),(&apos;2018-4-1&apos;,1);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，这个表包含了一个.frm 文件和 4 个.ibd 文件，每个分区对应一个.ibd 文件。也就是说：</p>
+<ul>
+<li>对于引擎层来说，这是 4 个表；</li>
+<li>对于 Server 层来说，这是 1 个表。</li>
+</ul>
+<h2 id="分区表的引擎层行为"><a href="#分区表的引擎层行为" class="headerlink" title="分区表的引擎层行为"></a>分区表的引擎层行为</h2><p>上述示例中，我们在表中插入了两条数据，这两条记录的数据分别会落在两个分区，现在我们执行如下查询语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from t where ftime = &apos;2017-5-1&apos; for update;</span><br></pre></td></tr></table></figure>
+
+<p>按照正常的逻辑，我们的这条查询语句，会为加上间隙锁 (2017-4-1, 2018-4-1)，但实际加锁会加在 p-2017分区上，间隙锁为(2017-4-1, supremum)，p-2018分区是不受影响的，也就是说关于2018的增删改查是不受影响的。</p>
+<h2 id="分区表的Server层行为"><a href="#分区表的Server层行为" class="headerlink" title="分区表的Server层行为"></a>分区表的Server层行为</h2><p>如果从 server 层看的话，一个分区表就只是一个表，分区表有如下特性：</p>
+<ol>
+<li><p>MySQL 在第一次打开分区表的时候，需要访问所有的分区；</p>
+</li>
+<li><p>在 server 层，认为这是同一张表，因此所有分区共用同一个 MDL 锁；</p>
+</li>
+<li><p>在引擎层，认为这是不同的表，因此 MDL 锁之后的执行过程，会根据分区表规则，只访问必要的分区。</p>
+</li>
+</ol>
+<p>而关于“必要的分区”的判断，就是根据 SQL 语句中的 where 条件，结合分区规则来实现的。比如我们上面的例子中，where ftime=‘2018-4-1’，根据分区规则 year 函数算出来的值是 2018，那么就会落在 p_2018 这个分区。但是，如果这个 where 条件改成 where ftime&gt;=‘2018-4-1’，虽然查询结果相同，但是这时候根据 where 条件，就要访问 p_2018 和 p_others 这两个分区。</p>
+<p>如果查询语句的 where 条件中没有分区 key，那就只能访问所有分区了。当然，这并不是分区表的问题。即使是使用业务分表的方式，where 条件中没有使用分表的 key，也必须访问所有的分表。</p>
+<h2 id="分区表的应用场景"><a href="#分区表的应用场景" class="headerlink" title="分区表的应用场景"></a>分区表的应用场景</h2><p>分区表的一个显而易见的优势是对业务透明，相对于用户分表来说，使用分区表的业务代码更简洁。还有，分区表可以很方便的清理历史数据。</p>
+<p>如果一项业务跑的时间足够长，往往就会有根据时间删除历史数据的需求。这时候，按照时间分区的分区表，就可以直接通过 alter table t drop partition …这个语法删掉分区，从而删掉过期的历史数据。</p>
+<p>这个 alter table t drop partition …操作是直接删除分区文件，效果跟 drop 普通表类似。与使用 delete 语句删除数据相比，优势是速度快、对系统影响小。</p>
+<h2 id="小结-5"><a href="#小结-5" class="headerlink" title="小结"></a>小结</h2><p>分区表跟用户分表比起来，有两个绕不开的问题：一个是第一次访问的时候需要访问所有分区，另一个是共用 MDL 锁。因此，如果要使用分区表，就不要创建太多的分区。我见过一个用户做了按天分区策略，然后预先创建了 10 年的分区。这种情况下，访问分区表的性能自然是不好的。这里有两个问题需要注意：</p>
+<ol>
+<li><p>分区并不是越细越好。实际上，单表或者单分区的数据一千万行，只要没有特别大的索引，对于现在的硬件能力来说都已经是小表了。</p>
+</li>
+<li><p>分区也不要提前预留太多，在使用之前预先创建即可。比如，如果是按月分区，每年年底时再把下一年度的 12 个新分区创建上即可。对于没有数据的历史分区，要及时的 drop 掉。</p>
+</li>
+</ol>
+<p>至于分区表的其他问题，比如查询需要跨多个分区取数据，查询性能就会比较慢，基本上就不是分区表本身的问题，而是数据量的问题或者说是使用方式的问题了。</p>
+<h1 id="自增id用完怎么办？"><a href="#自增id用完怎么办？" class="headerlink" title="自增id用完怎么办？"></a>自增id用完怎么办？</h1><p>MySQL 里有很多自增的 id，每个自增 id 都是定义了初始值，然后不停地往上加步长。虽然自然数是没有上限的，但是在计算机里，只要定义了表示这个数的字节长度，那它就有上限。比如，无符号整型 (unsigned int) 是 4 个字节，上限就是 2^32 - 1。</p>
+<h2 id="表定义自增值-id"><a href="#表定义自增值-id" class="headerlink" title="表定义自增值 id"></a>表定义自增值 id</h2><p><strong>表定义的自增值达到上限后的逻辑是：再申请下一个 id 时，得到的值保持不变。</strong></p>
+<p>当第一个 insert 语句插入数据成功后，自增值拿到的是最大值，这个表的 AUTO_INCREMENT 没有改变（还是 4294967295），就样就会导致了第二个 insert 语句又拿到相同的自增 id 值，再试图执行插入语句，报主键冲突错误。</p>
+<p>2^32-1（4294967295）不是一个特别大的数，对于一个频繁插入删除数据的表来说，是可能会被用完的。因此在建表的时候你需要考察你的表是否有可能达到这个上限，如果有可能，就应该创建成 8 个字节的 bigint unsigned。</p>
+<h2 id="InnoDB-系统自增-row-id"><a href="#InnoDB-系统自增-row-id" class="headerlink" title="InnoDB 系统自增 row_id"></a>InnoDB 系统自增 row_id</h2><p>如果你创建的 InnoDB 表没有指定主键，那么 InnoDB 会给你创建一个不可见的，长度为 6 个字节的 row_id。InnoDB 维护了一个全局的 dict_sys.row_id 值，所有无主键的 InnoDB 表，每插入一行数据，都将当前的 dict_sys.row_id 值作为要插入数据的 row_id，然后把 dict_sys.row_id 的值加 1。</p>
+<p>实际上，在代码实现时 row_id 是一个长度为 8 字节的无符号长整型 (bigint unsigned)。但是，InnoDB 在设计时，给 row_id 留的只是 6 个字节的长度，这样写到数据表中时只放了最后 6 个字节，所以 row_id 能写到数据表中的值，就有两个特征：</p>
+<ol>
+<li><p>row_id 写入表中的值范围，是从 0 到 2^48-1；</p>
+</li>
+<li><p>当 dict_sys.row_id=2^48时，如果再有插入数据的行为要来申请 row_id，拿到以后再取最后 6 个字节的话就是 0。</p>
+</li>
+</ol>
+<p>也就是说，写入表的 row_id 是从 0 开始到 2^48-1。达到上限后，下一个值就是 0，然后继续循环。</p>
+<p>当然，2^48-1 这个值本身已经很大了，但是如果一个 MySQL 实例跑得足够久的话，还是可能达到这个上限的。在 InnoDB 逻辑里，申请到 row_id=N 后，就将这行数据写入表中；<strong>如果表中已经存在 row_id=N 的行，新写入的行就会覆盖原有的行。</strong></p>
+<p>从这个角度看，我们还是应该在 InnoDB 表中主动创建自增主键。因为，表自增 id 到达上限后，再插入数据时报主键冲突错误，是更能被接受的。毕竟覆盖数据，就意味着数据丢失，影响的是数据可靠性；</p>
+<h2 id="Xid"><a href="#Xid" class="headerlink" title="Xid"></a>Xid</h2><p>redo log 和 binlog 相配合的时候，它们有一个共同的字段叫作 Xid。它在 MySQL 中是用来对应事务的。</p>
+<p>MySQL 内部维护了一个全局变量 global_query_id，每次执行语句的时候将它赋值给 Query_id，然后给这个变量加 1。如果当前语句是这个事务执行的第一条语句，那么 MySQL 还会同时把 Query_id 赋值给这个事务的 Xid。而 global_query_id 是一个纯内存变量，重启之后就清零了。所以你就知道了，在同一个数据库实例中，不同事务的 Xid 也是有可能相同的。</p>
+<p>而 global_query_id 是一个纯内存变量，重启之后就清零了。所以你就知道了，在同一个数据库实例中，不同事务的 Xid 也是有可能相同的。但是 MySQL 重启之后会重新生成新的 binlog 文件，这就保证了，<strong>同一个 binlog 文件里，Xid 一定是惟一的。</strong></p>
+<p>虽然 MySQL 重启不会导致同一个 binlog 里面出现两个相同的 Xid，但是如果 global_query_id 达到上限后，就会继续从 0 开始计数。从理论上讲，还是就会出现同一个 binlog 里面出现相同 Xid 的场景。因为 global_query_id 定义的长度是 8 个字节，这个自增值的上限是 264-1。要出现这种情况，必须是下面这样的过程：</p>
+<ol>
+<li>执行一个事务，假设 Xid 是 A；</li>
+<li>接下来执行 2^64次查询语句，让 global_query_id 回到 A；</li>
+<li>再启动一个事务，这个事务的 Xid 也是 A。</li>
+</ol>
+<p>不过，2^64这个值太大了，大到你可以认为这个可能性只会存在于理论上。</p>
+<h2 id="Innodb-trx-id"><a href="#Innodb-trx-id" class="headerlink" title="Innodb trx_id"></a>Innodb trx_id</h2><p>Xid 是由 server 层维护的。InnoDB 内部使用 Xid，就是为了能够在 InnoDB 事务和 server 之间做关联。但是，InnoDB 自己的 trx_id，是另外维护的。trx_id就是讲事务可见性时，用到的事务 id（transaction id）。</p>
+<p>InnoDB 内部维护了一个 max_trx_id 全局变量，每次需要申请一个新的 trx_id 时，就获得 max_trx_id 的当前值，然后并将 max_trx_id 加 1。<strong>InnoDB 数据可见性的核心思想是：每一行数据都记录了更新它的 trx_id，当一个事务读到一行数据的时候，判断这个数据是否可见的方法，就是通过事务的一致性视图与这行数据的 trx_id 做对比。</strong></p>
+<p>注意：只读事务不分配 trx_id，这是因为：</p>
+<ol>
+<li><p>一个好处是，这样做可以减小事务视图里面活跃事务数组的大小。因为当前正在运行的只读事务，是不影响数据的可见性判断的。所以，在创建事务的一致性视图时，InnoDB 就只需要拷贝读写事务的 trx_id。</p>
+</li>
+<li><p>另一个好处是，可以减少 trx_id 的申请次数。在 InnoDB 里，即使你只是执行一个普通的 select 语句，在执行过程中，也是要对应一个只读事务的。所以只读事务优化后，普通的查询语句不需要申请 trx_id，就大大减少了并发事务申请 trx_id 的锁冲突。</p>
+</li>
+</ol>
+<p>由于只读事务不分配 trx_id，一个自然而然的结果就是 trx_id 的增加速度变慢了。</p>
+<p>但是，max_trx_id 会持久化存储，重启也不会重置为 0，那么从理论上讲，只要一个 MySQL 服务跑得足够久，就可能出现 max_trx_id 达到 248-1 的上限，然后从 0 开始的情况。这样就会出现脏读的情况。由于低水位值会持续增加，而事务 id 从 0 开始计数，就导致了系统在这个时刻之后，所有的查询都会出现脏读的。并且，MySQL 重启时 max_trx_id 也不会清 0，也就是说重启 MySQL，这个 bug 仍然存在。</p>
+<p>假设一个 MySQL 实例的 TPS 是每秒 50 万，持续这个压力的话，在 17.8 年后，就会出现这个情况。如果 TPS 更高，这个年限自然也就更短了。但是，从 MySQL 的真正开始流行到现在，恐怕都还没有实例跑到过这个上限。不过，这个 bug 是只要 MySQL 实例服务时间够长，就会必然出现的。</p>
+<h2 id="thread-id"><a href="#thread-id" class="headerlink" title="thread_id"></a>thread_id</h2><p>线程 id 才是 MySQL 中最常见的一种自增 id。平时我们在查各种现场的时候，show processlist 里面的第一列，就是 thread_id。thread_id 的逻辑很好理解：<strong>系统保存了一个全局变量 thread_id_counter，每新建一个连接，就将 thread_id_counter 赋值给这个新连接的线程变量。</strong></p>
+<p>thread_id_counter 定义的大小是 4 个字节，因此达到 232-1 后，它就会重置为 0，然后继续增加。但是，你不会在 show processlist 里看到两个相同的 thread_id。是因为 MySQL 设计了一个唯一数组的逻辑，给新线程分配 thread_id 的时候，逻辑代码是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">do &#123;</span><br><span class="line">  new_id= thread_id_counter++;</span><br><span class="line">&#125; while (!thread_ids.insert_unique(new_id).second);</span><br></pre></td></tr></table></figure>
+
+<h2 id="小结-6"><a href="#小结-6" class="headerlink" title="小结"></a>小结</h2><p>每种自增 id 有各自的应用场景，在达到上限后的表现也不同：</p>
+<ol>
+<li><p>表的自增 id 达到上限后，再申请时它的值就不会改变，进而导致继续插入数据时报主键冲突的错误。</p>
+</li>
+<li><p>row_id 达到上限后，则会归 0 再重新递增，如果出现相同的 row_id，后写的数据会覆盖之前的数据。</p>
+</li>
+<li><p>Xid 只需要不在同一个 binlog 文件中出现重复值即可。虽然理论上会出现重复值，但是概率极小，可以忽略不计。</p>
+</li>
+<li><p>InnoDB 的 max_trx_id 递增值每次 MySQL 重启都会被保存起来，所以我们文章中提到的脏读的例子就是一个必现的 bug，好在留给我们的时间还很充裕。</p>
+</li>
+<li><p>thread_id 是我们使用中最常见的，而且也是处理得最好的一个自增 id 逻辑了。</p>
+</li>
+</ol>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年09月13日 16:46</p>
+        <p>原始链接： <a class="post-url" href="/2020/08/27/MySQL-实践三/" title="MySQL-实践三">https://jjw-story.github.io/2020/08/27/MySQL-实践三/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/08/27/MySQL-实践三/&title=《MySQL-实践三》 — JJW-STORY&pic=/images/blogs/mysql.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/08/27/MySQL-实践三/&title=《MySQL-实践三》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/08/27/MySQL-实践三/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySQL-实践三》 — JJW-STORY&url=https://jjw-story.github.io/2020/08/27/MySQL-实践三/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/08/27/MySQL-实践三/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/08/27/MySQL-实践三/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/MySQL/" class="color1">MySQL</a>
+      
+    <a href="/tags/实践三/" class="color4">实践三</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JOIN语句的执行原理"><span class="post-toc-text">JOIN语句的执行原理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Index-Nested-Loop-Join（NLJ）"><span class="post-toc-text">Index Nested-Loop Join（NLJ）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#结论"><span class="post-toc-text">结论</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Simple-Nested-Loop-Join"><span class="post-toc-text">Simple Nested-Loop Join</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Block-Nested-Loop-Join（BNL）"><span class="post-toc-text">Block Nested-Loop Join（BNL）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结"><span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#JOIN语句的优化"><span class="post-toc-text">JOIN语句的优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Multi-Range-Read-优化"><span class="post-toc-text">Multi-Range Read 优化</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Batched-Key-Access"><span class="post-toc-text">Batched Key Access</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#BNL-算法的性能问题"><span class="post-toc-text">BNL 算法的性能问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-1"><span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Join语句中的其他问题"><span class="post-toc-text">Join语句中的其他问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#join-的写法"><span class="post-toc-text">join 的写法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Simple-Nested-Loop-Join-的性能问题"><span class="post-toc-text">Simple Nested Loop Join 的性能问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#distinct-和-group-by-的性能"><span class="post-toc-text">distinct 和 group by 的性能</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#MySQL临时表的内部机制"><span class="post-toc-text">MySQL临时表的内部机制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#临时表的特征"><span class="post-toc-text">临时表的特征</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#为什么临时表可以重名？"><span class="post-toc-text">为什么临时表可以重名？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-2"><span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#什么时候会使用内部临时表？"><span class="post-toc-text">什么时候会使用内部临时表？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#union-执行流程"><span class="post-toc-text">union 执行流程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#group-by-执行流程"><span class="post-toc-text">group by 执行流程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#group-by-优化方法-–-索引"><span class="post-toc-text">group by 优化方法 – 索引</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-3"><span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Memory引擎"><span class="post-toc-text">Memory引擎</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内存表的数据组织结构"><span class="post-toc-text">内存表的数据组织结构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#hash-索引和-B-Tree-索引"><span class="post-toc-text">hash 索引和 B-Tree 索引</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内存表的锁"><span class="post-toc-text">内存表的锁</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-4"><span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#自增主键为什么不是连续的？"><span class="post-toc-text">自增主键为什么不是连续的？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自增值保存在哪儿？"><span class="post-toc-text">自增值保存在哪儿？</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自增值修改机制"><span class="post-toc-text">自增值修改机制</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自增值的修改时机"><span class="post-toc-text">自增值的修改时机</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#自增值为什么不能回退"><span class="post-toc-text">自增值为什么不能回退</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#分区表"><span class="post-toc-text">分区表</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分区表的引擎层行为"><span class="post-toc-text">分区表的引擎层行为</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分区表的Server层行为"><span class="post-toc-text">分区表的Server层行为</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#分区表的应用场景"><span class="post-toc-text">分区表的应用场景</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-5"><span class="post-toc-text">小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#自增id用完怎么办？"><span class="post-toc-text">自增id用完怎么办？</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#表定义自增值-id"><span class="post-toc-text">表定义自增值 id</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#InnoDB-系统自增-row-id"><span class="post-toc-text">InnoDB 系统自增 row_id</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Xid"><span class="post-toc-text">Xid</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Innodb-trx-id"><span class="post-toc-text">Innodb trx_id</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#thread-id"><span class="post-toc-text">thread_id</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结-6"><span class="post-toc-text">小结</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2021/02/05/Flink入门/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Flink-入门
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/08/06/Scala-语法/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Scala-语法</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

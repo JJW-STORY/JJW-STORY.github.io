@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Scala-高阶 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="Scala-高阶123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100">
+<meta name="keywords" content="Scala,高阶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala-高阶">
+<meta property="og:url" content="https://jjw-story.github.io/2020/08/06/Scala-高阶/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="Scala-高阶123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-08-06T07:27:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scala-高阶">
+<meta name="twitter:description" content="Scala-高阶123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Scala-高阶" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Scala-高阶
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Scala/">Scala</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-08-06
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="Scala-高阶"><a href="#Scala-高阶" class="headerlink" title="Scala-高阶"></a>Scala-高阶</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br></pre></td><td class="code"><pre><span class="line">package story.jjw</span><br><span class="line"></span><br><span class="line">import java.io.IOException</span><br><span class="line"></span><br><span class="line">object Two &#123;</span><br><span class="line"></span><br><span class="line">  def main(args: Array[String]): Unit = &#123;</span><br><span class="line">    // 1. 将函数赋值给变量</span><br><span class="line">    sayHelloFunc(&quot;JJW&quot;)</span><br><span class="line"></span><br><span class="line">    // 2.匿名函数</span><br><span class="line">    sayHelloFuncA(&quot;JJW&quot;)</span><br><span class="line"></span><br><span class="line">    // 3.高阶函数</span><br><span class="line">    greeting(sayHelloFunc, &quot;SS&quot;)</span><br><span class="line"></span><br><span class="line">    // 4.scala常用高阶函数</span><br><span class="line">    // map: 对传入的每个元素都进行映射，返回一个处理后的元素</span><br><span class="line">    val arr = Array(1, 2, 3, 4, 5).map(2 * _)</span><br><span class="line">    println(arr.toBuffer)</span><br><span class="line"></span><br><span class="line">    // foreach: 对传入的每个元素都进行处理，但是没有返回值</span><br><span class="line">    arr.map(2 * _).foreach(println _)</span><br><span class="line"></span><br><span class="line">    // filter: 对传入的每个元素都进行条件判断，如果对元素返回true，则保留该元素，否则过滤掉该元素</span><br><span class="line">    var arrA = arr.filter(_ % 3 == 0)</span><br><span class="line">    println(arrA.toBuffer)</span><br><span class="line"></span><br><span class="line">    // reduceLeft: 从左侧元素开始，进行reduce操作，即先对元素1和元素2进行处理，然后将结果与元素3处理，再将结果与元素4处理，依次类推，即为reduce；reduce操作必须掌握！spark编程的重点！！！</span><br><span class="line">    // 下面这个操作就相当于1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9</span><br><span class="line">    val sum = (1 to 9).reduceLeft(_ + _)</span><br><span class="line">    println(sum)</span><br><span class="line"></span><br><span class="line">    // sortWith: 对元素进行两两相比，进行排序</span><br><span class="line">    val sortArr = Array(3, 2, 5, 4, 10, 1).sortWith(_ - _ &gt; 0)</span><br><span class="line">    println(sortArr.toBuffer)</span><br><span class="line"></span><br><span class="line">    // 5.闭包</span><br><span class="line">    // 闭包最简洁的解释：函数在变量不处于其有效作用域时，还能够对变量进行访问，即为闭包</span><br><span class="line">    // 两次调用getGreetingFunc函数，传入不同的msg，并创建不同的函数返回</span><br><span class="line">    // 然而，msg只是一个局部变量，却在getGreetingFunc执行完之后，还可以继续存在创建的函数之中；greetingFuncHello(&quot;JJW&quot;)，调用时，值为&quot;hello&quot;的msg被保留在了函数体内部，可以反复的使用</span><br><span class="line">    // 这种变量超出了其作用域，还可以使用的情况，即为闭包</span><br><span class="line">    // Scala通过为每个函数创建对象来实现闭包，实际上对于getGreetingFunc函数创建的函数，msg是作为函数对象的变量存在的，因此每个函数才可以拥有不同的msg</span><br><span class="line">    val greetingFuncHello = getGreetingFunc(&quot;hello&quot;)</span><br><span class="line">    val greetingFuncHi = getGreetingFunc(&quot;hi&quot;)</span><br><span class="line">    greetingFuncHello(&quot;JJW&quot;)</span><br><span class="line">    greetingFuncHi(&quot;SS&quot;)</span><br><span class="line"></span><br><span class="line">    // 6.Curring函数</span><br><span class="line">    // Curring函数，指的是，将原来接收两个参数的一个函数，转换为两个函数，第一个函数接收原先的第一个参数，然后返回接收原先第二个参数的第二个函数。</span><br><span class="line">    // 在函数调用的过程中，就变为了两个函数连续调用的形式</span><br><span class="line">    sum1(1, 1)</span><br><span class="line">    sum2(1)(1)</span><br><span class="line">    sum3(1)(1)</span><br><span class="line"></span><br><span class="line">    // 7.集合</span><br><span class="line">    // Scala中的集合体系主要包括：Iterable、Seq、Set、Map。其中Iterable是所有集合trait的根trai</span><br><span class="line">    // Scala中的集合是分成可变和不可变两类集合的，其中可变集合就是说，集合的元素可以动态修改，而不可变集合的元素在初始化之后，就无法修改了。分别对应scala.collection.mutable和scala.collection.immutable两个包。</span><br><span class="line"></span><br><span class="line">    // 7.1 List</span><br><span class="line">    // List代表一个不可变的列表</span><br><span class="line">    // List的创建</span><br><span class="line">    val list = List(1, 2, 3, 4)</span><br><span class="line">    // List有head和tail，head代表List的第一个元素，tail代表第一个元素之后的所有元素，list.head，list.tail</span><br><span class="line">    // List有特殊的::操作符，可以用于将head和tail合并成一个List，0 :: list</span><br><span class="line"></span><br><span class="line">    // 7.2 LinkedList</span><br><span class="line">    // LinkedList代表一个可变的列表，使用elem可以引用其头部，使用next可以引用其尾部</span><br><span class="line">    // val l = scala.collection.mutable.LinkedList(1, 2, 3, 4, 5); l.elem; l.next</span><br><span class="line"></span><br><span class="line">    // 7.3 Set</span><br><span class="line">    // Set代表一个没有重复元素的集合，Set中的元素是乱序的</span><br><span class="line">    var s = Set(1, 2, 3)</span><br><span class="line">    s += 4</span><br><span class="line">    println(s)</span><br><span class="line"></span><br><span class="line">    // LinkedHashSet会用一个链表维护插入顺序</span><br><span class="line">    val ls = new scala.collection.mutable.LinkedHashSet[Int]();</span><br><span class="line">    ls += 1;</span><br><span class="line">    ls += 2;</span><br><span class="line">    ls += 5</span><br><span class="line"></span><br><span class="line">    // SortedSet会自动根据key来进行排序</span><br><span class="line">    val ss = scala.collection.mutable.SortedSet(&quot;orange&quot;, &quot;apple&quot;, &quot;banana&quot;)</span><br><span class="line"></span><br><span class="line">    // 7.4 Scala的高阶函数，Scala的集合类的map、flatMap、reduce、reduceLeft、foreach等这些函数，就是高阶函数，因为可以接收其他函数作为参数</span><br><span class="line">    // map案例实战：为List中每个元素都添加一个前缀</span><br><span class="line">    List(&quot;Leo&quot;, &quot;Jen&quot;, &quot;Peter&quot;, &quot;Jack&quot;).map(&quot;name is &quot; + _)</span><br><span class="line"></span><br><span class="line">    // faltMap案例实战：将List中的多行句子拆分成单词</span><br><span class="line">    List(&quot;Hello World&quot;, &quot;You Me&quot;).flatMap(_.split(&quot; &quot;))</span><br><span class="line"></span><br><span class="line">    // foreach案例实战：打印List中的每个单词</span><br><span class="line">    List(&quot;I&quot;, &quot;have&quot;, &quot;a&quot;, &quot;beautiful&quot;, &quot;house&quot;).foreach(println(_))</span><br><span class="line"></span><br><span class="line">    // zip案例实战：对学生姓名和学生成绩进行关联</span><br><span class="line">    List(&quot;Leo&quot;, &quot;Jen&quot;, &quot;Peter&quot;, &quot;Jack&quot;).zip(List(100, 90, 75, 83))</span><br><span class="line"></span><br><span class="line">    // Set(1, 2, 3, 4)  =&gt; Set((1,1), (2,1), (3,1), (4,1))</span><br><span class="line">    var sp = s.map((_, 1))</span><br><span class="line">    println(sp)</span><br><span class="line">    var sp1 = sp.map(_._2)</span><br><span class="line">    println(sp1)</span><br><span class="line">    var sp2 = sp1.reduceLeft(_ + _)</span><br><span class="line">    println(sp2)</span><br><span class="line"></span><br><span class="line">    // 8.模式匹配</span><br><span class="line">    judgeGrade(&quot;JJW&quot;, &quot;dongdong&quot;)</span><br><span class="line">    processException(new IOException(&quot;报错啦...&quot;))</span><br><span class="line">    matchArray(Array(&quot;Leo&quot;, &quot;JJW&quot;, &quot;SS&quot;))</span><br><span class="line">    matchList(List(&quot;Leo&quot;, &quot;JJW&quot;, &quot;SS&quot;))</span><br><span class="line"></span><br><span class="line">    // 9.泛型</span><br><span class="line">    // 泛型类</span><br><span class="line">    val st = new StudentD[Int](33)</span><br><span class="line">    println(st.getSchoolId(52))</span><br><span class="line">    // 泛型函数</span><br><span class="line">    println(st.getCard[String](&quot;身份证&quot;))</span><br><span class="line"></span><br><span class="line">    // 上下边界</span><br><span class="line">    val steA = new StudentE(&quot;JJW&quot;)</span><br><span class="line">    val steB = new StudentE(&quot;SS&quot;)</span><br><span class="line">    val pa = new PartyA(steA, steB)</span><br><span class="line">    pa.play</span><br><span class="line">    val pb = new PartyB(steA, steB)</span><br><span class="line">    pb.play</span><br><span class="line"></span><br><span class="line">    // 10.协变和逆变</span><br><span class="line">    // enterMeetA(new CardA[Master](&quot;JJW&quot;))    报错，因为方法形参定义的是CardA[Professional]   CardA[+T]，所以在这里只能是比Professional更子级的类</span><br><span class="line">    enterMeetA(new CardA[Professional](&quot;JJW&quot;))</span><br><span class="line">    enterMeetB(new CardB[Master](&quot;JJW&quot;))</span><br><span class="line">    // enterMeetB(new CardB[Professional](&quot;JJW&quot;))    报错，因为方法形参定义的是CardA[Master]   CardA[-T]，所以在这里只能是比Master更父级的类</span><br><span class="line"></span><br><span class="line">    // 11.隐式转换</span><br><span class="line">    // Scala的隐式转换，其实最核心的就是定义隐式转换函数，即implicit conversion function。</span><br><span class="line">    // 定义的隐式转换函数，只要在编写的程序内引入，就会被Scala自动使用。Scala会根据隐式转换函数的签名，在程序中使用到隐式转换函数接收的参数类型定义的对象时，会自动将其传入隐式转换函数，转换为另外一种类型的对象并返回。</span><br><span class="line"></span><br><span class="line">    // 隐式转换的发生时机</span><br><span class="line">    // 1、调用某个函数，但是给函数传入的参数的类型，与函数定义的接收参数类型不匹配（案例：特殊售票窗口）</span><br><span class="line">    // 2、使用某个类型的对象，调用某个方法，而这个方法并不存在于该类型时（案例：超人变身）</span><br><span class="line">    // 3、使用某个类型的对象，调用某个方法，虽然该类型有这个方法，但是给方法传入的参数类型，与方法定义的接收参数的类型不匹配（案例：特殊售票窗口加强版）</span><br><span class="line">    val stF = new StudentF(&quot;JJW&quot;)</span><br><span class="line">    println(buySpecialTicket(stF))</span><br><span class="line"></span><br><span class="line">    // 隐式转换-装饰器模式</span><br><span class="line">    val leo = new Man(&quot;leo&quot;)</span><br><span class="line">    leo.emitLaser</span><br><span class="line"></span><br><span class="line">    // 隐式转换-隐式参数</span><br><span class="line">    // 定义隐式参数</span><br><span class="line">    implicit val signPen = new SignPen</span><br><span class="line">    signForExam(&quot;JJW&quot;)</span><br><span class="line"></span><br><span class="line">    // 12.Actor</span><br><span class="line">    // Scala提供了Actor trait来让我们更方便地进行actor多线程编程，就Actor trait就类似于Java中的Thread和Runnable一样，是基础的多线程基类和接口。我们只要重写Actor trait的act方法，即可实现自己的线程执行体，与Java中重写run方法类似</span><br><span class="line">    // 使用start()方法启动actor；使用!符号，向actor发送消息；actor内部使用receive和模式匹配接收消息</span><br><span class="line">    // Scala的Actor模型与Java的多线程模型之间，很大的一个区别就是，Scala Actor天然支持线程之间的精准通信；即一个actor可以给其他actor直接发送消息。这个功能是非常强大和方便的。</span><br><span class="line">    val userManageActor = new UserManageActor</span><br><span class="line">    userManageActor.start()</span><br><span class="line">    userManageActor ! Register(&quot;JJW&quot;, &quot;5233&quot;)</span><br><span class="line"></span><br><span class="line">    // 默认情况下，消息都是异步的；但是如果希望发送的消息是同步的，即对方接受后，一定要给自己返回结果，那么可以使用!?的方式发送消息。即val reply = actor !? message。</span><br><span class="line">    // 如果要异步发送一个消息，但是在后续要获得消息的返回值，那么可以使用Future。即!!语法。val future = actor !! message。val reply = future()。</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Scala中的函数是一等公民，可以独立定义，独立存在，而且可以直接将函数作为值赋值给变量</span><br><span class="line">  // Scala的语法规定，将函数赋值给变量时，必须在函数后面加上空格和下划线</span><br><span class="line">  def sayHello(name: String) &#123;</span><br><span class="line">    println(&quot;Hello, &quot; + name)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  val sayHelloFunc = sayHello _</span><br><span class="line"></span><br><span class="line">  // 可以直接定义函数之后，将函数赋值给某个变量；也可以将直接定义的匿名函数传入其他函数之中</span><br><span class="line">  // Scala定义匿名函数的语法规则就是，(参数名: 参数类型) =&gt; 函数体</span><br><span class="line">  val sayHelloFuncA = (name: String) =&gt; println(&quot;Hello, &quot; + name)</span><br><span class="line"></span><br><span class="line">  // 直接将某个函数传入其他函数，作为参数，这种函数叫做高阶函数</span><br><span class="line">  def greeting(func: (String) =&gt; Unit, name: String): Unit = &#123;</span><br><span class="line">    func(name)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Scala通过为每个函数创建对象来实现闭包，实际上对于getGreetingFunc函数创建的函数，msg是作为函数对象的变量存在的，因此每个函数才可以拥有不同的msg</span><br><span class="line">  def getGreetingFunc(msg: String) = (name: String) =&gt; println(msg + &quot;, &quot; + name)</span><br><span class="line"></span><br><span class="line">  // Curring函数</span><br><span class="line">  def sum1(a: Int, b: Int) = a + b</span><br><span class="line"></span><br><span class="line">  def sum2(a: Int) = (b: Int) =&gt; a + b</span><br><span class="line"></span><br><span class="line">  def sum3(a: Int)(b: Int) = a + b</span><br><span class="line"></span><br><span class="line">  // 模式匹配</span><br><span class="line">  // Scala的match case可以匹配各种情况，比如变量的类型、集合的元素、有值或无值</span><br><span class="line">  // match case中，只要一个case分支满足并处理了，就不会继续判断下一个case分支了</span><br><span class="line">  def judgeGrade(name: String, grade: String) &#123;</span><br><span class="line">    grade match &#123;</span><br><span class="line">      case &quot;A&quot; =&gt; println(name + &quot;, you are excellent&quot;)</span><br><span class="line">      case &quot;B&quot; =&gt; println(name + &quot;, you are good&quot;)</span><br><span class="line">      case &quot;C&quot; =&gt; println(name + &quot;, you are just so so&quot;)</span><br><span class="line">      // 在case后的条件判断中，不仅仅只是提供一个值，而是可以在值后面再加一个if守卫，进行双重过滤</span><br><span class="line">      case _grade if name == &quot;leo&quot; =&gt; println(name + &quot;, you are a good boy, come on, your grade is &quot; + _grade)</span><br><span class="line">      case _grade =&gt; println(&quot;you need to work harder, your grade is &quot; + _grade)</span><br><span class="line">      // 如果值为下划线，则代表了不满足以上所有情况下的默认情况如何处理</span><br><span class="line">      case _ =&gt; println(&quot;you need to work harder&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 模式匹配-类型匹配</span><br><span class="line">  // 语法：case 变量: 类型 =&gt; 代码</span><br><span class="line">  def processException(e: Exception): Unit = &#123;</span><br><span class="line">    e match &#123;</span><br><span class="line">      case e1: IndexOutOfBoundsException =&gt; println(&quot;IndexOutOfBoundsException: &quot; + e1)</span><br><span class="line">      case e2: IOException =&gt; println(&quot;IOException: &quot; + e2)</span><br><span class="line">      case _e: Exception =&gt; println(&quot;Exception: &quot; + _e)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 对Array进行模式匹配，分别可以匹配带有指定元素的数组、带有指定个数元素的数组、以某元素打头的数组</span><br><span class="line">  def matchArray(arr: Array[String]): Unit = &#123;</span><br><span class="line">    arr match &#123;</span><br><span class="line">      case Array(&quot;Leo&quot;) =&gt; println(&quot;Hi, Leo!&quot;)</span><br><span class="line">      case Array(girl1, girl2, girl3) =&gt; println(&quot;Hi, girls, nice to meet you. &quot; + girl1 + &quot; and &quot; + girl2 + &quot; and &quot; + girl3)</span><br><span class="line">      case Array(&quot;Leo&quot;, _*) =&gt; println(&quot;Hi, Leo, please introduce your friends to me.&quot;)</span><br><span class="line">      case _ =&gt; println(&quot;hey, who are you?&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  def matchList(list: List[String]): Unit = &#123;</span><br><span class="line">    list match &#123;</span><br><span class="line">      case &quot;Leo&quot; :: Nil =&gt; println(&quot;Hi, Leo!&quot;)</span><br><span class="line">      case girl1 :: girl2 :: girl3 :: Nil =&gt; println(&quot;Hi, girls, nice to meet you. &quot; + girl1 + &quot; and &quot; + girl2 + &quot; and &quot; + girl3)</span><br><span class="line">      case &quot;Leo&quot; :: tail =&gt; println(&quot;Hi, Leo, please introduce your friends to me.&quot;)</span><br><span class="line">      case _ =&gt; println(&quot;hey, who are you?&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Scala有一种特殊的类型，叫做Option。Option有两种值，一种是Some，表示有值，一种是None，表示没有值</span><br><span class="line">  // Option通常会用于模式匹配中，用于判断某个变量是有值还是没有值，这比null来的更加简洁明了</span><br><span class="line">  val grades = Map((&quot;JJW&quot;, &quot;A&quot;), (&quot;SS&quot;, &quot;A&quot;))</span><br><span class="line"></span><br><span class="line">  def matchOption(name: String): Unit = &#123;</span><br><span class="line">    val grade = grades.get(name)</span><br><span class="line">    grade match &#123;</span><br><span class="line">      // 有值</span><br><span class="line">      case Some(grade) =&gt; println(&quot;你的成绩是：&quot; + grade)</span><br><span class="line">      case None =&gt; println(&quot;Sorry, your grade information is not in the system&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 斜边和逆变示例</span><br><span class="line">  def enterMeetA(card: CardA[Professional]) &#123;</span><br><span class="line">    println(&quot;welcome to have this meeting!&quot;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  def enterMeetB(card: CardB[Master]) &#123;</span><br><span class="line">    println(&quot;welcome to have this meeting!&quot;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 隐式转换函数</span><br><span class="line">   *</span><br><span class="line">   * Scala默认会使用两种隐式转换，一种是源类型，或者目标类型的伴生对象内的隐式转换函数；一种是当前程序作用域内的可以用唯一标识符表示的隐式转换函数</span><br><span class="line">   * 如果隐式转换函数不在上述两种情况下的话，那么就必须手动使用import语法引入某个包下的隐式转换函数，比如import test._</span><br><span class="line">   */</span><br><span class="line">  implicit def object2SpecialPerson(obj: Object): SpecialPerson = &#123;</span><br><span class="line">    if (obj.getClass == classOf[StudentF]) &#123;</span><br><span class="line">      val stu = obj.asInstanceOf[StudentF];</span><br><span class="line">      new SpecialPerson(stu.name)</span><br><span class="line">    &#125;</span><br><span class="line">    else if (obj.getClass == classOf[Older]) &#123;</span><br><span class="line">      val older = obj.asInstanceOf[Older];</span><br><span class="line">      new SpecialPerson(older.name)</span><br><span class="line">    &#125;</span><br><span class="line">    else Nil</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  var ticketNumber = 0</span><br><span class="line">  def buySpecialTicket(p: SpecialPerson) = &#123;</span><br><span class="line">    ticketNumber += 1</span><br><span class="line">    &quot;T-&quot; + ticketNumber</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 隐式转换-装饰器模式</span><br><span class="line">   */</span><br><span class="line">  implicit def man2superman(man: Man): Superman = new Superman(man.name)</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * 隐式转换-隐式参数的使用示例</span><br><span class="line">   */</span><br><span class="line">  def signForExam(name: String) (implicit signPen: SignPen) &#123;</span><br><span class="line">    signPen.write(name + &quot; come to exam in time.&quot;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 泛型类</span><br><span class="line">class StudentD[T](val localId: T) &#123;</span><br><span class="line">  def getSchoolId(id: T) = &quot;S-&quot; + id + &quot;-&quot; + localId</span><br><span class="line"></span><br><span class="line">  // 泛型函数</span><br><span class="line">  def getCard[E](content: E) = &#123;</span><br><span class="line">    if (content.isInstanceOf[Int]) &#123;</span><br><span class="line">      &quot;card: 001, &quot; + content</span><br><span class="line">    &#125; else if (content.isInstanceOf[String]) &#123;</span><br><span class="line">      &quot;card: this is your card, &quot; + content</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      &quot;card: &quot; + content</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 上边界   &lt;:  符号</span><br><span class="line">// 在指定泛型类型的时候，有时，我们需要对泛型类型的范围进行界定，而不是可以是任意的类型。</span><br><span class="line">class PersonF(val name: String) &#123;</span><br><span class="line">  def sayHello = println(&quot;Hello, I&apos;m &quot; + name)</span><br><span class="line"></span><br><span class="line">  def makeFriends(p: PersonF) &#123;</span><br><span class="line">    sayHello</span><br><span class="line">    p.sayHello</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class StudentE(name: String) extends PersonF(name)</span><br><span class="line"></span><br><span class="line">class PartyA[T &lt;: PersonF](p1: T, p2: T) &#123;</span><br><span class="line">  def play = p1.makeFriends(p2)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 下边界   &gt;:   符号</span><br><span class="line">// 下边界，即指定泛型类型必须是某个类的父类</span><br><span class="line">class PartyB[T &gt;: StudentE](p1: T, p2: T) &#123;</span><br><span class="line">  def play = &#123;</span><br><span class="line">    if (p1.getClass == classOf[PersonF]) println(&quot;PersonF&quot;)</span><br><span class="line">    else if (p1.getClass == classOf[StudentE]) println(&quot;StudentE&quot;)</span><br><span class="line">    else println(&quot;error&quot;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Scala的协变和逆变是非常有特色的！完全解决了Java中的泛型的一大缺憾！</span><br><span class="line"> *</span><br><span class="line"> * 举例来说，Java中，如果有Professional是Master的子类，那么Card[Professionnal]是不是Card[Master]的子类？答案是：不是。因此对于开发程序造成了很多的麻烦。</span><br><span class="line"> */</span><br><span class="line">class Master</span><br><span class="line"></span><br><span class="line">class Professional extends Master</span><br><span class="line"></span><br><span class="line">// 大师以及大师级别以下的名片都可以进入会场</span><br><span class="line">class CardA[+T](val name: String)</span><br><span class="line"></span><br><span class="line">// 只要专家级别的名片就可以进入会场，如果大师级别的过来了，当然可以了！</span><br><span class="line">class CardB[-T](val name: String)</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 隐式转换</span><br><span class="line"> *</span><br><span class="line"> * 基础示例</span><br><span class="line"> */</span><br><span class="line">class SpecialPerson(val name: String)</span><br><span class="line"></span><br><span class="line">class StudentF(val name: String)</span><br><span class="line"></span><br><span class="line">class Older(val name: String)</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 隐式转换-增强类型（装饰器模式）</span><br><span class="line"> */</span><br><span class="line">class Man(val name: String)</span><br><span class="line"></span><br><span class="line">class Superman(val name: String) &#123;</span><br><span class="line">  def emitLaser = println(&quot;emit a laster!&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 隐式参数</span><br><span class="line"> */</span><br><span class="line">class SignPen &#123;</span><br><span class="line">  def write(content: String) = println(content)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Actor</span><br><span class="line"> * 在scala中，通常建议使用样例类，即case class来作为消息进行发送。然后在actor接收消息之后，可以使用scala强大的模式匹配功能来进行不同消息的处理。</span><br><span class="line"> */</span><br><span class="line">case class Login(username: String, password: String)</span><br><span class="line">case class Register(username: String, password: String)</span><br><span class="line"></span><br><span class="line">class UserManageActor extends Actor &#123;</span><br><span class="line">  def act(): Unit = &#123;</span><br><span class="line">    while (true) &#123;</span><br><span class="line">      receive &#123;</span><br><span class="line">        case Login(username, password) =&gt; println(&quot;login, username is &quot; + username + &quot;, password is &quot; + password)</span><br><span class="line">        case Register(username, password) =&gt; println(&quot;Register, username is &quot; + username + &quot;, password is &quot; + password)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 两个Actor之间要互相收发消息</span><br><span class="line"> * 一个actor向另外一个actor发送消息时，同时带上自己的引用；其他actor收到自己的消息时，直接通过发送消息的actor的引用，即可以给它回复消息。</span><br><span class="line"> */</span><br><span class="line">case class Message(content: String, sender: Actor)</span><br><span class="line"></span><br><span class="line">class JJWTelephoneActor extends Actor &#123;</span><br><span class="line">  def act(): Unit = &#123;</span><br><span class="line">    while (true) &#123;</span><br><span class="line">      receive &#123;</span><br><span class="line">        case Message(content, sender) =&gt; &#123;</span><br><span class="line">          println(&quot;JJW telephone: &quot; + content)</span><br><span class="line">          sender ! &quot;I&apos;m JJW, please call me after 10 minutes.&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class SSTelephoneActor(val jjwTelephoneActor: Actor) extends Actor &#123;</span><br><span class="line">  def act(): Unit = &#123;</span><br><span class="line">    jjwTelephoneActor ! Message(&quot;Hello JJW, , I&apos;m SS.&quot;, this)</span><br><span class="line">    receive &#123;</span><br><span class="line">      case resp: String =&gt; println(&quot;ss telephone: &quot; + resp)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年08月06日 15:27</p>
+        <p>原始链接： <a class="post-url" href="/2020/08/06/Scala-高阶/" title="Scala-高阶">https://jjw-story.github.io/2020/08/06/Scala-高阶/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/08/06/Scala-高阶/&title=《Scala-高阶》 — JJW-STORY&pic=/images/blogs/scala.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/08/06/Scala-高阶/&title=《Scala-高阶》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/08/06/Scala-高阶/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Scala-高阶》 — JJW-STORY&url=https://jjw-story.github.io/2020/08/06/Scala-高阶/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/08/06/Scala-高阶/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/08/06/Scala-高阶/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Scala/" class="color1">Scala</a>
+      
+    <a href="/tags/高阶/" class="color3">高阶</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Scala-高阶"><span class="post-toc-text">Scala-高阶</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/08/06/Scala-语法/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Scala-语法
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/07/31/MySQL-实践二/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">MySQL-实践二</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

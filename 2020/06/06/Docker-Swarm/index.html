@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Docker-Swarm | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="容器编排介绍（Swarm Mode）我们之前的学习创建的容器都是在一台机器上的，但是实际生产环境中，我们创建的容器不可能都是在一台机器上的，而是在多台物理机器上。在生产环境中我们要部署一个应用，可能涉及很多个容器，而且这些容器不可能都部署在一台机器上，那么我们就需要解决一系列问题，比如：  怎么去管理这么多容器 怎么方便的横向扩展 如果容器down了，怎么自动恢复 如何去更新容器而不影响业务 如何">
+<meta name="keywords" content="Docker,Swarm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker-Swarm">
+<meta property="og:url" content="https://jjw-story.github.io/2020/06/06/Docker-Swarm/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="容器编排介绍（Swarm Mode）我们之前的学习创建的容器都是在一台机器上的，但是实际生产环境中，我们创建的容器不可能都是在一台机器上的，而是在多台物理机器上。在生产环境中我们要部署一个应用，可能涉及很多个容器，而且这些容器不可能都部署在一台机器上，那么我们就需要解决一系列问题，比如：  怎么去管理这么多容器 怎么方便的横向扩展 如果容器down了，怎么自动恢复 如何去更新容器而不影响业务 如何">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-14T06:51:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker-Swarm">
+<meta name="twitter:description" content="容器编排介绍（Swarm Mode）我们之前的学习创建的容器都是在一台机器上的，但是实际生产环境中，我们创建的容器不可能都是在一台机器上的，而是在多台物理机器上。在生产环境中我们要部署一个应用，可能涉及很多个容器，而且这些容器不可能都部署在一台机器上，那么我们就需要解决一系列问题，比如：  怎么去管理这么多容器 怎么方便的横向扩展 如果容器down了，怎么自动恢复 如何去更新容器而不影响业务 如何">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Docker-Swarm" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Docker-Swarm
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Docker/">Docker</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-06-06
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="容器编排介绍（Swarm-Mode）"><a href="#容器编排介绍（Swarm-Mode）" class="headerlink" title="容器编排介绍（Swarm Mode）"></a>容器编排介绍（Swarm Mode）</h1><p>我们之前的学习创建的容器都是在一台机器上的，但是实际生产环境中，我们创建的容器不可能都是在一台机器上的，而是在多台物理机器上。在生产环境中我们要部署一个应用，可能涉及很多个容器，而且这些容器不可能都部署在一台机器上，那么我们就需要解决一系列问题，比如：</p>
+<ol>
+<li>怎么去管理这么多容器</li>
+<li>怎么方便的横向扩展</li>
+<li>如果容器down了，怎么自动恢复</li>
+<li>如何去更新容器而不影响业务</li>
+<li>如何去监控追踪这些容器</li>
+<li>如何去调度容器的创建</li>
+<li>如何保护隐私数据</li>
+</ol>
+<h2 id="Swarm介绍"><a href="#Swarm介绍" class="headerlink" title="Swarm介绍"></a>Swarm介绍</h2><p>Swarm就是做容器编排的一个工具，用于容器服务的创建删除等操作和调度，它用来解决上述问题，它是Docker内置的一个工具，但是我们要注意，容器编排的工具并不是Swarm一个，只是Docker内置的是这个，不需要安装任何其他的东西。</p>
+<p>Swarm是一个集群的架构，它有两种角色，Manager和Worker。Manager是整个集群的大脑，一般至少要有两个机器，Worker就是实际容器的运行的节点，当然Manager节点也可以运行我们的业务容器，但是一般我们都是部署在Worker节点。</p>
+<p>Service：Swarm中一个非常重要的概念，我们Swarm环境下的Service的概念基本和Compose中的Service是一样的，一个Service就代表了一个容器。</p>
+<p>Replicas：作为容器横向扩展时的概念，就是我们部署一个service时，通过scale指定部署的容器个数时，我们每一个容器就是作为了一个Replica，可以理解为同一个容器的多个副本，但是这里不存在主分片的概念。</p>
+<h1 id="Swarm的应用"><a href="#Swarm的应用" class="headerlink" title="Swarm的应用"></a>Swarm的应用</h1><h2 id="创建Swarm集群"><a href="#创建Swarm集群" class="headerlink" title="创建Swarm集群"></a>创建Swarm集群</h2><p>我们这里只讲述生产环境中多个机器的Swarm的创建方式。</p>
+<ol>
+<li>创建Swarm节点，方法是在一个安装了Docker环境的机器上通过命令：</li>
+</ol>
+<p><strong>docker swarm init –advertise=[本机IP地址]</strong></p>
+<p>我们先运行此命令的节点将会成为Manager节点，运行此命令后，终端会输出如果要添加Manager节点和添加Worker节点的命令，我们要添加此集群的节点，就复制此对应的命令，然后到另外的机器上执行即可</p>
+<ol start="2">
+<li><p>创建Worker节点，将上述输出的添加Worker命令粘贴，进入另外的机器（可以是多个），执行即可</p>
+</li>
+<li><p>我们可以在Manager节点通过命令：<strong>docker node ls</strong> 查看此集群下的所有节点信息</p>
+</li>
+</ol>
+<h2 id="在swarm集群环境service操作"><a href="#在swarm集群环境service操作" class="headerlink" title="在swarm集群环境service操作"></a>在swarm集群环境service操作</h2><ol>
+<li>我们docker service的创建有点类似于docker run，但是我们在searm模式下就不用docker run命令了，因为docker run只是用于在本地创建docker容器，创建命令如下：</li>
+</ol>
+<p><strong>docker service create –name [service名称] [Image名称]</strong></p>
+<ol start="2">
+<li>我们可以通过命令查看创建的容器信息，此信息会展示容器的Replicas数量等：</li>
+</ol>
+<p><strong>docker service ls</strong></p>
+<ol start="3">
+<li>查看到service信息后，我们可以查看每个容器具体的部署信息，比如部署在哪个节点，状态等，通过如下命令：</li>
+</ol>
+<p><strong>docker service ps [service名称]</strong></p>
+<ol start="4">
+<li>我们创建完成后就可以通过scale来进行容器数量的横向扩展，使用命令：</li>
+</ol>
+<p><strong>docker service scale [service名称]=[容器的总数量]</strong></p>
+<p>执行完成后，我们通过ls命令，查看到的service信息，Replicas的数量就是我们设置的容器总数量了，并且我们通过ps命令查看到每个容器的部署是平均的分配在了不同的机器上</p>
+<ol start="5">
+<li><p>上述创建的容器我们说会平均分布在不同的机器上，如果此时我们有一个机器down掉了或者我们手动将容器给停止了，我们发现过一会在通过ls命令查看的容器数量还是5，这是因为它又新扩展了一个容器在其他的机器上。这就证明scale它不仅仅是横向扩展的功能，而且它能保证横向扩展的数目是稳定有效的，当其中容器down掉之后，他们 检测到然后立即创建新的容器保证扩展的数量</p>
+</li>
+<li><p>service的删除，我们service的删除使用如下命令，删除后会将此service下所有的容器都回收掉：</p>
+</li>
+</ol>
+<p><strong>docker service rm [service名称]</strong></p>
+<h1 id="Swarm网络"><a href="#Swarm网络" class="headerlink" title="Swarm网络"></a>Swarm网络</h1><h2 id="示例及现象介绍"><a href="#示例及现象介绍" class="headerlink" title="示例及现象介绍"></a>示例及现象介绍</h2><p>首先我们搭建一个三台机器的swarm集群，有一个Manager节点和两个Worker节点，然后我们部署wordpress和mysql应用，我们在部署前创建驱动类型为 overlay 的Network Namespace，然后创建mysql和wordpress的service，并且在创建的时候通过 -p 参数指定wordpress的端口映射，使得我们可以向外部提供服务，在创建的时候指定此两个service使用的Network Namespace（具体方式与run启动指定参数一样），使他们之间可以直接通过service名称就能实现网络互通，完成我们的应用部署。</p>
+<p><strong>注意：我们如果要保证本机之间的容器通信，需要使用bridge驱动类型的Network，但是如果是多机之间的通信，需要使用overlay驱动类型的Network</strong></p>
+<p>以上出现的现象是：</p>
+<ol>
+<li><p>我们之前挨Manager节点上创建的驱动类型为 overlay 的Network Namespace，在其他的两个Worker机器节点上也能看到并且存在</p>
+</li>
+<li><p>我们的mysql service容器部署在了manager机器上，wordpress service容器部署在了其中一台Worker节点上，但是我们通过我们映射好的端口，通过任何一个swarm集群机器的ip加此映射好的端口，都能访问到我们的workpress服务</p>
+</li>
+</ol>
+<h2 id="Rounting-Mesh的两种体现"><a href="#Rounting-Mesh的两种体现" class="headerlink" title="Rounting Mesh的两种体现"></a>Rounting Mesh的两种体现</h2><p>Docker Swarm的网络技术</p>
+<h3 id="Internal-Network"><a href="#Internal-Network" class="headerlink" title="Internal Network"></a>Internal Network</h3><p>针对于Swarm service之间的访问及负载均衡，我们同一个Swarm中的容器之间是怎么通信的，他们是用过service名称来进行通信的，我们service名称对应的IP地址并不是容器的具体地址，因为我们某一个service下可能会通过scale创建多个容器，并且容器扩增或删除都会造成service下容器IP地址的变化，所以我们肯定不是直接通过容器的IP地址进行通信的，我们service名称对应的IP地址是一个VIP，就是一个虚拟IP，如果我们的横向容器扩展了之后，VIP是不会变化的，并且它会对我们的访问做负载均衡，这就是VIP的主要作用和Swarm的网络访问实现。</p>
+<p>Internal Load Balancing，既我们通过service名称访问的容器它是通过VIP访问的，VIP会自动负载均衡到请求的不同的容器节点上去，它是基于LVS来实现的，LVS是一个很牛的中国大佬写的，已经加入到Linux内核中了，详细google或baidu了解。</p>
+<h3 id="Ingress-Network"><a href="#Ingress-Network" class="headerlink" title="Ingress Network"></a>Ingress Network</h3><p>针对于外部访问的负载均衡，我们某个service绑定了对外的端口，这个service可能只是部署在了我们Swarm集群中的部分节点，但是我们在Swarm中的任何一个机器节点都可以通过此机器IP加端口都能访问到此容器的服务，它就是使用了Ingress网络。</p>
+<h1 id="Docker-Stack"><a href="#Docker-Stack" class="headerlink" title="Docker Stack"></a>Docker Stack</h1><p>Docker Stack及对于一个应用包含的多个容器进行统一管理的工具，它与Docker Compose的作用及使用类似，不同的是compose是应用于单机环境的，而Stack是应用于Swarm下的多机环境的。</p>
+<p>Docker Stack的使用也是使用docker-compose.yml文件来定义的，此文件的格式与之前介绍的compose定义一样，只不过添加了deploy参数，此参数下定义的内容有非常多，包括service部署更新等策略，容器的数量、内存CPU的使用限制等非常多，具体我们可以通过官网去查看。</p>
+<p>docker stack 命令参数说明：</p>
+<ul>
+<li><p>deploy：部署或更新stack，使用示例：docker stack depoly [指定stack名称] –compose-file=docker-compose.yml</p>
+</li>
+<li><p>ls：列举出当前所有stack及每个stack中包含的services个数，使用示例：docker stack ls</p>
+</li>
+<li><p>ps：查询指定stack的详细信息，包括容器部署的节点、状态、使用的image等信息，使用示例：docker stack ps [指定stack名称]</p>
+</li>
+<li><p>rm：删除指定的stack，使用示例：docker stack rm [指定stack名称]</p>
+</li>
+<li><p>services：列举出当前stack中包含的所有service，以及service的副本数量等信息，使用示例：docker stack services [指定stack名称]</p>
+</li>
+</ul>
+<p>docker-compose.yml文件示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">version: &apos;3&apos;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    image: wordpress</span><br><span class="line">    ports:</span><br><span class="line">      - 8080:80</span><br><span class="line">    environment:</span><br><span class="line">      WORDPRESS_DB_HOST: mysql</span><br><span class="line">      WORDPRESS_DB_PASSWORD: root</span><br><span class="line">    networks:</span><br><span class="line">      - my-network</span><br><span class="line">    depends_on:</span><br><span class="line">      - mysql</span><br><span class="line">    </span><br><span class="line">    # web的service stack配置</span><br><span class="line">    deploy:</span><br><span class="line">      # 部署模式-多例</span><br><span class="line">      mode: replicated</span><br><span class="line">      # 容器分片数量</span><br><span class="line">      replicas: 3</span><br><span class="line">      # 重启策略</span><br><span class="line">      restart_policy:</span><br><span class="line">        condition: on-failure</span><br><span class="line">        delay: 5s</span><br><span class="line">        max_attempts: 3</span><br><span class="line">      # 更新策略</span><br><span class="line">      update_config:</span><br><span class="line">        # 更新时同时进行的容器数量</span><br><span class="line">        parallelism: 1</span><br><span class="line">        delay: 10s</span><br><span class="line"></span><br><span class="line">  mysql:</span><br><span class="line">    image: mysql</span><br><span class="line">    environment:</span><br><span class="line">      MYSQL_ROOT_PASSWORD: root</span><br><span class="line">      MYSQL_DATABASE: wordpress</span><br><span class="line">    volumes:</span><br><span class="line">      - mysql-data:/var/lib/mysql</span><br><span class="line">    networks:</span><br><span class="line">      - my-network</span><br><span class="line"></span><br><span class="line">    # mysql的service stack配置</span><br><span class="line">    deploy:</span><br><span class="line">      # 部署模式-单例</span><br><span class="line">      mode: global</span><br><span class="line">      placement:</span><br><span class="line">        # 容器部署的节点位置，指定部署在manager机器上</span><br><span class="line">        constraints:</span><br><span class="line">          - node.role == manager</span><br><span class="line"></span><br><span class="line">  # 一个可视化的stack工具，访问此端口可以通过可视化的界面查看具体的stack信息</span><br><span class="line">  visualizer:</span><br><span class="line">    image: dockersamples/visualizer:stable</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8080:8080&quot;</span><br><span class="line">    stop_grace_period: 1m30s</span><br><span class="line">    volumes:</span><br><span class="line">      - &quot;/var/run/docker.sock:/var/run/docker.sock&quot;</span><br><span class="line">    deploy:</span><br><span class="line">      placement:</span><br><span class="line">        constraints: [node.role == manager]</span><br><span class="line"></span><br><span class="line">volumes:</span><br><span class="line">  mysql-data:</span><br><span class="line"></span><br><span class="line"># 指定使用的网络驱动</span><br><span class="line">networks:</span><br><span class="line">  my-network:</span><br><span class="line">    driver: overlay</span><br></pre></td></tr></table></figure>
+
+<h1 id="Docker-Secret管理"><a href="#Docker-Secret管理" class="headerlink" title="Docker Secret管理"></a>Docker Secret管理</h1><p>什么是Secret，主要是指一下内容：</p>
+<ol>
+<li>用户名密码</li>
+<li>SSH Key</li>
+<li>TLS认证</li>
+<li>任何不想让别人看到的数据</li>
+</ol>
+<p>我们之前在讲Swarm时说过，在Manager节点之间，它们有一个内置的分布式存储， 它们是基于Raft协议来同步数据的，保证他们之间的信息时实时共享同步的。</p>
+<h2 id="Secret-Management"><a href="#Secret-Management" class="headerlink" title="Secret Management"></a>Secret Management</h2><ol>
+<li><p>Secret都是存储在Swarm 的 Manager节点，存储在Raft database中的，都是加密的</p>
+</li>
+<li><p>Secret可以assign给一个service，在这个service中就可以看到这个secret</p>
+</li>
+<li><p>在container内部Secret看起来像文件，但实际是在内存中的</p>
+</li>
+</ol>
+<h2 id="Secret的具体操作使用"><a href="#Secret的具体操作使用" class="headerlink" title="Secret的具体操作使用"></a>Secret的具体操作使用</h2><h4 id="Secret的创建"><a href="#Secret的创建" class="headerlink" title="Secret的创建"></a>Secret的创建</h4><p>首先介绍查看Secret的命令： <strong>docker secret ls</strong>，表示查看当前环境中的Secret</p>
+<p>创建有两种方式，一种是从一个文件中创建，一种是从标准的输入中创建。</p>
+<ol>
+<li><p>我们首先创建一个文件，然后再文件中写入我们的Secret内容，例如密码等内容，然后我们通过命令：<strong>docker secret create [secret名称] [文件路径名称]</strong>，这样我们就创建完成，一般我们通过文件创建好secret后，就把我们的文件删除掉，这是为了保护我们的隐私数据。创建完成我们就可以通过ls命令来查看创建的Secret。</p>
+</li>
+<li><p>通过标准输入创建，使用示例如下：echo “secret具体内容” | docker secret create [secret名称] -，这样我们就创建完成了，可以通过ls命令查看了</p>
+</li>
+</ol>
+<h4 id="Secret的删除"><a href="#Secret的删除" class="headerlink" title="Secret的删除"></a>Secret的删除</h4><p>使用命令：docker secret rm [secret名称]</p>
+<h4 id="将Secret暴露给Service容器来使用"><a href="#将Secret暴露给Service容器来使用" class="headerlink" title="将Secret暴露给Service容器来使用"></a>将Secret暴露给Service容器来使用</h4><p>我们在创建service容器时，指定一下即可，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 1.创建容器并指定要应用的Searet</span><br><span class="line">docker service create --name [service名称] --secret [要使用的之前在Manager节点创建好的secret名称]  [image名称]</span><br><span class="line"></span><br><span class="line"># 2.进入创建好的容器</span><br><span class="line">docker exec -it [容器ID] /bin/bash</span><br><span class="line"></span><br><span class="line"># 3.进入 /run/secret 目录并查看文件，我们发现有一个文件跟我们指定的Secret名称一样，查看后发现内部的内容就是我们之前定义好的内容</span><br><span class="line">cd /run/secret</span><br><span class="line">ls</span><br></pre></td></tr></table></figure>
+
+<p>具体使用例如我们创建一个MySQL容器，并且创建时指定root用户的密码，具体使用命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker service create --name [mysql service 名称] --secret [要使用的之前在Manager节点创建好的secret名称] -e MYSQL_ROOT_PASSWORD_FILE=/run.secret/[之前在Manager节点创建好的secret名称] [mysql image名称]</span><br></pre></td></tr></table></figure>
+
+<h4 id="Searct在stack中的应用"><a href="#Searct在stack中的应用" class="headerlink" title="Searct在stack中的应用"></a>Searct在stack中的应用</h4><p>应用原理其实与上述暴露给service中一样，只不过我们将一些命令直接写在了docker-compose.yml文件中，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"># 1.首先通过上述方式在Manager节点创建好Secret</span><br><span class="line"></span><br><span class="line"># 2.docker-compose.yml文件中引入应用</span><br><span class="line">version: &apos;3&apos;</span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line"></span><br><span class="line">  web:</span><br><span class="line">    image: wordpress</span><br><span class="line">    ports:</span><br><span class="line">      - 8080:80</span><br><span class="line"></span><br><span class="line">    # 定义我们要引入的secret</span><br><span class="line">    secrets:</span><br><span class="line">      - my-pw</span><br><span class="line">    </span><br><span class="line">    # 环境变量应用我们引入的secret</span><br><span class="line">    environment:</span><br><span class="line">      WORDPRESS_DB_HOST: mysql</span><br><span class="line">      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/my-pw</span><br><span class="line">    </span><br><span class="line">    networks:</span><br><span class="line">      - my-network</span><br><span class="line">    depends_on:</span><br><span class="line">      - mysql</span><br><span class="line">    deploy:</span><br><span class="line">      mode: replicated</span><br><span class="line">      replicas: 3</span><br><span class="line">      restart_policy:</span><br><span class="line">        condition: on-failure</span><br><span class="line">        delay: 5s</span><br><span class="line">        max_attempts: 3</span><br><span class="line">      update_config:</span><br><span class="line">        parallelism: 1</span><br><span class="line">        delay: 10s</span><br><span class="line"></span><br><span class="line">  mysql:</span><br><span class="line">    image: mysql</span><br><span class="line"></span><br><span class="line">    # 定义我们要引入的secret</span><br><span class="line">    secrets:</span><br><span class="line">      - my-pw</span><br><span class="line">    </span><br><span class="line">    # 环境变量应用我们引入的secret</span><br><span class="line">    environment:</span><br><span class="line">      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/my-pw</span><br><span class="line">      MYSQL_DATABASE: wordpress</span><br><span class="line">    </span><br><span class="line">    volumes:</span><br><span class="line">      - mysql-data:/var/lib/mysql</span><br><span class="line">    networks:</span><br><span class="line">      - my-network</span><br><span class="line">    deploy:</span><br><span class="line">      mode: global</span><br><span class="line">      placement:</span><br><span class="line">        constraints:</span><br><span class="line">          - node.role == manager</span><br><span class="line"></span><br><span class="line">volumes:</span><br><span class="line">  mysql-data:</span><br><span class="line"></span><br><span class="line">networks:</span><br><span class="line">  my-network:</span><br><span class="line">    driver: overlay</span><br><span class="line"></span><br><span class="line"># 我们可以不再先前就创建好secret，可以定义一个文件在创建service时引入文件创建，但是这种做法不安全，所以我们不推荐（一般还是先创建好）</span><br><span class="line"># secrets:</span><br><span class="line">#   my-pw:</span><br><span class="line">#    file: ./password</span><br></pre></td></tr></table></figure>
+
+<h1 id="Service的更新"><a href="#Service的更新" class="headerlink" title="Service的更新"></a>Service的更新</h1><p>本节讲述的是对Swarm中运行的service进行升级，我们需要实现的是不宕机的升级，参照现在的生产环境服务升级。</p>
+<p>Service的更新可以更新很多内容，例如Secret，暴露的端口，image等。</p>
+<h2 id="普通方式更新"><a href="#普通方式更新" class="headerlink" title="普通方式更新"></a>普通方式更新</h2><ol>
+<li>更新image，当我们的servcie使用scale创建了多个实例的时候，我们使用如下命令更新服务，发现容器更新是逐个进行的，可以表述为优雅上下线，命令如下：</li>
+</ol>
+<p>更新服务使用命令： docker service update –image [更新的新的image名称] [service名称]</p>
+<ol start="2">
+<li>更新端口，命令如下(同理更新secret)：</li>
+</ol>
+<p>docker service update –pulish-rm 8080:5000 –pulish-add 8088:5000 [service名称]</p>
+<h2 id="stack模式下的更新"><a href="#stack模式下的更新" class="headerlink" title="stack模式下的更新"></a>stack模式下的更新</h2><p>stack模式下的更新我们只需要修改 docker-compose.yml 文件的内容，然后重新发布就自动完成了更新，而且更新的过程更上述一样，都是优雅的。</p>
+<p>例如我们要升级服务更新image，只需要修改 docker-compose.yml 中对应的serivce中对应的iamge即可，更新其他内容也一样，只需要修改此文件，然后直接 depoly 即可。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年06月14日 14:51</p>
+        <p>原始链接： <a class="post-url" href="/2020/06/06/Docker-Swarm/" title="Docker-Swarm">https://jjw-story.github.io/2020/06/06/Docker-Swarm/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/06/06/Docker-Swarm/&title=《Docker-Swarm》 — JJW-STORY&pic=/images/blogs/docker.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/06/06/Docker-Swarm/&title=《Docker-Swarm》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/06/06/Docker-Swarm/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Docker-Swarm》 — JJW-STORY&url=https://jjw-story.github.io/2020/06/06/Docker-Swarm/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/06/06/Docker-Swarm/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/06/06/Docker-Swarm/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Docker/" class="color2">Docker</a>
+      
+    <a href="/tags/Swarm/" class="color1">Swarm</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#容器编排介绍（Swarm-Mode）"><span class="post-toc-text">容器编排介绍（Swarm Mode）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Swarm介绍"><span class="post-toc-text">Swarm介绍</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Swarm的应用"><span class="post-toc-text">Swarm的应用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建Swarm集群"><span class="post-toc-text">创建Swarm集群</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在swarm集群环境service操作"><span class="post-toc-text">在swarm集群环境service操作</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Swarm网络"><span class="post-toc-text">Swarm网络</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#示例及现象介绍"><span class="post-toc-text">示例及现象介绍</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Rounting-Mesh的两种体现"><span class="post-toc-text">Rounting Mesh的两种体现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Internal-Network"><span class="post-toc-text">Internal Network</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Ingress-Network"><span class="post-toc-text">Ingress Network</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Docker-Stack"><span class="post-toc-text">Docker Stack</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Docker-Secret管理"><span class="post-toc-text">Docker Secret管理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Secret-Management"><span class="post-toc-text">Secret Management</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Secret的具体操作使用"><span class="post-toc-text">Secret的具体操作使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Secret的创建"><span class="post-toc-text">Secret的创建</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Secret的删除"><span class="post-toc-text">Secret的删除</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#将Secret暴露给Service容器来使用"><span class="post-toc-text">将Secret暴露给Service容器来使用</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Searct在stack中的应用"><span class="post-toc-text">Searct在stack中的应用</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Service的更新"><span class="post-toc-text">Service的更新</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#普通方式更新"><span class="post-toc-text">普通方式更新</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#stack模式下的更新"><span class="post-toc-text">stack模式下的更新</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/06/14/Kubernetes/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Kubernetes
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/06/03/Docker-Compose/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Docker-Compose</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

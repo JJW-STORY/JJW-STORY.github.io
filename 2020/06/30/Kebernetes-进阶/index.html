@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Kebernetes-进阶 | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="Kubectl连接K8s集群配置（Cluster配置）在我们搭建好K8s集群后，需要通过Kubectl 客户端连接集群并进行相关集群管控操作，一般我们只需要安装kubectl工具，然后将集群中生成的config文件，拷贝到我们需要连接集群的电脑的 ${HOME}/.kube/config 目录下，这样就可以操作K8s集群了。 但是有的时候我们一台客户端电脑需要连接多个K8s集群，这时我们就需要将不">
+<meta name="keywords" content="Kebernetes,进阶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kebernetes-进阶">
+<meta property="og:url" content="https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="Kubectl连接K8s集群配置（Cluster配置）在我们搭建好K8s集群后，需要通过Kubectl 客户端连接集群并进行相关集群管控操作，一般我们只需要安装kubectl工具，然后将集群中生成的config文件，拷贝到我们需要连接集群的电脑的 ${HOME}/.kube/config 目录下，这样就可以操作K8s集群了。 但是有的时候我们一台客户端电脑需要连接多个K8s集群，这时我们就需要将不">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-07-10T12:50:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kebernetes-进阶">
+<meta name="twitter:description" content="Kubectl连接K8s集群配置（Cluster配置）在我们搭建好K8s集群后，需要通过Kubectl 客户端连接集群并进行相关集群管控操作，一般我们只需要安装kubectl工具，然后将集群中生成的config文件，拷贝到我们需要连接集群的电脑的 ${HOME}/.kube/config 目录下，这样就可以操作K8s集群了。 但是有的时候我们一台客户端电脑需要连接多个K8s集群，这时我们就需要将不">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Kebernetes-进阶" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Kebernetes-进阶
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2020-06-30
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="Kubectl连接K8s集群配置（Cluster配置）"><a href="#Kubectl连接K8s集群配置（Cluster配置）" class="headerlink" title="Kubectl连接K8s集群配置（Cluster配置）"></a>Kubectl连接K8s集群配置（Cluster配置）</h1><p>在我们搭建好K8s集群后，需要通过Kubectl 客户端连接集群并进行相关集群管控操作，一般我们只需要安装kubectl工具，然后将集群中生成的config文件，拷贝到我们需要连接集群的电脑的 <strong>${HOME}/.kube/config</strong> 目录下，这样就可以操作K8s集群了。</p>
+<p>但是有的时候我们一台客户端电脑需要连接多个K8s集群，这时我们就需要将不同的config文件合并在一起，以方便我们操作。</p>
+<p>本节核心命令：</p>
+<p><strong>kubectl config get-contexts:</strong>获取客户端链接的所有上下文</p>
+<p><strong>kubectl config get-clusters:</strong>获取客户端连接的所有配置cluster</p>
+<p><strong>kubectl config use-context [context的名称]：</strong>切换当前集群的连接</p>
+<p><strong>kubectl get node -o wide:</strong>查看集群节点的详细信息</p>
+<p><strong>kubectl describe node [上述命令查询出的节点名称]:</strong>查看某个节点的详细信息</p>
+<hr>
+<p>例如我们原有的minikube集群中的config文件如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">clusters:</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority: /home/jjw/.minikube/ca.crt</span><br><span class="line">    server: https://172.17.0.3:8443</span><br><span class="line">  name: minikube</span><br><span class="line">contexts:</span><br><span class="line">- context:</span><br><span class="line">    cluster: minikube</span><br><span class="line">    user: minikube</span><br><span class="line">  name: minikube</span><br><span class="line">current-context: minikube</span><br><span class="line">kind: Config</span><br><span class="line">preferences: &#123;&#125;</span><br><span class="line">users:</span><br><span class="line">- name: minikube</span><br><span class="line">  user:</span><br><span class="line">    client-certificate: /home/jjw/.minikube/profiles/minikube/client.crt</span><br><span class="line">    client-key: /home/jjw/.minikube/profiles/minikube/client.key</span><br></pre></td></tr></table></figure>
+
+<p>我们现在合并另外一个集群的配置文件如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"># 指定版本</span><br><span class="line">apiVersion: v1</span><br><span class="line"></span><br><span class="line"># 配置clusters，这里就是可以配置连接多个K8s的集群</span><br><span class="line">clusters:</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority: /home/jjw/.minikube/ca.crt</span><br><span class="line">    server: https://172.17.0.3:8443</span><br><span class="line">  name: minikube</span><br><span class="line">- cluster:</span><br><span class="line">    certificate-authority-data: DATA+OMITTED</span><br><span class="line">    server: https://172.19.8.113:6443</span><br><span class="line">  name: jplocal</span><br><span class="line"></span><br><span class="line"># 配置context，</span><br><span class="line">contexts:</span><br><span class="line"></span><br><span class="line"># 第一个</span><br><span class="line">- context:</span><br><span class="line">    cluster: minikube</span><br><span class="line">    user: minikube</span><br><span class="line">  name: minikube</span><br><span class="line"></span><br><span class="line"># 第二个</span><br><span class="line">- context:</span><br><span class="line">    cluster: jplocal</span><br><span class="line">    user: kube-admin-local</span><br><span class="line">  name: local</span><br><span class="line"></span><br><span class="line"># 配置默认的连接</span><br><span class="line">current-context: minikube</span><br><span class="line">kind: Config</span><br><span class="line">preferences: &#123;&#125;</span><br><span class="line"></span><br><span class="line"># 配置连接集群的uers信息，包含身份认证信息等</span><br><span class="line">users:</span><br><span class="line">- name: minikube</span><br><span class="line">  user:</span><br><span class="line">    client-certificate: /home/jjw/.minikube/profiles/minikube/client.crt</span><br><span class="line">    client-key: /home/jjw/.minikube/profiles/minikube/client.key</span><br><span class="line">- name: kube-admin-local</span><br><span class="line">  user:</span><br><span class="line">    client-certificate-data: REDACTED</span><br><span class="line">    client-key-data: REDACTED</span><br></pre></td></tr></table></figure>
+
+<p>配置完成后我们就可以通过命令查看我们的配置上下文等信息，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 注意：带*号表示是我们当前使用连接的context</span><br><span class="line">jjw@jjw-PC:~/.kube$ kubectl config get-contexts</span><br><span class="line">CURRENT   NAME       CLUSTER    AUTHINFO           NAMESPACE</span><br><span class="line">          local      jplocal    kube-admin-local   </span><br><span class="line">*         minikube   minikube   minikube      </span><br><span class="line"></span><br><span class="line">jjw@jjw-PC:~/.kube$ kubectl config get-clusters</span><br><span class="line">NAME</span><br><span class="line">minikube</span><br><span class="line">jplocal</span><br></pre></td></tr></table></figure>
+
+<p>切换连接到名称为local的集群：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 切换</span><br><span class="line">jjw@jjw-PC:~/.kube$ kubectl config use-context local</span><br><span class="line">Switched to context &quot;local&quot;.</span><br><span class="line"></span><br><span class="line"># 查看切换结果，发现切换成功</span><br><span class="line">jjw@jjw-PC:~/.kube$ kubectl config get-contexts</span><br><span class="line">CURRENT   NAME       CLUSTER    AUTHINFO           NAMESPACE</span><br><span class="line">*         local      jplocal    kube-admin-local   </span><br><span class="line">          minikube   minikube   minikube</span><br></pre></td></tr></table></figure>
+
+<p>这样我们就可以操作我们的K8s集群了，例如完整如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 获取当前local集群的节点信息，获取不到是因为这个配置是我瞎写的</span><br><span class="line">jjw@jjw-PC:~/.kube$ kubectl get node</span><br><span class="line">error: tls: failed to find any PEM data in certificate input</span><br><span class="line"></span><br><span class="line"># 切换成之前的minikube集群</span><br><span class="line">jjw@jjw-PC:~/.kube$ kubectl config use-context minikube</span><br><span class="line">Switched to context &quot;minikube&quot;.</span><br><span class="line"></span><br><span class="line"># 能够获取到节点信息</span><br><span class="line">jjw@jjw-PC:~/.kube$ kubectl get node</span><br><span class="line">NAME       STATUS   ROLES    AGE   VERSION</span><br><span class="line">minikube   Ready    master   15d   v1.18.3</span><br></pre></td></tr></table></figure>
+
+<h1 id="K8s集群网络（Cluster-Networking）"><a href="#K8s集群网络（Cluster-Networking）" class="headerlink" title="K8s集群网络（Cluster Networking）"></a>K8s集群网络（Cluster Networking）</h1><h2 id="K8s集群间网络现象及原理"><a href="#K8s集群间网络现象及原理" class="headerlink" title="K8s集群间网络现象及原理"></a>K8s集群间网络现象及原理</h2><p>当我们搭建了一套K8s集群后，我们在节点中创建Pod，并且查询出此Pod的IP地址，这时我们在任何一个节点或者任何一个节点的Pod中，我们ping这个IP地址，我们发现是都可以ping通的，这就是K8s集群中我们要讲的网络。</p>
+<p>在之前的Swarm集群中，我们也有同样的现象，我们知道原理是它们通过一个Overlay的Network实现的，其实K8s集群也是这样，只不过这里是通过某个插件来实现的Overlay网络，远离同样是将Pod的网络代理到机器网关上，类似eth1，然后通过此网关来解析代理。</p>
+<p>具体的插件有很多种（例如flannal网络插件），我们可以去K8s官网上查看，这些插件都需要遵循K8s网络的规定或者说协议：</p>
+<ol>
+<li><p>所有的容器跟其他所有的容器之间可以直接通信，并且不需要NAT的转化</p>
+</li>
+<li><p>所有的Node都可以直接与其他Node的容器进行直接通信，并且不需要NAT的转化</p>
+</li>
+<li><p>我们的这个容器的IP地址是什么，那么其他容器或者节点就可以直接通过这个IP来访问这个容器</p>
+</li>
+</ol>
+<p>本节核心命令：</p>
+<p><strong>kubectl get svc:</strong>获取集群上所有的Services信息</p>
+<p><strong>kubectl get pods –show-labels:</strong>查看集群中所有Pod的Label</p>
+<p><strong>kubectl expose pods [pod名称]:</strong>将已有Pod导出创建Service</p>
+<p><strong>kubectl expose depolyment [depolyment名称]：</strong>将已有depolyment导出创建为Service</p>
+<p><strong>kubectl create -f [service的yml文件名称]：</strong>通过yml文件创建service</p>
+<p><strong>kubectl edit depolyment [depolyment名称]：</strong>创建service后，直接编辑此depolymet升级此depolyment</p>
+<p><strong>kubectl apply -f [新的depolyment yml文件] –record:</strong>创建service滚动升级depolyment</p>
+<p><strong>kubectl delete svc/[service名称]:</strong>删除service</p>
+<p><strong>kubectl delete -f [service的yml文件名称]:</strong>通过文件删除service</p>
+<h2 id="K8s集群中应用对外提供网络"><a href="#K8s集群中应用对外提供网络" class="headerlink" title="K8s集群中应用对外提供网络"></a>K8s集群中应用对外提供网络</h2><h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>在上述现象中，我们所描述的Pod提供的IP都只是在K8s集群中可以互访，但是我们部署应用后，需要对外界提供服务，这样我们就需要将网络暴露给外界，这时应该怎么做呢？</p>
+<p>首先我们看看在K8s集群中直接使用和管理Pod的缺点：</p>
+<ol>
+<li><p>当我们使用ReplicaSet或者ReplicationController做水平扩展scale的时候，Pods就有可能被终止掉</p>
+</li>
+<li><p>当我们使用Depolyment的时候，我们去更新Docker Image Version ，旧的Pod就会被终止，然后创建新的Pod</p>
+</li>
+</ol>
+<p>当我们使用上述两种方式做扩展，如果我们直接管理的是Pod，对外提供的是Pod的IP，那么我们在扩展后，Pod的IP地址就会发生变化，这时我们外界再通过之前的IP就不能访问我们的Pod中提供的服务了。或者是说我们在Pod中部署了数据库服务，其他集群中的Pod可以访问，但是我们对数据库进行升级的时候，这样其他集群中的服务就不能访问数据库了，因为在升级的过程中，数据库的IP地址就发生了变化</p>
+<p>为了解决上述问题，我们同样可以使用之前学习过的Service来解决，K8s中管理最常用的也是Service，使用Service我们可以管理多个Pod，并且将这些Pod集中管理起来，可以随意扩展或降级升级，并且保证我们对外提供的IP地址是一个，且不发生变化，而且有负载均衡的作用。</p>
+<p>Service主要有三种类型：</p>
+<ol>
+<li><p>ClusterIP：这个IP地址是Cluster可以访问的，及K8s集群中任何一个节点都可以访问，但是外界不能访问，这个IP是不会变的，是Service所对应的IP地址，它会代理到我们service中的Pod上，Pod的IP地址是可以变化的，一般应用与只在系统间内部可以访问，比如数据库服务</p>
+</li>
+<li><p>NodePort：这个Service是对外提供IP地址，这是与ClusterIP类型的Service最大的不同</p>
+</li>
+<li><p>LoadBalancer：这个一般需要云服务商提供，我们通过这个LoadBalancer就可以访问集群中的Pod，并且提供负载均衡</p>
+</li>
+</ol>
+<p>Service的创建方式：</p>
+<ol>
+<li><p>通过kubectl expose 命令，会给我们的Pod创建一个service，供外部访问</p>
+</li>
+<li><p>定义一个yml文件，我们在此文件中描述Service的具体信息及资源</p>
+</li>
+</ol>
+<h4 id="创建ClusterIP类型Servcice示例"><a href="#创建ClusterIP类型Servcice示例" class="headerlink" title="创建ClusterIP类型Servcice示例"></a>创建ClusterIP类型Servcice示例</h4><ul>
+<li>通过Pod直接创建Service </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1. 首先创建好Pod</span><br><span class="line">kubectl create -f [yml文件的路径名称]</span><br><span class="line"></span><br><span class="line">2. 查看我们创建的Pod的具体信息，包括pod的名称和IP等</span><br><span class="line">kubectl get pods -o wide</span><br><span class="line"></span><br><span class="line">3. 根据pod的名称，创建service</span><br><span class="line">kubectl expose pods [pod名称]</span><br><span class="line"></span><br><span class="line">4. 查看我们创建的service的具体信息，这里会查看到我们创建的service的IP地址和端口，这里我们查看到的Service的IP地址是不会变化的，而上面我们查看到的Pod的IP地址是会随着服务的扩展升级等发生变化</span><br><span class="line">注意：这里查询出的ServiceIP只能在K8s集群内部访问，因为我们创建的是一个ClusterIP类型的Service</span><br><span class="line">kubectl get svc</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过Depolyment创建Service，测试升级或者扩展此应用，Service IP不发生变化</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">1. 首先我们创建一个Depolyment，此Depolyment中Pod的个数可以是多个</span><br><span class="line">kubectl create -f [deployment的yml文件]</span><br><span class="line">jjw@jjw-PC:~$ kubectl create -f deployment_nginx.yml </span><br><span class="line">deployment.apps/nginx-deployment created</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2. 查看我们创建好的pod的具体信息</span><br><span class="line">kubectl get pods -o wide</span><br><span class="line">jjw@jjw-PC:~$ kubectl get pods -o wide</span><br><span class="line">NAME                                READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES</span><br><span class="line">nginx-deployment-5cc6c7559b-j5v57   1/1     Running   0          16s   172.18.0.5   minikube   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">nginx-deployment-5cc6c7559b-t5z92   1/1     Running   0          16s   172.18.0.4   minikube   &lt;none&gt;           &lt;none&gt;</span><br><span class="line">nginx-deployment-5cc6c7559b-wfbts   1/1     Running   0          16s   172.18.0.6   minikube   &lt;none&gt;           &lt;none&gt;</span><br><span class="line"></span><br><span class="line">3. 查看我们此depolyment的具体信息，包括depolyment的名称</span><br><span class="line">kubectl get depolyment</span><br><span class="line"></span><br><span class="line">4. 通过此depolyment创建Service</span><br><span class="line">kubectl expose depolyment [depolyment名称]</span><br><span class="line">jjw@jjw-PC:~$ kubectl expose deployment  nginx-deployment</span><br><span class="line">service/nginx-deployment exposed</span><br><span class="line"></span><br><span class="line">5. 查看我们创建的service，这时，我们的Service的IP信息也就被查看到了</span><br><span class="line">kubectl get svc</span><br><span class="line">jjw@jjw-PC:~$ kubectl get svc</span><br><span class="line">NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">kubernetes         ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP   19d</span><br><span class="line">nginx-deployment   ClusterIP   10.96.161.226   &lt;none&gt;        80/TCP    26s</span><br><span class="line"></span><br><span class="line">6. 然后我们访问此IP，发现是可以访问到我们Pod提供的服务的，并且它还实现了负载均衡的功能</span><br><span class="line"></span><br><span class="line">7. 升级此depoluyment，我们可以直接编辑此depolyment来实现升级，使用命令</span><br><span class="line">kubectl edit depolyment [depolyment名称]</span><br><span class="line"></span><br><span class="line">8. 编辑完此depolyment要升级的内容后，我们的服务就会自动升级</span><br><span class="line"></span><br><span class="line">9. 查看现在的Pod信息，发现pod已经不是我们之前创建的了，而是新的，但是这时我们的Service IP还是没有变化，还是可以通过此IP访问到服务</span><br><span class="line">kubectl get pods -o wide</span><br></pre></td></tr></table></figure>
+
+<p>这里我们的升级它不是零宕机的升级，它还是会中断一会，我们可以通过其他方法实现滚动升级，即优雅上下线升级</p>
+<p>滚动升级的实现其实就是我们重新定义一个yml，及针对与之前depolyment的yml的升级后的yml，然后通过命令：</p>
+<ul>
+<li>kubectl apply -f [新的depolyment yml文件] –record</li>
+</ul>
+<p>这样就可以实现滚动升级，如果不加 –record 参数，则旧的depolymeng不会被删除，它还会存在，只是Pod数变成了0 </p>
+<h4 id="创建NodePort类型Servcice示例"><a href="#创建NodePort类型Servcice示例" class="headerlink" title="创建NodePort类型Servcice示例"></a>创建NodePort类型Servcice示例</h4><ul>
+<li>通过Pod直接创建Service </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1. 首先创建好Pod</span><br><span class="line">kubectl create -f [yml文件的路径名称]</span><br><span class="line"></span><br><span class="line">2. 查看我们创建的Pod的具体信息，包括pod的名称和IP等</span><br><span class="line">kubectl get pods -o wide</span><br><span class="line"></span><br><span class="line">3. 根据pod的名称，指定参数，创建NodePort类型Service</span><br><span class="line">kubectl expose pods [pod名称] --type=NodePort</span><br><span class="line"></span><br><span class="line">4. 查看我们创建的service的具体信息</span><br><span class="line">注意：这里也会查询出ClusterIP，但是在端口信息上，与ClusterIP类型的Service不同，它会指定一个IP映射（80:31404/TCP），这里就表示我们将Pod的端口映射到了主机上，我们可以通过此映射及Port通过主机的IP来访问此Pod服务。这样如果我们的主机是有公网IP的，那么我们这个服务就可以直接暴露给外界来使用</span><br><span class="line">kubectl get svc</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过Depolyment创建NodePort类型的Service</li>
+</ul>
+<p>创建方式与上述创建ClusterIP类型的Service一样，不同的是在创建的命令中指定–type=NodePort即可</p>
+<p>kubectl expose depolyment [depolyment名称] –type=NodePort即可</p>
+<ul>
+<li>通过Service.yml文件创建Service</li>
+</ul>
+<ol>
+<li>通过yml文件创建service，我们首先要创建好Pod，然后指定Pod的Label，如下Pod的yml文件，nginx-pod.yml</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-pod</span><br><span class="line">  </span><br><span class="line">  # 注意：这里我们指明了Pod的Label</span><br><span class="line">  labels:</span><br><span class="line">    app: nginx</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: nginx-container</span><br><span class="line">    image: nginx</span><br><span class="line">    ports:</span><br><span class="line">    - name: nginx-port</span><br><span class="line">      containerPort: 80</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建service的yml文件，如下service_nginx.yml</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: Service</span><br><span class="line">metadata:</span><br><span class="line">  name: nginx-service</span><br><span class="line">spec:</span><br><span class="line"></span><br><span class="line">  # 指定端口映射，这里表示将Pod的端口映射为本地的8080和NodePort的8080</span><br><span class="line">  ports:</span><br><span class="line">  - port: 32333</span><br><span class="line">    nodePort: 32333</span><br><span class="line"></span><br><span class="line">    # 这里就表示我们创建service要引用的Pod的，这里指定的是Pod的Label，所以我们创建service的文件是用Label来确定具体Pod的</span><br><span class="line">    targetPort: nginx-port</span><br><span class="line">    protocol: TCP</span><br><span class="line">  selector:</span><br><span class="line">    app: nginx</span><br><span class="line">  type: NodePort</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>创建service</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl create -f service_nginx.yml</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建LoadBalance类型Servcice示例"><a href="#创建LoadBalance类型Servcice示例" class="headerlink" title="创建LoadBalance类型Servcice示例"></a>创建LoadBalance类型Servcice示例</h4><p>创建LoadBalance类型的Servcie需要借助于云服务，所以这里不再演示，比较复杂，具体用的时候查资料或者视频即可</p>
+<p>具体创建命令：</p>
+<p>kubectl expose pods [pod名称] –type=LoadBalance</p>
+<p>kubectl expose depolyment [depolyment名称] –type=LoadBalance</p>
+<h1 id="secret使用"><a href="#secret使用" class="headerlink" title="secret使用"></a>secret使用</h1><p>secret的使用与Swarm很类似，具体就是先在集群中创建secret，然后在service的yml文件中要使用的地方引入此secret名称即可</p>
+<p>创建secret：</p>
+<ol>
+<li><p>kubectl create secret generic [secret名称] –from-literal=[key]=[value]：通过命令直接指定创建</p>
+</li>
+<li><p>kubectl create secret generic [secret名称] –from-file=[file路径]：通过编辑好的文件创建</p>
+</li>
+</ol>
+<p>示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 创建一个名称为mysql-pass的 键为password 值为jjw0923的secret</span><br><span class="line">kubectl create secret generic mysql-pass --from-literal=password=jjw0923</span><br></pre></td></tr></table></figure>
+
+<p>然后在service的yml文件引入即可，具体使用查资料</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2020年07月10日 20:50</p>
+        <p>原始链接： <a class="post-url" href="/2020/06/30/Kebernetes-进阶/" title="Kebernetes-进阶">https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/&title=《Kebernetes-进阶》 — JJW-STORY&pic=/images/blogs/docker.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/&title=《Kebernetes-进阶》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Kebernetes-进阶》 — JJW-STORY&url=https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2020/06/30/Kebernetes-进阶/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Kebernetes/" class="color1">Kebernetes</a>
+      
+    <a href="/tags/进阶/" class="color3">进阶</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Kubectl连接K8s集群配置（Cluster配置）"><span class="post-toc-text">Kubectl连接K8s集群配置（Cluster配置）</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#K8s集群网络（Cluster-Networking）"><span class="post-toc-text">K8s集群网络（Cluster Networking）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#K8s集群间网络现象及原理"><span class="post-toc-text">K8s集群间网络现象及原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#K8s集群中应用对外提供网络"><span class="post-toc-text">K8s集群中应用对外提供网络</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Service"><span class="post-toc-text">Service</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#创建ClusterIP类型Servcice示例"><span class="post-toc-text">创建ClusterIP类型Servcice示例</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#创建NodePort类型Servcice示例"><span class="post-toc-text">创建NodePort类型Servcice示例</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#创建LoadBalance类型Servcice示例"><span class="post-toc-text">创建LoadBalance类型Servcice示例</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#secret使用"><span class="post-toc-text">secret使用</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2020/07/10/MySQL-基础/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          MySQL-基础
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2020/06/14/Kubernetes/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Kubernetes</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 10px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
