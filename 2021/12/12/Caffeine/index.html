@@ -20,10 +20,10 @@
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/write.png">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/count_min_sketch.png">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/w_lfu.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/w_lfu_construct.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/w_lfu_construct.png">
 <meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/queue.png">
-<meta property="og:image" content="https://jjw-story.github.io/images/blogs/read_buffer.png">
-<meta property="og:updated_time" content="2022-03-08T07:26:32.151Z">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/read_buffer.png">
+<meta property="og:updated_time" content="2022-03-08T07:49:31.043Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Caffeine">
 <meta name="twitter:description" content="缓存介绍缓存是分布式系统中的重要组件，主要解决高并发，大数据场景下，热点数据访问的性能问题。提供高性能的数据快速访问。缓存主要分类：  本地缓存：指的是在应用中的缓存组件，其最大的优点是应用和cache是在同一个进程内部，请求缓存非常快速，没有过多的网络开销等，在单应用不需要集群支持或者集群情况下各节点无需互相通知的场景下使用本地缓存较合适；同时，它的缺点也是应为缓存跟应用程序耦合，多个应用程序无">
@@ -295,7 +295,7 @@
 <h2 id="保新机制"><a href="#保新机制" class="headerlink" title="保新机制"></a>保新机制</h2><p>为了让缓存保持“新鲜”，剔除掉过往频率很高但之后不经常的缓存，Caffeine 有一个 Freshness Mechanism。做法很简单，就是当整体的统计计数（当前所有记录的频率统计之和，这个数值内部维护）达到某一个值时，那么所有记录的频率统计除以 2。</p>
 <h2 id="淘汰策略-1"><a href="#淘汰策略-1" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><p>Caffeine 通过测试发现 TinyLFU 在面对突发性的稀疏流量（sparse bursts）时表现很差，因为新的记录（new items）还没来得及建立足够的频率就被剔除出去了，这就使得命中率下降。</p>
 <p>Window TinyLFU主要结构如下：</p>
-<p><img src="/images/blogs/w_lfu_construct.png" alt="avatar"></p>
+<p><img src="/images/blogs/caffeine/w_lfu_construct.png" alt="avatar"></p>
 <p>可以看到整个W-TinyLFU由三部分构成：</p>
 <ul>
 <li><p>准入窗口（Admission Windows），由一个较小的LRU队列构成，其容量只有整个缓存大小的1%，这个窗口的作用主要是为了保护一些新进入缓存的数据，给他们一定的成长时间来积累自己的使用频率，避免被快速淘汰掉，而且LRU也能应对突发的流量。</p>
@@ -344,7 +344,7 @@
 <p>Caffeine借鉴了数据库系统的WAL（Write-Ahead Logging）思想，即先写日志再执行操作，这种思想同样适合缓存。在执行读写操作时，先把操作记录在缓冲区，然后在合适的时机异步、批量地执行缓冲区中的内容。但在执行缓冲区的内容时，也是需要在缓冲区加上同步锁的，不然存在并发问题，只不过这样就可以把 对锁的竞争从缓存数据转移到对缓冲区上。</p>
 <p>Caffeine 认为读操作是频繁的，写操作是偶尔的，读写都是异步线程更新频率信息。</p>
 <h4 id="读缓冲"><a href="#读缓冲" class="headerlink" title="读缓冲"></a>读缓冲</h4><p>传统的缓存实现将会为每个操作加锁，以便能够安全的对每个访问队列的元素进行排序。一种优化方案是将每个操作按序加入到缓冲区中进行批处理操作。读完把数据放到环形队列 RingBuffer 中，为了减少读并发，采用多个 RingBuffer，每个线程都有对应的 RingBuffer。环形队列是一个定长数组，提供高性能的能力并最大程度上减少了 GC所带来的性能开销。数据丢到队列之后就返回读取结果，类似于数据库的WAL机制，和ConcurrentHashMap 读取数据相比，仅仅多了把数据放到队列这一步。异步线程并发读取 RingBuffer 数组，更新访问信息。</p>
-<p><img src="/images/blogs/read_buffer.png" alt="avatar"></p>
+<p><img src="/images/blogs/caffeine/read_buffer.png" alt="avatar"></p>
 <h4 id="写缓冲"><a href="#写缓冲" class="headerlink" title="写缓冲"></a>写缓冲</h4><p>与读缓冲类似，写缓冲是为了储存写事件。读缓冲中的事件主要是为了优化驱逐策略的命中率，因此读缓冲中的事件完整程度允许一定程度的有损。但是写缓冲并不允许数据的丢失，因此其必须实现为一个安全的队列。Caffeine 写是把数据放入MpscGrowableArrayQueue 阻塞队列中，它参考了JCTools里的MpscGrowableArrayQueue ，是针对 MPSC- 多生产者单消费者（Multi-Producer &amp; Single-Consumer）场景的高性能实现。多个生产者同时并发地写入队列是线程安全的，但是同一时刻只允许一个消费者消费队列。</p>
 <p>资料：</p>
 <p>时间轮：<a href="https://blog.csdn.net/weixin_43167418/article/details/111570240" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43167418/article/details/111570240</a></p>
@@ -355,7 +355,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2022年03月08日 15:26</p>
+        <p>最后更新： 2022年03月08日 15:49</p>
         <p>原始链接： <a class="post-url" href="/2021/12/12/Caffeine/" title="Caffeine">https://jjw-story.github.io/2021/12/12/Caffeine/</a></p>
         <footer>
             <a href="https://jjw-story.github.io">
@@ -413,7 +413,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2021/12/12/Caffeine/&title=《Caffeine》 — JJW-STORY&pic=/images/blogs/kafka.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2021/12/12/Caffeine/&title=《Caffeine》 — JJW-STORY&pic=/images/blogs/caffeine.jpg" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
