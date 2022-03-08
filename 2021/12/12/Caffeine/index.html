@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <title>Caffeine | JJW-STORY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="JJW-STORY">
+  
+  <meta name="description" content="缓存介绍缓存是分布式系统中的重要组件，主要解决高并发，大数据场景下，热点数据访问的性能问题。提供高性能的数据快速访问。缓存主要分类：  本地缓存：指的是在应用中的缓存组件，其最大的优点是应用和cache是在同一个进程内部，请求缓存非常快速，没有过多的网络开销等，在单应用不需要集群支持或者集群情况下各节点无需互相通知的场景下使用本地缓存较合适；同时，它的缺点也是应为缓存跟应用程序耦合，多个应用程序无">
+<meta name="keywords" content="Caffeine">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Caffeine">
+<meta property="og:url" content="https://jjw-story.github.io/2021/12/12/Caffeine/index.html">
+<meta property="og:site_name" content="JJW-STORY">
+<meta property="og:description" content="缓存介绍缓存是分布式系统中的重要组件，主要解决高并发，大数据场景下，热点数据访问的性能问题。提供高性能的数据快速访问。缓存主要分类：  本地缓存：指的是在应用中的缓存组件，其最大的优点是应用和cache是在同一个进程内部，请求缓存非常快速，没有过多的网络开销等，在单应用不需要集群支持或者集群情况下各节点无需互相通知的场景下使用本地缓存较合适；同时，它的缺点也是应为缓存跟应用程序耦合，多个应用程序无">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/read_write.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/write.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/count_min_sketch.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/w_lfu.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/w_lfu_construct.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/caffeine/queue.png">
+<meta property="og:image" content="https://jjw-story.github.io/images/blogs/read_buffer.png">
+<meta property="og:updated_time" content="2022-03-08T07:26:32.151Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Caffeine">
+<meta name="twitter:description" content="缓存介绍缓存是分布式系统中的重要组件，主要解决高并发，大数据场景下，热点数据访问的性能问题。提供高性能的数据快速访问。缓存主要分类：  本地缓存：指的是在应用中的缓存组件，其最大的优点是应用和cache是在同一个进程内部，请求缓存非常快速，没有过多的网络开销等，在单应用不需要集群支持或者集群情况下各节点无需互相通知的场景下使用本地缓存较合适；同时，它的缺点也是应为缓存跟应用程序耦合，多个应用程序无">
+<meta name="twitter:image" content="https://jjw-story.github.io/images/blogs/caffeine/read_write.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">JJW-STORY</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        JJW-STORY
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        技术记录
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="JJW-STORY" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//jjw-story.github.io">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="/暂不开放">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="/暂不开放">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Caffeine" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Caffeine
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Caffeine/">Caffeine</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2021-12-12
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="缓存介绍"><a href="#缓存介绍" class="headerlink" title="缓存介绍"></a>缓存介绍</h1><p>缓存是分布式系统中的重要组件，主要解决高并发，大数据场景下，热点数据访问的性能问题。提供高性能的数据快速访问。缓存主要分类：</p>
+<ul>
+<li><p>本地缓存：指的是在应用中的缓存组件，其最大的优点是应用和cache是在同一个进程内部，请求缓存非常快速，没有过多的网络开销等，在单应用不需要集群支持或者集群情况下各节点无需互相通知的场景下使用本地缓存较合适；同时，它的缺点也是应为缓存跟应用程序耦合，多个应用程序无法直接的共享缓存，各应用或集群的各节点都需要维护自己的单独缓存，对内存是一种浪费。</p>
+</li>
+<li><p>分布式缓存：指的是与应用分离的缓存组件或服务，其最大的优点是自身就是一个独立的应用，与本地应用隔离，多个应用可直接的共享缓存。</p>
+</li>
+</ul>
+<h1 id="Caffeine介绍"><a href="#Caffeine介绍" class="headerlink" title="Caffeine介绍"></a>Caffeine介绍</h1><h2 id="Caffeine简介"><a href="#Caffeine简介" class="headerlink" title="Caffeine简介"></a>Caffeine简介</h2><p>Caffeine是基于JDK8的高性能本地缓存库，提供了几乎完美的命中率。它有点类似JDK中的ConcurrentMap，实际上，Caffeine中的LocalCache接口就是实现了JDK中的ConcurrentMap接口，但两者并不完全一样。最根本的区别就是，ConcurrentMap保存所有添加的元素，除非显示删除之（比如调用remove方法）。而本地缓存一般会配置自动剔除策略，为了保护应用程序，限制内存占用情况，防止内存溢出。</p>
+<h2 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h2><p><strong>读 (75%) / 写 (25%)</strong></p>
+<p>在这个基准测试中，对一个配置了最大容量的缓存，6 线程进行并发读，2 线程进行并发写。</p>
+<p><img src="/images/blogs/caffeine/read_write.png" alt="avatar"></p>
+<p><strong>写 (100%)</strong></p>
+<p>在这个基准测试中，8 线程对一个配置了最大容量的缓存进行并发写。</p>
+<p><img src="/images/blogs/caffeine/write.png" alt="avatar"></p>
+<h2 id="Caffeine特性"><a href="#Caffeine特性" class="headerlink" title="Caffeine特性"></a>Caffeine特性</h2><ol>
+<li><p>自动把数据加载到本地缓存中，并且可以配置异步。</p>
+</li>
+<li><p>基于频率和近期的数量/容量淘汰策略。</p>
+</li>
+<li><p>基于失效时间剔除策略，这个时间是从最后一次访问或者写入算起。</p>
+</li>
+<li><p>异步刷新（当entry的第一个过时请求时,进行异步刷新）。</p>
+</li>
+<li><p>Key会被包装成Weak引用；</p>
+</li>
+<li><p>Value会被包装成Weak或者Soft引用，从而能被GC掉，而不至于内存泄漏；</p>
+</li>
+<li><p>数据剔除提醒；</p>
+</li>
+<li><p>写入广播机制；</p>
+</li>
+<li><p>缓存访问可以统计；</p>
+</li>
+</ol>
+<h1 id="加载策略"><a href="#加载策略" class="headerlink" title="加载策略"></a>加载策略</h1><p>Caffeine 为我们提供了4种填充策略：手动、自动同步、手动异步、异步自动。</p>
+<h3 id="1-Cache-手动加载"><a href="#1-Cache-手动加载" class="headerlink" title="1.Cache 手动加载"></a>1.Cache 手动加载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Cache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .expireAfterWrite(10, TimeUnit.MINUTES)</span><br><span class="line">    .maximumSize(10_000)</span><br><span class="line">    .build();</span><br><span class="line">// 查找一个缓存元素，没有查找到的时候返回null</span><br><span class="line">UserInfo userInfo = cache.getIfPresent(key);</span><br><span class="line">// 查找缓存，如果缓存不存在则生成缓存元素,  如果无法生成则返回null（注意上一行代码两种方法对比）</span><br><span class="line">userInfo = cache.get(key, k -&gt; getUserInfoByDB(key));</span><br><span class="line">// 添加或者更新一个缓存元素</span><br><span class="line">cache.put(key, userInfo);</span><br><span class="line">// 移除一个缓存元素</span><br><span class="line">cache.invalidate(key);</span><br></pre></td></tr></table></figure>
+
+<p>Cache接口允许显式的去控制缓存的获取，更新和删除。</p>
+<p>我们可以通过cache.getIfPresent(key) 方法来获取一个key的值，通过cache.put(key, value)方法显式的将数据放入缓存，但是会覆盖缓原来key的数据。更加建议使用cache.get(key，k – &gt; value) 的方式，get 方法将一个参数为 key 的 Function (getUserInfoByDB) 作为参数传入。如果缓存中不存在该Key，则调用这个 Function 函数，并将返回值作为该缓存的值插入缓存中。get 方法是以阻塞方式执行调用，即使多个线程同时请求该值也只会调用一次Function方法。这样可以避免与其他线程的写入竞争，这也是为什么使用 get 优于 getIfPresent 的原因。</p>
+<p>注意：如果调用该方法返回NULL（如上面的 getUserInfoByDB 方法），则cache.get返回null，如果调用该方法抛出异常，则get方法也会抛出异常。</p>
+<p>也可以使用 Cache.asMap() 所暴露出来的 ConcurrentMap 的方法直接对缓存进行操作。</p>
+<h3 id="2-LoadingCache-自动加载"><a href="#2-LoadingCache-自动加载" class="headerlink" title="2.LoadingCache 自动加载"></a>2.LoadingCache 自动加载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">LoadingCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .maximumSize(10_000)</span><br><span class="line">    .expireAfterWrite(10, TimeUnit.MINUTES)</span><br><span class="line">    .build(new CacheLoader&lt;Key, UserInfo&gt;() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public UserInfo load(Key key) throws Exception &#123;</span><br><span class="line">                        return getUserInfoByDB(key);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public Map&lt;Key, UserInfo&gt; loadAll(@Nonnull Iterable&lt;? extends Key&gt; key) throws Exception &#123;</span><br><span class="line">                      return getUserInfosByDB(ists.newArrayList(key));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">// 查找缓存，如果缓存不存在则生成缓存元素,  如果无法生成则返回null</span><br><span class="line">UserInfo userInfo = cache.get(key);</span><br><span class="line">// 批量查找缓存，如果缓存不存在则生成缓存元素</span><br><span class="line">Map&lt;Key, UserInfo&gt; userInfos = cache.getAll(keys);</span><br></pre></td></tr></table></figure>
+
+<p>和guava cache相同,LoadingCache是使用CacheLoader来构建的缓存。</p>
+<p>批量查找可以使用getAll方法。默认情况下，getAll将会对缓存中没有值的key分别调用CacheLoader.load方法来构建缓存的值。我们可以重写CacheLoader.loadAll方法来提高getAll的效率。</p>
+<h3 id="3-AsyncCache-异步手动加载"><a href="#3-AsyncCache-异步手动加载" class="headerlink" title="3.AsyncCache 异步手动加载"></a>3.AsyncCache 异步手动加载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AsyncCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .expireAfterWrite(10, TimeUnit.MINUTES)</span><br><span class="line">    .maximumSize(10_000)</span><br><span class="line">    .buildAsync();</span><br><span class="line"></span><br><span class="line">// 查找缓存元素，如果不存在，则异步生成</span><br><span class="line">CompletableFuture&lt;UserInfo&gt; userInfo = cache.get(key, k -&gt; getUserInfoByDB(key));</span><br></pre></td></tr></table></figure>
+
+<p>AsyncLoadingCache异步加载使用Executor去调用方法并返回一个CompletableFuture。异步加载缓存使用了响应式编程模型。</p>
+<p>如果要以同步方式调用时，应提供CacheLoader。要以异步表示时，应该提供一个AsyncCacheLoader，并返回一个CompletableFuture。</p>
+<p>synchronous()这个方法提供了一个阻塞缓存的视图LoadingCache,直到异步计算完成。调用该方法后就相当于将一个异步加载的缓存AsyncLoadingCache转换成了一个同步加载的缓存LoadingCache。</p>
+<p>默认使用ForkJoinPool.commonPool()来执行异步线程，但是我们可以通过Caffeine.executor(Executor) 方法来替换为指定线程池。</p>
+<h3 id="4-AsyncLoadingCache-异步自动加载"><a href="#4-AsyncLoadingCache-异步自动加载" class="headerlink" title="4.AsyncLoadingCache 异步自动加载"></a>4.AsyncLoadingCache 异步自动加载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">AsyncLoadingCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .maximumSize(10_000)</span><br><span class="line">    .expireAfterWrite(10, TimeUnit.MINUTES)</span><br><span class="line">    // 你可以选择: 去异步的封装一段同步操作来生成缓存元素</span><br><span class="line">    .buildAsync(new CacheLoader&lt;Key, UserInfo&gt;() &#123;</span><br><span class="line">                    @Override</span><br><span class="line">                    public UserInfo asyncLoad(Key key) throws Exception &#123;</span><br><span class="line">                        return getUserInfoByDB(key);</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    @Override</span><br><span class="line">                    public Map&lt;Key, UserInfo&gt; asyncLoadAll(@Nonnull Iterable&lt;? extends Key&gt; key) throws Exception &#123;</span><br><span class="line">                      return getUserInfosByDB(ists.newArrayList(key));</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">// 找缓存元素，如果其不存在，将会异步进行生成</span><br><span class="line">CompletableFuture&lt;UserInfo&gt; userInfo = cache.get(key);</span><br><span class="line">// 批量查找缓存元素，如果其不存在，将会异步进行生成</span><br><span class="line">CompletableFuture&lt;Map&lt;Key, UserInfo&gt;&gt; userInfos = cache.getAll(keys);</span><br></pre></td></tr></table></figure>
+
+<p>AsyncLoadingCache是使用AsyncCacheLoader来构建的异步缓存,和同步加载的方式类似,异步自动加载需要一个AsyncCacheLoader,并返回CompletableFuture</p>
+<h1 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h1><p>cffeine提供三种淘汰策略：基于大小（size-based），基于时间（time-based）和基于引用（reference-based）。</p>
+<h3 id="1-基于大小（size-based）"><a href="#1-基于大小（size-based）" class="headerlink" title="1.基于大小（size-based）"></a>1.基于大小（size-based）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 基于配置的大小淘汰缓存</span><br><span class="line">LoadingCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .maximumSize(10_000)</span><br><span class="line">    .build(this::load);</span><br><span class="line"></span><br><span class="line">// 基于配置的权重淘汰缓存</span><br><span class="line">LoadingCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .maximumWeight(10_000)</span><br><span class="line">    .weigher((String key, UserInfo value)-&gt;key.getBytes().length + value.getBytes().length)</span><br><span class="line">    .build(this::load);</span><br></pre></td></tr></table></figure>
+
+<p>基于大小淘汰，有两种方式：一种是基于缓存数量大小，一种是基于缓存的权重。</p>
+<p>使用Caffeine.maximumSize(long)方法来指定缓存的最大容量。当缓存超出这个容量的时候，会使用Window-TinyLfu策略来删除缓存。</p>
+<p>可以使用权重的策略来进行淘汰，可以使用Caffeine.weigher(Weigher)来指定权重函数，使用Caffeine.maximumWeight(long) 函数来指定缓存最大权重值。maximumWeight与maximumSize不可以同时使用。</p>
+<p>当我们的缓存大小不均匀时，我们可以通过这种方式控制总大小。权重计算是在其创建或更新时发生的，此后其权重值都是静态存在的。</p>
+<h3 id="2-基于时间（time-based）"><a href="#2-基于时间（time-based）" class="headerlink" title="2.基于时间（time-based）"></a>2.基于时间（time-based）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 基于固定的过期策略进行淘汰</span><br><span class="line">// 表示自从最后一次访问（写入或者读取）后多久就会过期</span><br><span class="line">LoadingCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .expireAfterAccess(5, TimeUnit.MINUTES)</span><br><span class="line">    .build(this::load);</span><br><span class="line"></span><br><span class="line">// 表示自从最后一次写入后多久就会过期</span><br><span class="line">LoadingCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .expireAfterWrite(10, TimeUnit.MINUTES)</span><br><span class="line">    .build(this::load);</span><br><span class="line"></span><br><span class="line">// 基于动态的过期策略进行淘汰</span><br><span class="line">LoadingCache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line">    .expireAfter(new Expiry&lt;Key, UserInfo&gt;() &#123;</span><br><span class="line">      long expireAfterCreate(@Nonnull K var1, @Nonnull V var2, long var3) &#123;</span><br><span class="line">        // 首次创建过期时间设置</span><br><span class="line">      &#125;</span><br><span class="line">    	long expireAfterUpdate(@Nonnull K var1, @Nonnull V var2, long var3, @Nonnegative long var5) &#123;</span><br><span class="line">      	// 更新过期时间设置</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    	long expireAfterRead(@Nonnull K var1, @Nonnull V var2, long var3, @Nonnegative long var5) &#123;</span><br><span class="line">        // 读取过期时间设置</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    .build(key -&gt; getUserInfoByDB(key));</span><br></pre></td></tr></table></figure>
+
+<p>Caffeine提供了三种定时驱逐策略：</p>
+<p>1、expireAfterAccess(long, TimeUnit):在最后一次访问或者写入后开始计时，在指定的时间后过期。假如一直有请求访问该key，那么这个缓存将一直不会过期。</p>
+<p>2、expireAfterWrite(long, TimeUnit): 在最后一次写入缓存后开始计时，在指定的时间后过期。</p>
+<p>3、expireAfter(Expiry): 自定义策略，过期时间由Expiry实现计算。</p>
+<p>通过在写入和偶尔在读取的期间来定期维护过期处理,过期事件的调度和触发都以O(1)进行。</p>
+<p>对于准时过期，而不是依赖其他缓存活动来触发常规的维护，请使用调度程序接口和Caffeine.Scheduler（Scheduler）方法指定调度线程.</p>
+<p>Caffeine的缓存清除是惰性的，可能发生在读请求后或者写请求后，比如说有一条数据过期后，不会立即删除，可能在下一次读/写操作后触发删除。如果读请求和写请求比较少，但想要尽快的删掉cache中过期的数据的话，可以通过增加定时器的方法（Caffeine.Scheduler（Scheduler）），定时执行cache.cleanUp()方法，触发缓存清除操作。</p>
+<h3 id="3-基于引用（reference-based）"><a href="#3-基于引用（reference-based）" class="headerlink" title="3.基于引用（reference-based）"></a>3.基于引用（reference-based）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// Evict when neither the key nor value are strongly reachable</span><br><span class="line">LoadingCache&lt;Key, UserInfo&gt; graphs = Caffeine.newBuilder()</span><br><span class="line">    .weakKeys()</span><br><span class="line">    .weakValues()</span><br><span class="line">    .build(new CacheLoader&lt;Key, UserInfo&gt;() &#123;</span><br><span class="line">                   ...</span><br><span class="line">                &#125;);</span><br><span class="line"></span><br><span class="line">// 当进行GC的时候进行淘汰</span><br><span class="line">LoadingCache&lt;Key, UserInfo&gt; graphs = Caffeine.newBuilder()</span><br><span class="line">    .softValues()</span><br><span class="line">    .build(new CacheLoader&lt;Key, UserInfo&gt;() &#123;</span><br><span class="line">                   ...</span><br><span class="line">                &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>java种有四种引用：强引用，软引用，弱引用和虚引用，caffeine可以将值封装成弱引用或软引用。</p>
+<p>软引用：如果一个对象只具有软引用，则内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。</p>
+<p>弱引用：弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存</p>
+<p>我们可以将缓存的驱逐配置成基于垃圾回收器。为此，我们可以将key 和 value 配置为弱引用或只将值配置成软引用。</p>
+<p>注意：AsyncLoadingCache不支持弱引用和软引用。</p>
+<p>Caffeine.weakKeys() 使用弱引用存储key。如果没有其他地方对该key有强引用，那么该缓存就会被垃圾回收器回收。由于垃圾回收器只依赖于身份(identity)相等，因此这会导致整个缓存使用身份 (==) 相等来比较 key，而不是使用 equals()。</p>
+<p>Caffeine.weakValues() 使用弱引用存储value。如果没有其他地方对该value有强引用，那么该缓存就会被垃圾回收器回收。由于垃圾回收器只依赖于身份(identity)相等，因此这会导致整个缓存使用身份 (==) 相等来比较 key，而不是使用 equals()。</p>
+<p>Caffeine.softValues() 使用软引用存储value。当内存满了过后，软引用的对象以将使用最近最少使用(least-recently-used ) 的方式进行垃圾回收。由于使用软引用是需要等到内存满了才进行回收，所以我们通常建议给缓存配置一个使用内存的最大值。 softValues() 将使用身份相等(identity) (==) 而不是equals() 来比较值。</p>
+<p>注意：Caffeine.weakValues()和Caffeine.softValues()不可以一起使用。</p>
+<h1 id="刷新策略"><a href="#刷新策略" class="headerlink" title="刷新策略"></a>刷新策略</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LoadingCache&lt;String, String&gt; cache = Caffeine.newBuilder()</span><br><span class="line">                .expireAfterWrite(10,TimeUnit.SECONDS)</span><br><span class="line">                .refreshAfterWrite(2,TimeUnit.SECONDS)</span><br><span class="line">                .executor(Executors.newFixedThreadPool(1))</span><br><span class="line">                .build(this::load);</span><br></pre></td></tr></table></figure>
+
+<p>Caffeine和Guava cache一样，也提供了异步刷新的功能，通过refreshAfterWrite方法指定刷新的时间</p>
+<p>刷新和淘汰是不一样的。刷新的是通过LoadingCache.refresh(key)方法来指定，并通过调用CacheLoader.load方法来执行，刷新key会异步地为这个key加载新的value，并返回旧的值（如果有的话）。淘汰会阻塞查询操作直到淘汰作完成才会进行其他操作。</p>
+<p>refreshAfterWrite在查询数据的时候判断该数据是不是符合查询条件，如果符合条件该缓存就会去执行刷新操作。例如，可以在同一个缓存中同时指定refreshAfterWrite和expireAfterWrite，只有当数据具备刷新条件的时候才会去刷新数据，不会盲目去执行刷新操作。如果数据在刷新后就一直没有被再次查询，那么该数据也会过期。</p>
+<p>在刷新的时候如果查询缓存元素，其旧值将仍被返回，直到该元素的刷新完毕后结束后才会返回刷新后的新值。refreshAfterWrite 将会使在写操作之后的一段时间后允许 key 对应的缓存元素进行刷新，但是只有在这个 key 被真正查询到的时候才会正式进行刷新操作。</p>
+<p>在刷新的过程中，如果抛出任何异常，会保留旧值。异常会被 logger 打印，然后被吞掉。</p>
+<p>此外，CacheLoader 还支持通过覆盖重写 CacheLoader.reload(K, V) 方法使得在刷新中可以将旧值也参与到更新的过程中去。</p>
+<p>refresh 的操作将会异步执行在一个 Executor 上。默认的线程池实现是 ForkJoinPool.commonPool()。当然也可以通过覆盖 Caffeine.executor(Executor) 方法自定义线程池的实现。这个 Executor 同时负责 removalListener 的操作。</p>
+<h1 id="移除监听器"><a href="#移除监听器" class="headerlink" title="移除监听器"></a>移除监听器</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cache&lt;Key, Graph&gt; graphs = Caffeine.newBuilder()</span><br><span class="line">    .removalListener((Key key, UserInfo userInfo, RemovalCause cause) -&gt;</span><br><span class="line">        System.out.printf(&quot;Key %s was removed (%s)%n&quot;, key, cause))</span><br><span class="line">    .build();</span><br></pre></td></tr></table></figure>
+
+<p>通过Caffeine.removalListener(RemovalListener) 为缓存指定一个删除监听，以便在删除数据时执行某些操作。 RemovalListener可以获取到key、value和RemovalCause（删除的原因）。</p>
+<p>监听器的操作是使用Executor来异步执行的。默认执行程序是ForkJoinPool.commonPool()，可以通过Caffeine.executor(Executor)覆盖。注意：由RemovalListener抛出的任何异常都会被记录（使用Logger）但并不会抛出。</p>
+<h1 id="Writer"><a href="#Writer" class="headerlink" title="Writer"></a>Writer</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">LoadingCache&lt;Key, Graph&gt; graphs = Caffeine.newBuilder()</span><br><span class="line">  .writer(new CacheWriter&lt;Key, Graph&gt;() &#123;</span><br><span class="line">    @Override public void write(Key key, Graph graph) &#123;</span><br><span class="line">      // 持久化或者次级缓存</span><br><span class="line">    &#125;</span><br><span class="line">    @Override public void delete(Key key, Graph graph, RemovalCause cause) &#123;</span><br><span class="line">      // 从持久化或者次级缓存中删除</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  .build(this::load);</span><br></pre></td></tr></table></figure>
+
+<p>CacheWriter允许缓存充当一个底层资源的代理，当与CacheLoader结合使用时，所有对缓存的读写操作都可以通过Writer进行传递。Writer可以把操作缓存和操作外部资源扩展成一个同步的原子性操作。并且在缓存写入完成之前，它将会阻塞后续的更新缓存操作，但是读取（get）将直接返回原有的值。如果写入程序失败，那么原有的key和value的映射将保持不变，如果出现异常将直接抛给调用者。</p>
+<p>CacheWriter可以同步的监听到缓存的创建、变更和删除操作。加载（例如LoadingCache.get）、重新加载（例如LoadingCache.refresh）和计算（例如Map.computeIfPresent）的操作不被CacheWriter监听到。</p>
+<p>注意：CacheWriter不能与weakKeys或AsyncLoadingCache结合使用。</p>
+<p>CacheWriter 可以用来实现 write-through 和 write-back 两种模式的缓存。也可以用来整合多级缓存，或是用来作为发布同步监听器使用。</p>
+<h1 id="统计"><a href="#统计" class="headerlink" title="统计"></a>统计</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cache&lt;Key, UserInfo&gt; cache = Caffeine.newBuilder()</span><br><span class="line"> .maximumSize(10_000)</span><br><span class="line"> .recordStats()</span><br><span class="line"> .build();</span><br></pre></td></tr></table></figure>
+
+<p>使用Caffeine.recordStats()，您可以打开统计信息收集。Cache.stats() 方法返回提供统计信息的CacheStats，如：</p>
+<ul>
+<li><p>hitRate()：返回命中与请求的比率</p>
+</li>
+<li><p>hitCount(): 返回命中缓存的总数</p>
+</li>
+<li><p>evictionCount()：缓存逐出的数量</p>
+</li>
+<li><p>averageLoadPenalty()：加载新值所花费的平均时间</p>
+</li>
+</ul>
+<p>这些统计数据对于缓存优化至关重要，我们建议在性能关键的应用程序中密切关注这些统计数据。</p>
+<p>缓存统计信息可以使用基于pull or push的方法与报告系统集成.基于pull的方法定期调用Cache.stats()并记录最新的快照,基于pusu的方法提供一个定制的statcounter，以便在缓存操作期间直接更新度量。</p>
+<h1 id="Cleanup清理"><a href="#Cleanup清理" class="headerlink" title="Cleanup清理"></a>Cleanup清理</h1><p>Caffeine的缓存清除是惰性的，可能发生在读请求后或者写请求后，比如说有一条数据过期后，不会立即删除，可能在下一次读/写操作后触发删除。如果读请求和写请求比较少，但想要尽快的删掉cache中过期的数据的话，可以通过增加定时器的方法，定时执行cache.cleanUp()方法，触发缓存清除操作。</p>
+<h1 id="淘汰算法"><a href="#淘汰算法" class="headerlink" title="淘汰算法"></a>淘汰算法</h1><p>淘汰策略是影响缓存命中率的因素之一，一般比较简单的缓存就会直接用到 LFU(Least Frequently Used，即最不经常使用) 或者LRU(Least Recently Used，即最近最少使用) ，而 Caffeine 就是使用了 W-TinyLFU 算法。</p>
+<p>LRU（Least Recently Used）算法认为最近访问过的数据将来被访问的几率也更高。LRU通常使用链表来实现，如果数据添加或者被访问到则把数据移动到链表的头部，链表的头部为热数据，链表的尾部如冷数据，当数据满时，淘汰尾部的数据。</p>
+<ul>
+<li><p>优点：实现简单，可以有效的对访问比较频繁的数据进行保护，也就是针对热点数据的命中率提高有明显的效果。</p>
+</li>
+<li><p>缺点：对于周期性、偶发性的访问数据，有大概率可能造成缓存污染，也就是置换出去了热点数据，把这些偶发性数据留下了，从而导致LRU的数据命中率急剧下降。</p>
+</li>
+</ul>
+<p>LFU（Least Frequently Used）算法根据数据的历史访问频率来淘汰数据，其核心思想是“如果数据过去被访问多次，那么将来被访问的频率也更高”。根据LFU的思想，如果想要实现这个算法，需要额外的一套存储用来存每个元素的访问次数，会造成内存资源的浪费。</p>
+<ul>
+<li><p>优点：LFU也可以有效的保护缓存，相对场景来讲，比LRU有更好的缓存命中率。因为是以次数为基准，所以更加准确，自然能有效的保证和提高命中率</p>
+</li>
+<li><p>缺点：LFU需要额外的一套存储用来存每个元素的访问次数，会造成内存资源的浪费。对突发性的稀疏流量无力，因为前期经常访问的记录已经占用了缓存，偶然的流量不太可能会被保留下来，而且过去的一些大量被访问的记录在将来也不一定会使用上，这样就一直把“坑”占着了。</p>
+</li>
+</ul>
+<h2 id="W-TinyLFU"><a href="#W-TinyLFU" class="headerlink" title="W-TinyLFU"></a>W-TinyLFU</h2><h3 id="核心实现"><a href="#核心实现" class="headerlink" title="核心实现"></a>核心实现</h3><p>无论LRU还是LFU都有其各自的缺点，不过，现在已经有很多针对其缺点而改良、优化出来的变种算法。Caffeine的缓存淘汰是通过一种叫做W-TinyLFU的数据结构实现的，这是一种对LRU和LFU进行了组合优化的算法，以及结合了一些其他算法的特点，提供了一个近乎最佳的命中率。</p>
+<p><strong>W-TinyLFU采用了Count–Min Sketch算法，解决LFU资源浪费的问题，引入一个窗口来保存突发流量，使得新元素能有机会保留下来。</strong></p>
+<p>关于Count-Min Sketch算法，可以看作是布隆过滤器的同源的算法，假如我们用一个hashmap来存储每个元素的访问次数，那这个量级是比较大的，并且hash冲突的时候需要做一定处理，否则数据会产生很大的误差，Count-Min Sketch算法将一个hash操作，扩增为多个hash，这样原来hash冲突的概率就降低了几个等级，且当多个hash取得数据的时候，取最低值，也就是Count Min的含义所在。如下图：</p>
+<p><img src="/images/blogs/caffeine/count_min_sketch.png" alt="avatar"></p>
+<p>图中不同的row对应着不同的哈希算法，depth大小代表着哈希算法的数量，width则表示数据可哈希的范围。如果需要记录一个值，那我们需要通过多种Hash算法对其进行处理hash，然后在对应的hash算法的记录中+1。使用多个哈希算法可以降低哈希碰撞带来的数据不准确的概率，宽度上的增加可以提高key的哈希范围，减少碰撞的概率，所以合理的调整算法数量和哈希的范围，可以更好的平衡空间与哈希碰撞产生的错误率。</p>
+<p>Caffeine 对此有进一步的优化，例如Count–Min Sketch使用了二维数组，Caffeine只是用了一个一维的数组；频次如果是数值类型的话，这个数需要用 int 或 long 来存储，但是Caffeine 认为缓存的访问频率不需要用到那么大，只需要 15 就足够，一般认为达到 15 次的频率算是很高的了，而且 Caffeine 还有另外一个机制来使得这个频率进行衰退减半。如果最大是 15 的话，那么只需要 4 个 bit 就可以满足了，一个 long 有 64bit，可以存储 16 个这样的统计数，Caffeine 就是这样的设计，使得存储效率提高了 16 倍。</p>
+<p><img src="/images/blogs/caffeine/w_lfu.png" alt="avatar"></p>
+<h2 id="保新机制"><a href="#保新机制" class="headerlink" title="保新机制"></a>保新机制</h2><p>为了让缓存保持“新鲜”，剔除掉过往频率很高但之后不经常的缓存，Caffeine 有一个 Freshness Mechanism。做法很简单，就是当整体的统计计数（当前所有记录的频率统计之和，这个数值内部维护）达到某一个值时，那么所有记录的频率统计除以 2。</p>
+<h2 id="淘汰策略-1"><a href="#淘汰策略-1" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><p>Caffeine 通过测试发现 TinyLFU 在面对突发性的稀疏流量（sparse bursts）时表现很差，因为新的记录（new items）还没来得及建立足够的频率就被剔除出去了，这就使得命中率下降。</p>
+<p>Window TinyLFU主要结构如下：</p>
+<p><img src="/images/blogs/w_lfu_construct.png" alt="avatar"></p>
+<p>可以看到整个W-TinyLFU由三部分构成：</p>
+<ul>
+<li><p>准入窗口（Admission Windows），由一个较小的LRU队列构成，其容量只有整个缓存大小的1%，这个窗口的作用主要是为了保护一些新进入缓存的数据，给他们一定的成长时间来积累自己的使用频率，避免被快速淘汰掉，而且LRU也能应对突发的流量。</p>
+</li>
+<li><p>频次过滤器（TinyLFU）是W-TinyLFU核心部分，也是Caffeine精髓所在，上面核心实现的内容。</p>
+</li>
+<li><p>主缓存区（Main Cache）用于存放大部分的缓存数据，数据结构为一个分段LRU队列（SLRU），占整个缓存容量的99%，Segmented LRU核心思想就是分段，所以整个主缓存区包括Protected和Probation两部分，其中Protected的大小占主缓存区容量的80%，Probation占20%，发生数据淘汰时，会从这部分缓存里获取数据进行淘汰。</p>
+</li>
+</ul>
+<p>在caffeine所有的数据都在ConcurrentHashMap中，这个和guava cache不同，guava cache是自己实现了个类似ConcurrentHashMap的结构。在caffeine中有三个记录引用的LRU队列:</p>
+<ul>
+<li><p>Eden队列:在caffeine中规定只能为缓存容量的%1,如果size=100,那这个队列的有效大小就等于1。这个队列中记录的是新到的数据，防止突发流量由于之前没有访问频率，而导致被淘汰。比如有一部新剧上线，在最开始其实是没有访问频率的，防止上线之后被其他缓存淘汰出去，而加入这个区域。伊甸区，最舒服最安逸的区域，在这里很难被其他数据淘汰。</p>
+</li>
+<li><p>Probation队列:叫做缓刑队列，在这个队列就代表你的数据相对比较冷，马上就要被淘汰了。这个有效大小为size减去eden减去protected。</p>
+</li>
+<li><p>Protected队列:在这个队列中，可以稍微放心一下了，你暂时不会被淘汰，但是别急，如果Probation队列没有数据了或者Protected数据满了，你也将会被面临淘汰的尴尬局面。当然想要变成这个队列，需要把Probation访问一次之后，就会提升为Protected队列。这个有效大小为(size减去eden) X 80% 如果size =100，就会是79。</p>
+</li>
+</ul>
+<p>这三个队列关系如下:</p>
+<p><img src="/images/blogs/caffeine/queue.png" alt="avatar"></p>
+<ol>
+<li><p>所有进入缓存区的数据会首先被add进Eden区，当该队列长度达到容量限制后，会触发Eden区的淘汰操作，超出的entries会被下放至主缓存区的Probation队列。</p>
+</li>
+<li><p>进入Probation队列的数据如果在没有被主缓存区淘汰之前获得了一次access，该节点会被add进Protected队列。</p>
+</li>
+<li><p>Protecte队列如果达到其容量限制会触发Node Demotion过程，队列首部的元素会被peek出并下放到Probation队列。</p>
+</li>
+<li><p>主缓存区的大小(Probation的大小 + Protected的大小)达到了其容量限制会触发主缓存区的数据淘汰，Probation会被优先选择为淘汰队列，如果Probation为空，则选择Protected为淘汰队列。</p>
+</li>
+<li><p>别选取淘汰队列的首部元素作为受害者(victim)，尾部元素作为竞争者(candidate)，通过对比两者的访问频次选择最终的淘汰者，其中访问频次通过CountMin Sketch获得。</p>
+</li>
+</ol>
+<p>这套机制确保了访问间隔小的热数据被保存下来，而被重复访问少的冷数据则被回收。</p>
+<h1 id="高性能读写"><a href="#高性能读写" class="headerlink" title="高性能读写"></a>高性能读写</h1><p>缓存进行读写之后（读的话，已经存在则直接返回，不存在则load数据，保存，再返回；写的话，则直接插入或更新），需要维护一些淘汰策略相关的额外数据，诸如：</p>
+<ol>
+<li><p>计算和比较数据的是否过期</p>
+</li>
+<li><p>统计频率（像LFU或其变种）</p>
+</li>
+<li><p>护read queue和write queue</p>
+</li>
+<li><p>淘汰符合条件的数据</p>
+</li>
+</ol>
+<p>缓存数据的读写都伴随着缓存状态的变更，Guava Cache的做法是把缓存状态的变更和读写操作一起同步处理，在一个同步加锁的操作中完成。虽然Guava Cache巧妙地利用了JDK的ConcurrentHashMap（JDk7的分段锁或者JDK8的无锁CAS）来降低锁的密度，达到提高并发度的目的。但是，对于一些热点数据，这种做法还是避免不了频繁的锁竞争。</p>
+<p>Caffeine借鉴了数据库系统的WAL（Write-Ahead Logging）思想，即先写日志再执行操作，这种思想同样适合缓存。在执行读写操作时，先把操作记录在缓冲区，然后在合适的时机异步、批量地执行缓冲区中的内容。但在执行缓冲区的内容时，也是需要在缓冲区加上同步锁的，不然存在并发问题，只不过这样就可以把 对锁的竞争从缓存数据转移到对缓冲区上。</p>
+<p>Caffeine 认为读操作是频繁的，写操作是偶尔的，读写都是异步线程更新频率信息。</p>
+<h4 id="读缓冲"><a href="#读缓冲" class="headerlink" title="读缓冲"></a>读缓冲</h4><p>传统的缓存实现将会为每个操作加锁，以便能够安全的对每个访问队列的元素进行排序。一种优化方案是将每个操作按序加入到缓冲区中进行批处理操作。读完把数据放到环形队列 RingBuffer 中，为了减少读并发，采用多个 RingBuffer，每个线程都有对应的 RingBuffer。环形队列是一个定长数组，提供高性能的能力并最大程度上减少了 GC所带来的性能开销。数据丢到队列之后就返回读取结果，类似于数据库的WAL机制，和ConcurrentHashMap 读取数据相比，仅仅多了把数据放到队列这一步。异步线程并发读取 RingBuffer 数组，更新访问信息。</p>
+<p><img src="/images/blogs/read_buffer.png" alt="avatar"></p>
+<h4 id="写缓冲"><a href="#写缓冲" class="headerlink" title="写缓冲"></a>写缓冲</h4><p>与读缓冲类似，写缓冲是为了储存写事件。读缓冲中的事件主要是为了优化驱逐策略的命中率，因此读缓冲中的事件完整程度允许一定程度的有损。但是写缓冲并不允许数据的丢失，因此其必须实现为一个安全的队列。Caffeine 写是把数据放入MpscGrowableArrayQueue 阻塞队列中，它参考了JCTools里的MpscGrowableArrayQueue ，是针对 MPSC- 多生产者单消费者（Multi-Producer &amp; Single-Consumer）场景的高性能实现。多个生产者同时并发地写入队列是线程安全的，但是同一时刻只允许一个消费者消费队列。</p>
+<p>资料：</p>
+<p>时间轮：<a href="https://blog.csdn.net/weixin_43167418/article/details/111570240" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43167418/article/details/111570240</a></p>
+<p><a href="https://km.sankuai.com/page/357451435" target="_blank" rel="noopener">https://km.sankuai.com/page/357451435</a></p>
+<p><a href="https://albenw.github.io/posts/a4ae1aa2/" target="_blank" rel="noopener">https://albenw.github.io/posts/a4ae1aa2/</a></p>
+<p><a href="https://km.sankuai.com/page/1001307176" target="_blank" rel="noopener">https://km.sankuai.com/page/1001307176</a></p>
+<p><a href="https://km.sankuai.com/page/212609259#id-Performance%E6%80%A7%E8%83%BD" target="_blank" rel="noopener">https://km.sankuai.com/page/212609259#id-Performance%E6%80%A7%E8%83%BD</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月08日 15:26</p>
+        <p>原始链接： <a class="post-url" href="/2021/12/12/Caffeine/" title="Caffeine">https://jjw-story.github.io/2021/12/12/Caffeine/</a></p>
+        <footer>
+            <a href="https://jjw-story.github.io">
+                <img src="/images/logo.png" alt="JJW">
+                JJW
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://jjw-story.github.io/2021/12/12/Caffeine/&title=《Caffeine》 — JJW-STORY&pic=/images/blogs/kafka.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://jjw-story.github.io/2021/12/12/Caffeine/&title=《Caffeine》 — JJW-STORY&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://jjw-story.github.io/2021/12/12/Caffeine/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Caffeine》 — JJW-STORY&url=https://jjw-story.github.io/2021/12/12/Caffeine/&via=https://jjw-story.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://jjw-story.github.io/2021/12/12/Caffeine/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://jjw-story.github.io/2021/12/12/Caffeine/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Caffeine/" class="color4">Caffeine</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#缓存介绍"><span class="post-toc-text">缓存介绍</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Caffeine介绍"><span class="post-toc-text">Caffeine介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Caffeine简介"><span class="post-toc-text">Caffeine简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#性能对比"><span class="post-toc-text">性能对比</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Caffeine特性"><span class="post-toc-text">Caffeine特性</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#加载策略"><span class="post-toc-text">加载策略</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-Cache-手动加载"><span class="post-toc-text">1.Cache 手动加载</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-LoadingCache-自动加载"><span class="post-toc-text">2.LoadingCache 自动加载</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-AsyncCache-异步手动加载"><span class="post-toc-text">3.AsyncCache 异步手动加载</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-AsyncLoadingCache-异步自动加载"><span class="post-toc-text">4.AsyncLoadingCache 异步自动加载</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#淘汰策略"><span class="post-toc-text">淘汰策略</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-基于大小（size-based）"><span class="post-toc-text">1.基于大小（size-based）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-基于时间（time-based）"><span class="post-toc-text">2.基于时间（time-based）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-基于引用（reference-based）"><span class="post-toc-text">3.基于引用（reference-based）</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#刷新策略"><span class="post-toc-text">刷新策略</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#移除监听器"><span class="post-toc-text">移除监听器</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Writer"><span class="post-toc-text">Writer</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#统计"><span class="post-toc-text">统计</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Cleanup清理"><span class="post-toc-text">Cleanup清理</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#淘汰算法"><span class="post-toc-text">淘汰算法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#W-TinyLFU"><span class="post-toc-text">W-TinyLFU</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#核心实现"><span class="post-toc-text">核心实现</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#保新机制"><span class="post-toc-text">保新机制</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#淘汰策略-1"><span class="post-toc-text">淘汰策略</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#高性能读写"><span class="post-toc-text">高性能读写</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#读缓冲"><span class="post-toc-text">读缓冲</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#写缓冲"><span class="post-toc-text">写缓冲</span></a></li></ol></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2022/03/06/Kafka-基础/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Kafka-基础
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2021/04/20/Redis-实践四/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Redis-实践四</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 JJW<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "https://jjw-story.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Caffeine/">Caffeine</a><a class="category-link" href="/categories/Docker/">Docker</a><a class="category-link" href="/categories/Elasticsearch/">Elasticsearch</a><a class="category-link" href="/categories/Flink/">Flink</a><a class="category-link" href="/categories/IDEA/">IDEA</a><a class="category-link" href="/categories/Kafka/">Kafka</a><a class="category-link" href="/categories/Kubernetes/">Kubernetes</a><a class="category-link" href="/categories/Lamda/">Lamda</a><a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/MQ/">MQ</a><a class="category-link" href="/categories/MySQL/">MySQL</a><a class="category-link" href="/categories/Python/">Python</a><a class="category-link" href="/categories/Redis/">Redis</a><a class="category-link" href="/categories/Scala/">Scala</a><a class="category-link" href="/categories/Spark/">Spark</a><a class="category-link" href="/categories/设计模式/">设计模式</a><a class="category-link" href="/categories/高效员工起航训练营/">高效员工起航训练营</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/Caffeine/" style="font-size: 10px;">Caffeine</a> <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kafka/" style="font-size: 10px;">Kafka</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 11.67px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/Caffeine/" style="font-size: 10px;">Caffeine</a> <a href="/tags/Compose/" style="font-size: 10px;">Compose</a> <a href="/tags/Design/" style="font-size: 15px;">Design</a> <a href="/tags/Django/" style="font-size: 13.33px;">Django</a> <a href="/tags/Docker/" style="font-size: 18.33px;">Docker</a> <a href="/tags/Elasticsearch/" style="font-size: 15px;">Elasticsearch</a> <a href="/tags/Flink/" style="font-size: 13.33px;">Flink</a> <a href="/tags/Flink-Storm-SparkStream对比/" style="font-size: 10px;">Flink Storm SparkStream对比</a> <a href="/tags/IDEA/" style="font-size: 10px;">IDEA</a> <a href="/tags/Kafka/" style="font-size: 10px;">Kafka</a> <a href="/tags/Kebernetes/" style="font-size: 10px;">Kebernetes</a> <a href="/tags/Kubernetes/" style="font-size: 10px;">Kubernetes</a> <a href="/tags/Lamda/" style="font-size: 10px;">Lamda</a> <a href="/tags/MQ/" style="font-size: 10px;">MQ</a> <a href="/tags/MySQL/" style="font-size: 15px;">MySQL</a> <a href="/tags/Network/" style="font-size: 10px;">Network</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/Python基础/" style="font-size: 10px;">Python基础</a> <a href="/tags/Redis/" style="font-size: 16.67px;">Redis</a> <a href="/tags/Scala/" style="font-size: 11.67px;">Scala</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Spark/" style="font-size: 10px;">Spark</a> <a href="/tags/Swarm/" style="font-size: 10px;">Swarm</a> <a href="/tags/command/" style="font-size: 20px;">command</a> <a href="/tags/overview/" style="font-size: 10px;">overview</a> <a href="/tags/su-sudo/" style="font-size: 10px;">su-sudo</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/入门/" style="font-size: 16.67px;">入门</a> <a href="/tags/内存与磁盘管理/" style="font-size: 10px;">内存与磁盘管理</a> <a href="/tags/创建型设计模式/" style="font-size: 10px;">创建型设计模式</a> <a href="/tags/原则-规范-重构/" style="font-size: 10px;">原则-规范-重构</a> <a href="/tags/基础/" style="font-size: 11.67px;">基础</a> <a href="/tags/实践一/" style="font-size: 11.67px;">实践一</a> <a href="/tags/实践三/" style="font-size: 11.67px;">实践三</a> <a href="/tags/实践二/" style="font-size: 11.67px;">实践二</a> <a href="/tags/实践四/" style="font-size: 10px;">实践四</a> <a href="/tags/帮助命令/" style="font-size: 10px;">帮助命令</a> <a href="/tags/打包压缩与解压缩/" style="font-size: 10px;">打包压缩与解压缩</a> <a href="/tags/数据持久化/" style="font-size: 10px;">数据持久化</a> <a href="/tags/文件及目录权限/" style="font-size: 10px;">文件及目录权限</a> <a href="/tags/文件查看命令/" style="font-size: 10px;">文件查看命令</a> <a href="/tags/文件管理命令/" style="font-size: 10px;">文件管理命令</a> <a href="/tags/文本查看命令/" style="font-size: 10px;">文本查看命令</a> <a href="/tags/核心技术一/" style="font-size: 10px;">核心技术一</a> <a href="/tags/核心技术三/" style="font-size: 10px;">核心技术三</a> <a href="/tags/核心技术二/" style="font-size: 10px;">核心技术二</a> <a href="/tags/核心技术四/" style="font-size: 10px;">核心技术四</a> <a href="/tags/用户和权限管理/" style="font-size: 10px;">用户和权限管理</a> <a href="/tags/结构型设计模式/" style="font-size: 10px;">结构型设计模式</a> <a href="/tags/网络管理/" style="font-size: 15px;">网络管理</a> <a href="/tags/行为型设计模式/" style="font-size: 10px;">行为型设计模式</a> <a href="/tags/语法/" style="font-size: 10px;">语法</a> <a href="/tags/软件包管理器和内核升级/" style="font-size: 10px;">软件包管理器和内核升级</a> <a href="/tags/运行时架构/" style="font-size: 10px;">运行时架构</a> <a href="/tags/进程管理/" style="font-size: 10px;">进程管理</a> <a href="/tags/进阶/" style="font-size: 10px;">进阶</a> <a href="/tags/逻辑卷管理/" style="font-size: 10px;">逻辑卷管理</a> <a href="/tags/镜像的构建和发布及容器操作/" style="font-size: 10px;">镜像的构建和发布及容器操作</a> <a href="/tags/高效员工起航训练营/" style="font-size: 10px;">高效员工起航训练营</a> <a href="/tags/高阶/" style="font-size: 10px;">高阶</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
